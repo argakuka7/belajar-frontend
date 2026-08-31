@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 1 - Apa Itu Front End | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 1</span>
+<h1>Apa Itu Front End</h1>
+<p>Front end adalah bagian aplikasi yang kamu lihat di browser. Bab ini menjelaskan apa itu dan bagaimana browser menyusunnya.</p>
+</header>
+
+<main>
+<figure>
+<img src="/01-apa-itu-front-end/img/kuka-alur-browser.png" alt="Diagram alur dari HTML menuju DOM, render tree, lalu paint, dengan Kuka di sampingnya.">
+<figcaption>Alur browser menyusun halaman.</figcaption>
+</figure>
+
+<h2>Apa itu front end</h2>
+<p>Setiap aplikasi web punya dua sisi. Sisi yang tampil di layar disebut front end. Sisi yang menyimpan data dan logika di server disebut backend. Saat kamu membuka toko online, halaman produk, tombol beli, dan keranjang adalah front end. Harga yang dihitung di server adalah backend.</p>
+<p>Front end berjalan di browser. Ia terdiri dari tiga bahasa: HTML, CSS, dan JavaScript. Masing-masing punya satu tugas. HTML menyusun struktur. CSS mengatur tampilan. JavaScript menangani perilaku. Kamu akan memakai ketiganya sepanjang seri ini.</p>
+<p>Ada cara mudah membedakan keduanya. Front end adalah apa yang bisa kamu lihat dan sentuh. Backend adalah apa yang terjadi di tempat lain, jauh dari layar. Saat kamu mengisi formulir dan menekan kirim, front end menampilkan formulirnya. Backend yang memproses data setelah tombol ditekan. Keduanya bekerja sama, tapi kamu hanya melihat satu sisi.</p>
+<p>Seri ini fokus pada front end. Kamu tidak perlu menyentuh server sama sekali. Semua contoh berjalan di browser, di mesinmu sendiri. Itu membuat belajar lebih mudah, karena hasilnya langsung terlihat tanpa perlu mengatur server.</p>
+<p>Sebelum lanjut, ada satu istilah yang akan sering muncul: halaman web. Halaman web adalah satu dokumen yang tampil di browser. Situs web adalah kumpulan halaman yang saling terhubung. Saat kamu membuka toko online, kamu melihat satu halaman. Saat kamu berpindah dari produk ke keranjang, kamu berpindah antar halaman dalam satu situs.</p>
+
+<h2>Cara browser menyusun halaman</h2>
+<p>Browser tidak langsung menggambar halaman. Ia melewati beberapa langkah. Memahami langkah ini membantu kamu tahu di mana sebuah masalah berada.</p>
+<p>Langkah pertama adalah HTML parse. Browser membaca file HTML baris demi baris dan mengubahnya menjadi struktur. Struktur ini disebut DOM, singkatan dari Document Object Model. DOM adalah pohon yang mewakili halaman. Setiap elemen, seperti judul atau tombol, menjadi satu cabang di pohon itu.</p>
+<p>Langkah kedua adalah render tree. Browser menggabungkan DOM dengan aturan CSS. Hasilnya adalah daftar elemen yang siap digambar, lengkap dengan ukuran dan warnanya. Elemen yang tersembunyi tidak masuk ke sini.</p>
+<p>Langkah ketiga adalah paint. Browser menggambar render tree ke layar. Inilah gambar yang akhirnya kamu lihat. Proses ini berjalan sangat cepat, dan browser mengulanginya setiap kali halaman berubah.</p>
+<p>Kenapa urutan ini penting? Karena JavaScript bekerja di tengah alur. Ia bisa mengubah DOM, dan browser lalu menyusun ulang render tree dan menggambar lagi. Itulah cara halaman berubah tanpa dimuat ulang.</p>
+<p>Bayangkan DOM sebagai kerangka rumah. Render tree adalah rumah yang sudah dicat dan diberi perabot. Paint adalah foto rumah itu yang kamu lihat. Saat kamu memindahkan satu kursi, kamu tidak membangun ulang rumah. Kamu hanya mengubah satu bagian, lalu mengambil foto baru. Browser bekerja dengan cara yang mirip.</p>
+<p>Alur ini juga menjelaskan kenapa halaman kadang terasa lambat. Setiap kali JavaScript mengubah DOM, browser harus menyusun ulang render tree dan menggambar lagi. Semakin banyak yang berubah, semakin lama prosesnya. Di bab performa nanti, kamu akan belajar cara meminimalkan kerja ini.</p>
+
+<h2>Kenapa tiga bahasa terpisah</h2>
+<figure>
+<img src="/01-apa-itu-front-end/img/kuka-tiga-bahasa.png" alt="Kuka memegang tiga kartu bertuliskan HTML, CSS, dan JavaScript.">
+<figcaption>Kuka memegang tiga bahasa.</figcaption>
+</figure>
+<p>Kamu mungkin bertanya kenapa tidak satu bahasa saja. Jawabannya ada pada tugas yang berbeda. HTML menjawab apa isi halaman. CSS menjawab bagaimana tampilannya. JavaScript menjawab apa yang terjadi saat pengguna berinteraksi.</p>
+<p>Pemisahan ini membuat kode lebih mudah dirawat. Kamu bisa mengubah warna seluruh situs tanpa menyentuh isi teks. Kamu bisa memperbaiki perilaku tombol tanpa mengubah strukturnya. Tiap bahasa fokus pada satu hal, dan itu membuat pekerjaan lebih jelas.</p>
+<p>Ada satu istilah yang perlu kamu kenal sejak awal: DOM. DOM adalah jembatan antara halaman dan JavaScript. Saat JavaScript ingin mengubah halaman, ia mengubah DOM. Browser lalu menggambar ulang. Kamu akan memakai DOM terus-menerus, jadi pahami dulu bahwa ia adalah representasi halaman di memori.</p>
+<p>Ketiga bahasa juga punya kecepatan belajar yang berbeda. HTML paling mudah, karena ia hanya menyusun isi. CSS sedikit lebih rumit, karena ia mengatur posisi dan warna. JavaScript paling menantang, karena ia berisi logika. Seri ini mengikuti urutan itu, jadi kamu tidak akan kewalahan.</p>
+<p>Ada satu hal yang perlu kamu ingat. Ketiga bahasa tidak berdiri sendiri. Sebuah halaman nyata memakai semuanya sekaligus. HTML menyusun kerangka, CSS menghiasnya, dan JavaScript membuatnya hidup. Kamu akan melihat ketiganya bekerja bersama di setiap contoh berikutnya.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah mengubah teks sebuah elemen saat tombol ditekan. Versi vanilla memakai <code>document.getElementById</code> untuk menemukan elemen lalu mengubah isinya. Versi React memakai komponen dan state untuk hal yang sama.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;p id="pesan"&gt;Halo&lt;/p&gt;
+&lt;button id="ubah"&gt;Ubah teks&lt;/button&gt;
+
+&lt;script&gt;
+document.getElementById("ubah")
+  .addEventListener("click", function () {
+    document.getElementById("pesan").textContent =
+      "Teks berubah!";
+  });
+&lt;/script&gt;</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function App() {
+  const [pesan, setPesan] = React.useState("Halo");
+  return (
+    &lt;div&gt;
+      &lt;p&gt;{pesan}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setPesan("Teks berubah!")}&gt;
+        Ubah teks
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Kedua versi melakukan hal yang sama. Vanilla mengubah DOM secara langsung. React mengubah state, lalu React yang memperbarui DOM untukmu. Perbedaan ini akan menjadi tema besar di bab-bab React nanti.</p>
+<p>Perhatikan satu hal pada versi React. Ia memakai <code>React.useState</code> untuk menyimpan teks, dan <code>onClick</code> untuk menangkap klik. Kamu tidak perlu memahami semua ini sekarang. Yang perlu kamu lihat adalah bahwa React menyembunyikan langkah menemukan elemen. Kamu cukup menyebut apa yang ingin tampil, dan React mengurus sisanya.</p>
+<p>Kedua pendekatan ini akan kamu temui terus sepanjang seri. Vanilla menunjukkan cara kerja yang sebenarnya. React menunjukkan cara ekosistem membungkusnya agar lebih ringkas. Memahami keduanya membuatmu tidak hanya bisa memakai React, tapi juga tahu apa yang terjadi di baliknya.</p>
+
+<h2>Demo Hidup</h2>
+<p>Tombol di bawah mengubah teks halaman lewat DOM. Tekan tombolnya dan lihat teksnya berganti. Ini contoh paling kecil dari cara JavaScript mengubah halaman.</p>
+<p>Perhatikan apa yang terjadi. Saat kamu menekan tombol, browser menjalankan kode yang mengubah isi elemen <code>demo-teks</code>. Browser lalu menyusun ulang render tree dan menggambar lagi. Kamu melihat teks baru dalam sekejap. Itulah alur yang baru saja kamu pelajari, bekerja dalam satu klik.</p>
+
+<div class="demo">
+<p id="demo-teks">Teks awal. Tekan tombol untuk mengubahnya.</p>
+<button id="demo-ubah">Ubah teks</button>
+</div>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_web_works">MDN: How the web works</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">MDN: Introduction to the DOM</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML">MDN: HTML</a></li>
+<li><a href="https://web.dev/articles/howbrowserswork">web.dev: How browsers work</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/00-siapkan-alat/">Bab 0 - Siapkan Alat</a> | Lanjut ke <a href="/02-html-semantik/">Bab 2 - HTML: Struktur &amp; Semantik</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+document.getElementById("demo-ubah").addEventListener("click", function () {
+  document.getElementById("demo-teks").textContent =
+    "Teks berubah lewat DOM. Selamat, kamu baru saja mengubah halaman!";
+});
+</script>
+</body>
+</html>

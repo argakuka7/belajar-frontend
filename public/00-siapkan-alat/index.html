@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 0 - Siapkan Alat | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 0</span>
+<h1>Siapkan Alat</h1>
+<p>Sebelum menulis kode, kamu butuh tiga alat. Bab ini menyiapkan semuanya.</p>
+</header>
+
+<main>
+<figure>
+<img src="/00-siapkan-alat/img/kuka-editor.png" alt="Kuka duduk di depan layar yang menampilkan jendela editor VS Code dengan baris kode berwarna.">
+<figcaption>Kuka di depan editor.</figcaption>
+</figure>
+
+<h2>Pasang editor</h2>
+<p>Editor adalah tempat kamu menulis kode. Bayangkan aplikasi catatan, tapi khusus untuk teks program. Kamu mengetik di sana, lalu menyimpan file. Browser nanti yang membaca file itu.</p>
+<p>Kita pakai VS Code. Ia gratis, populer, dan berjalan di Windows, macOS, dan Linux. Buka situs resminya, unduh untuk sistem operasimu, lalu pasang seperti aplikasi biasa. Setelah terpasang, buka dan pilih menu untuk membuka folder. Buat folder baru bernama <code>latihan</code>, lalu buka folder itu di VS Code.</p>
+<p>Kenapa editor penting? Karena kode adalah teks polos. Kamu bisa menulisnya di aplikasi catatan bawaan, tapi editor memberi warna, penomoran baris, dan saran. Itu membuat kode lebih mudah dibaca dan lebih sedikit salah ketik.</p>
+<p>Ada satu kebiasaan yang berguna sejak awal. Simpan file dengan nama yang jelas dan akhiran yang tepat. File HTML berakhiran <code>.html</code>, file CSS berakhiran <code>.css</code>, dan file JavaScript berakhiran <code>.js</code>. Akhiran ini memberi tahu editor dan browser jenis isi file. Kamu akan memakai ketiganya di bab berikutnya.</p>
+
+<h2>Kenal browser</h2>
+<p>Browser adalah tempat hasil karyamu tampil. Chrome, Firefox, dan Edge semuanya bisa. Seri ini memakai Chrome sebagai contoh, tapi langkahnya hampir sama di browser lain.</p>
+<p>Browser membaca file HTML, CSS, dan JavaScript, lalu menggambar halaman. Kamu tidak perlu menginstal apa pun untuk menjalankan kode. Cukup buka file di browser, dan hasilnya muncul.</p>
+<p>Cara membuka file lokal sederhana. Di VS Code, klik kanan file HTML lalu pilih <code>Open with Live Server</code> jika ekstensi itu terpasang. Tanpa ekstensi, kamu bisa menyeret file ke jendela browser. Keduanya menampilkan halaman yang sama. Untuk seri ini, cara apa pun yang kamu pilih tidak masalah.</p>
+
+<h2>Buka DevTools</h2>
+<p>DevTools adalah jendela inspeksi yang tertanam di dalam browser. Ia menampilkan apa yang terjadi di balik halaman. Untuk membukanya di Chrome, tekan <code>F12</code> atau klik kanan halaman lalu pilih <code>Inspect</code>.</p>
+<p>Panel yang paling sering dipakai di awal adalah <code>Console</code>. Console menampilkan pesan dari kode. Ia juga tempat kamu mengetik perintah JavaScript langsung. Di bab ini kamu hanya perlu membukanya dan melihat pesan muncul.</p>
+<p>Console adalah teman terbaikmu saat belajar. Setiap kali kode tidak berjalan seperti harapan, console sering menunjukkan alasannya. Pesan error muncul di sana dengan baris yang bermasalah. Membaca console adalah keterampilan yang akan kamu pakai di setiap bab berikutnya.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah menulis satu pesan ke console. Versi vanilla menulisnya langsung. Versi React menulisnya dari dalam komponen. Keduanya melakukan hal yang sama.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>console.log("Halo, dunia!");</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Halo() {
+  console.log("Halo, dunia!");
+  return &lt;p&gt;Halo dari React&lt;/p&gt;;
+}</code></pre>
+</div>
+</div>
+
+<h2>Demo Hidup</h2>
+<p>Tombol di bawah memanggil <code>console.log</code>. Tekan tombolnya, lalu buka DevTools dan lihat tab Console. Pesan akan muncul di sana.</p>
+
+<div class="demo">
+<figure>
+<img src="/00-siapkan-alat/img/kuka-devtools.png" alt="Kuka menunjuk panel Console di DevTools yang menampilkan teks Halo, dunia!.">
+<figcaption>Kuka membuka DevTools.</figcaption>
+</figure>
+<button id="demo-log">Tekan untuk menulis ke console</button>
+<p>Langkah: tekan tombol, tekan <code>F12</code>, pilih tab Console, lalu lihat pesannya.</p>
+</div>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web">MDN: Getting started with the web</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/What_are_browser_developer_tools">MDN: What are browser developer tools</a></li>
+<li><a href="https://developer.chrome.com/docs/devtools/overview">web.dev: Chrome DevTools overview</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Lanjut ke <a href="/01-apa-itu-front-end/">Bab 1 - Apa Itu Front End</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+document.getElementById("demo-log").addEventListener("click", function () {
+  console.log("Halo, dunia! Kamu berhasil membuka console.");
+});
+</script>
+</body>
+</html>
