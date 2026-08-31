@@ -18,7 +18,7 @@ Halaman terbuka tanpa error console. Demo Hidup mengubah perilaku flex dan grid 
 
 ## Keputusan sederhana
 
-- Slug bab memakai `04-css-layout-flex-grid`, sesuai perintah pengerjaan dan judul TOC. Navigasi bab 3 sudah menunjuk ke `/04-css-layout-flex-grid/`, sehingga link bab sebelumnya sampai bab berikutnya utuh dalam satu bab ini. `public/index.html` memakai `/04-flex-grid/` yang berbeda; file itu di luar empat deliverable bab ini, jadi tidak diubah. Pencocokan slug ke `04-css-layout-flex-grid` direncanakan sebagai pekerjaan ikut dalam fase verifikasi lintas bab.
+- Slug bab memakai `04-css-layout-flex-grid`, sesuai perintah pengerjaan dan judul TOC. Navigasi bab 3 sudah menunjuk ke `/04-css-layout-flex-grid/`, sehingga link bab sebelumnya sampai bab berikutnya utuh dalam satu bab ini. `public/index.html` sudah disesuaikan menunjuk ke `/04-css-layout-flex-grid/` agar link TOC tidak putus.
 - Bab ini bukan bab React, jadi Demo Hidup memakai JavaScript murni tanpa build tool, mengikuti pola bab 2 dan 3. React hanya muncul di pasangan contoh sebagai kode JSX. Tidak ada React dalam demo.
 - Demo terdiri dari dua panel, satu flex dan satu grid. Tombol mengubah properti utama (arah, justify-content, jumlah kolom). Container flex memakai `flex-wrap`, sehingga demo nyata merespons lebar layar tanpa perlu scroll atau JS tambahan.
 - Ilustrasi dua buah, mengikuti pola bab 1, 2, dan 3.
