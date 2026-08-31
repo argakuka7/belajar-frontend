@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 3 - CSS: Selektor &amp; Box Model | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 3</span>
+<h1>CSS: Selektor &amp; Box Model</h1>
+<p>HTML menyusun isi halaman. CSS memberi isi itu tampilan. Bab ini menjelaskan cara memilih elemen yang dihias, dan cara browser menghitung ruang setiap elemen.</p>
+</header>
+
+<main>
+<figure>
+<img src="/03-css-selektor-box-model/img/kuka-selektor.png" alt="Kuka memegang satu alat yang menunjuk satu bagian dari struktur halaman bergaris, sementara bagian lain memudar.">
+<figcaption>CSS memilih satu elemen dengan selektor.</figcaption>
+</figure>
+
+<h2>CSS menghias struktur</h2>
+<p>Di bab 2 kamu membuat kerangka halaman dengan HTML. Kerangka itu menentukan di mana judul, navigasi, dan isi utama berada. Tapi kerangka saja belum menarik. Browser memberinya tampilan bawaan yang sederhana: teks hitam dengan latar putih. Untuk mengubah tampilan itu, kamu butuh CSS.</p>
+<p>CSS adalah bahasa yang mengatur tampilan. Kepanjangannya, Cascading Style Sheets, jarang dipakai; yang penting adalah cara kerjanya. CSS terpisah dari HTML. Struktur halaman tinggal di HTML, aturan tampilan tinggal di CSS. Pemisahan ini membuat dua hal mudah dirawat. Kamu bisa mengubah warna seluruh situs lewat satu tempat, tanpa menyentuh isi.</p>
+
+<h2>Aturan CSS</h2>
+<p>Sebuah aturan CSS terdiri dari dua bagian. Selektor memilih elemen mana yang dihias. Deklarasi menetapkan tampilannya. Deklarasi berisi pasangan properti dan nilai, ditulis di dalam kurung kurawal.</p>
+<pre><code>.judul {
+  color: red;
+  font-size: 2rem;
+}</code></pre>
+<p>Baris pertama, <code>.judul</code>, adalah selektor. <code>color</code> dan <code>font-size</code> adalah properti. <code>red</code> dan <code>2rem</code> adalah nilai. Selektor dipisahkan dari deklarasi, dan setiap pasangan properti nilai diakhiri titik koma. Struktur ini selalu sama, satu aturan memilih elemen, lalu menetapkan tampilan.</p>
+<p>Bayangkan selektor sebagai alamat. Halaman adalah sebuah desa, dan setiap elemen adalah satu rumah. Selektor memberi tahu postman rumah mana yang harus dituju. Alamat yang lebih umum menjangkau banyak rumah. Alamat yang lebih khusus menjangkau satu rumah. Ini analogi selektor: alamat untuk elemen.</p>
+
+<h2>Selektor dasar</h2>
+<p>Ada tiga selektor yang sering dipakai. Selektor tipe menargetkan elemen berdasarkan nama elemennya. <code>h1</code> memilih semua judul level satu. <code>p</code> memilih semua paragraf. Selektor tipe menjangkau semua elemen dengan nama itu.</p>
+<p>Selektor class memakai tanda titik. <code>.judul</code> memilih elemen yang memiliki <code>class="judul"</code>. Satu class bisa dipakai banyak elemen. Inilah selektor yang paling sering dipakai, karena kamu bisa mengelompokkan elemen yang tampilannya sama tanpa menyebut satu per satu.</p>
+<p>Selektor id memakai tanda pagar. <code>#banner</code> memilih elemen dengan <code>id="banner"</code>. Id harus unik, hanya satu elemen per halaman. Selektornya paling khusus di antara ketiganya. Gunakan id saat kamu ingin menarget satu elemen saja.</p>
+<p>Mengapa tiga macam? Karena kebutuhan berbeda. Kadang kamu ingin menghias semua paragraf, kadang satu kelompok kartu, kadang satu blok spesifik. Selektor memberi tingkat alamat yang tepat untuk tiap kebutuhan. Memilih selektor yang pas membuat CSS lebih mudah dibaca dan dirawat.</p>
+
+<h2>Mengapa kotak</h2>
+<p>Browser memperlakukan setiap elemen sebagai kotak persegi panjang, bahkan huruf yang satu. Sebuah paragraf adalah kotak selebar halaman. Sebuah <code>div</code> adalah kotak. Gambar adalah kotak. Tidak ada lingkaran sejati di dalam aliran halaman, semuanya kotak yang tersusun. Inilah dasar cara browser menata elemen.</p>
+<p>Kesadaran bahwa semuanya kotak itu penting. Layout di bab 4 membahas cara menyusun kotak-kotak ini. Responsif di bab 5 membahas cara mengubah ukuran kotak mengikuti layar. Semua kerja itu berdiri di atas pemahaman bahwa setiap elemen adalah kotak.</p>
+
+<h2>Box model: kotak empat lapis</h2>
+<figure>
+<img src="/03-css-selektor-box-model/img/kuka-box-model.png" alt="Kuka memegang bingkai foto yang lapisannya terbuka memperlihatkan foto, bantalan, bingkai, dan jarak ke dinding.">
+<figcaption>Empat lapis box model, seperti bingkai foto.</figcaption>
+</figure>
+<p>Setiap kotak elemen tersusun dari empat lapis, dari dalam ke luar. Lapis paling dalam adalah konten, isi sebenarnya, teks atau gambar. Di sekelilingnya ada padding, ruang antara isi dan tepi. Lalu border, garis tepi kotak. Paling luar adalah margin, jarak antara kotak ini dan kotak lain.</p>
+<p>Bayangkan bingkai foto. Foto adalah konten. Bantalan dalam bingkai yang menahan foto adalah padding. Kayu bingkai adalah border. Jarak antara bingkai dan dinding atau foto di sebelahnya adalah margin. Keempat lapis ini ada di setiap elemen, meskipun padding, border, dan margin kadang berukuran nol.</p>
+<p>Padding memberi napas pada isi, agar teks tidak menempel di tepi. Border menandai batas kotak. Margin memberi jarak antartetangga. Ukuran padding, border, dan margin bisa diatur terpisah untuk empat sisi, atas, kanan, bawah, kiri. Aturan satu nilai menetapkan keempat sisi sekaligus.</p>
+<p>Total ruang sebuah kotak adalah jumlah keempat lapisnya. Konten punya lebar sendiri. Tambahkan padding kiri dan kanan, lalu border kiri dan kanan, lalu margin kiri dan kanan. Hasilnya ruang total yang diduduki kotak. Browser menghitung jumlah ini untuk menata posisi tiap elemen di halaman.</p>
+
+<h2>Perangkap box-sizing</h2>
+<p>Ada satu hal yang mengecoh pemula. Saat kamu menetapkan lebar elemen, lebar itu biasanya mengacu hanya pada konten. Padding dan border dihitung di luar lebar itu. Jadi sebuah <code>div</code> selebar 200 piksel dengan padding 20 piksel akan memakan 240 piksel di halaman, 200 untuk konten, ditambah 40 untuk padding.</p>
+<p>Ini sering membuat kotak lebih besar dari yang kamu bayangkan. Perbaikannya memakai <code>box-sizing: border-box</code>. Dengan nilai ini, lebar yang kamu tetapkan sudah mencakup padding dan border. Kotak selebar 200 piksel memakan 200 piksel, berapa pun paddingnya. Banyak situs memakai aturan ini pada semua elemen.</p>
+<pre><code>* {
+  box-sizing: border-box;
+}</code></pre>
+<p>Tanda bintang, atau <code>*</code>, adalah selektor universal. Ia memilih semua elemen. Satu baris ini membuat semua elemen memakai <code>border-box</code>. Setelah aturan ini, mengatur lebar terasa lebih masuk akal, karena angka yang kamu tulis sesuai ruang nyata di layar.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah menghias satu kartu. Versi vanilla menulis elemen HTML dengan class, lalu aturan CSS di dalam <code>&lt;style&gt;</code>. Versi React menulis elemen yang sama di dalam komponen JSX.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;div class="kartu"&gt;
+  &lt;h2&gt;Resep Nasi Goreng&lt;/h2&gt;
+  &lt;p&gt;Beras, telur, kecap.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.kartu {
+  padding: 1rem;
+  border: 1px solid;
+  margin: 1rem;
+}
+&lt;/style&gt;</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Kartu() {
+  return (
+    &lt;div className="kartu"&gt;
+      &lt;h2&gt;Resep Nasi Goreng&lt;/h2&gt;
+      &lt;p&gt;Beras, telur, kecap.&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perhatikan satu perbedaan penting. HTML memakai <code>class</code> untuk menempelkan selektor class. React memakai <code>className</code>. Alasannya teknis: di JavaScript, kata <code>class</code> sudah dipakai untuk arti lain, jadi JSX memakai <code>className</code>. Hasilnya sama, elemen ikut selektor .kartu.</p>
+<p>Aturan CSS sendiri tidak berubah di React. Selektor <code>.kartu</code> tetap bekerja. React pada akhirnya menghasilkan HTML yang sama, jadi CSS yang kamu pelajari tetap berlaku. React menyembunyikan cara mengelola halaman, tapi tidak mengubah aturan tampilan.</p>
+
+<h2>Demo Hidup</h2>
+<p>Kartu di bawah memakai padding, border, dan margin. Tombol di bawahnya mengubah ukuran ketiga lapis itu. Perhatikan bagaimana kartu bergeser dan ruangnya berubah. Ini cara nyata box model menentukan tempat elemen di halaman.</p>
+
+<div class="demo">
+<div id="kotak" style="max-width: 320px; background: #fff; border: 2px solid var(--accent);">
+<div id="kotak-isi" style="background: #f0f1f4; padding: .5rem;">
+<h2 style="margin-top: 0;">Kartu Demo</h2>
+<p id="kotak-keterangan">Padding 0, border 0, margin 0.</p>
+</div>
+</div>
+<button id="demo-kecil">Kecilkan lapis</button>
+<button id="demo-besar">Besarkan lapis</button>
+</div>
+<p>Ini ringkasan bab ini. CSS memberi tampilan pada struktur HTML. Selektor memilih elemen yang dihias, dan deklarasi menetapkan tampilannya. Setiap elemen adalah kotak empat lapis, konten, padding, border, margin. Memahami kotak ini membantu kamu mengatur ruang halaman dengan tepat.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS">MDN: CSS</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/First_steps/Getting_started">MDN: CSS first steps</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors">MDN: CSS selectors</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/The_box_model">MDN: The box model</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing">MDN: box-sizing</a></li>
+<li><a href="https://web.dev/learn/css/selectors">web.dev: Selectors</a></li>
+<li><a href="https://web.dev/learn/css/box-model">web.dev: Box model</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/02-html-semantik/">Bab 2 - HTML: Struktur &amp; Semantik</a> | Lanjut ke <a href="/04-css-layout-flex-grid/">Bab 4 - CSS Layout: Flex &amp; Grid</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+(function () {
+  var isi = document.getElementById("kotak-isi");
+  var demo = document.getElementById("kotak");
+  var keterangan = document.getElementById("kotak-keterangan");
+  var tingkat = 0;
+  var daftar = [
+    { judul: "Padding 0, border 0, margin 0.", padding: "0", border: "2px", margin: "0" },
+    { judul: "Padding ditambah 1rem.", padding: "1rem", border: "2px", margin: "0" },
+    { judul: "Border dipertebal.", padding: "1rem", border: "6px", margin: "0" },
+    { judul: "Margin ditambah 1rem.", padding: "1rem", border: "6px", margin: "1rem" }
+  ];
+  function terapkan() {
+    var s = daftar[tingkat];
+    isi.style.padding = s.padding;
+    demo.style.border = s.border + " solid var(--accent)";
+    demo.style.margin = s.margin;
+    keterangan.textContent = s.judul;
+  }
+  document.getElementById("demo-besar").addEventListener("click", function () {
+    tingkat = (tingkat + 1) % daftar.length;
+    terapkan();
+  });
+  document.getElementById("demo-kecil").addEventListener("click", function () {
+    tingkat = (tingkat - 1 + daftar.length) % daftar.length;
+    terapkan();
+  });
+  terapkan();
+})();
+</script>
+</body>
+</html>
