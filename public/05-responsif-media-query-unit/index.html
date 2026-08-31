@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 5 - Responsif: Media Query &amp; Unit | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo-grid { display: grid; gap: .5rem; grid-template-columns: 1fr; }
+.demo-kartu { border: 1px solid #e5e7eb; border-radius: .4rem; padding: .6rem .8rem; background: #fafafb; }
+.demo-kartu h3 { margin: 0 0 .3rem; font-size: clamp(1rem, 2.4vw, 1.5rem); }
+.demo-kartu p { margin: 0; font-size: .9rem; }
+#react-lebar { background: #f0f1f4; padding: .4rem .6rem; border-radius: .3rem; font-size: .9rem; }
+@media (min-width: 480px) { .demo-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 760px) { .demo-grid { grid-template-columns: 1fr 1fr 1fr; } }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 5</span>
+<h1>Responsif: Media Query &amp; Unit</h1>
+<p>Layar ponsel di tangan, laptop di meja, dan TV di ruang tamu membaca situs yang sama. Bab ini menjelaskan cara membuat tampilan menyesuaikan lebar layar, supaya nyaman dibaca di mana pun.</p>
+</header>
+
+<main>
+<figure>
+<img src="/05-responsif-media-query-unit/img/kuka-media-query.png" alt="Kuka menambahkan daun ke tengah meja makan yang memanjang, dan kursi bertambah dari dua menjadi delapan.">
+<figcaption>Media query menambah ruang ketika lebar layar mencukupi.</figcaption>
+</figure>
+
+<h2>Mengapa responsif</h2>
+<p>Bayangkan satu foto dan tiga ukuran bingkai, kecil, sedang, dan besar. Foto yang sama harus muat di ketiganya. Halaman web menghadapi masalah yang sama. Ponsel, tablet, laptop, dan TV punya lebar layar yang berbeda. Pembaca melihat situs yang sama di semua layar itu. Kalau tampilan dibuat untuk satu ukuran saja, di layar lain ia kepanjangan, kepotongan, atau terlalu kecil untuk dibaca.</p>
+<p>Dari sinilah istilah responsif lahir. Responsif berarti tampilan menyesuaikan diri dengan lebar layar yang sedang dipakai. Tampilan tidak dibuat dalam satu ukuran tetap. Tampilan diberi aturan tentang bagaimana ia berubah saat lebar berubah. Dua alat utama dipakai untuk ini. Media query memutuskan kapan sebuah aturan berlaku, berdasarkan lebar layar. Unit relatif membuat ukuran mengalir mengikuti lebar. Bab ini membahas keduanya.</p>
+
+<h2>Viewport dan unit</h2>
+<p>Sebelum melangkah, kenali satu istilah. Viewport adalah bagian halaman yang terlihat di layar, jadi pada ponsel lebar jendela browser itu sempit, pada laptop lebih lebar. Pada TV sangat lebar. Semua kerja responsif mengacu pada lebar viewport ini.</p>
+<p>Sejak bab 3 kamu menulis angka seperti <code>2rem</code> dan <code>1px</code>. Angka itu adalah unit, satuan untuk mengukur ukuran. <code>px</code> adalah piksel, satu titik tetap di layar. Nilai <code>px</code> tidak berubah walau layar berubah. Itu sebabnya memakai <code>px</code> saja menyulitkan tampilan responsif. Maka ada unit relatif, unit yang menghitung ukurannya dari acuan lain yang ikut berubah.</p>
+
+<h2>Unit relatif</h2>
+<figure>
+<img src="/05-responsif-media-query-unit/img/kuka-unit-relatif.png" alt="Kuka menata piring di atas meja makan yang dua ukurannya, dan satu piring selalu memakai setengah lebar meja.">
+<figcaption>Unit relatif, ukuran yang mengikuti acuannya.</figcaption>
+</figure>
+<p>Unit relatif menghitung ukuran dari acuan lain. Acuan itu bisa elemen induk, ukuran huruf dasar, atau lebar viewport. Kalau acuannya berubah, ukurannya ikut berubah. Empat unit yang paling dipakai dijelaskan di sini.</p>
+<p>Persen, ditulis <code>%</code>, mengikuti induknya. Satu kolom dengan <code>width: 50%</code> selalu mengambil setengah lebar elemen yang menampungnya, apa pun lebarnya. Persen bagus untuk membagi ruang secara proporsi.</p>
+<p><code>rem</code> mengikuti ukuran huruf akar halaman, elemen <code>&lt;html&gt;</code>, biasanya 16 piksel di browser. Satu <code>rem</code> adalah 16 piksel itu, jadi <code>2rem</code> adalah 32 piksel. Kata <code>rem</code> singkatan dari root em. <code>rem</code> mudah ditebak karena selalu mengacu satu angka dasar, dan karena itu paling sering dipakai untuk ukuran huruf dan jarak.</p>
+<p><code>em</code> serupa, tapi mengikuti ukuran huruf elemen tempat ia dipakai, bukan akar halaman.</p>
+<p><code>vw</code> singkatan dari viewport width, dan satu <code>vw</code> adalah satu persen dari lebar viewport. <code>vh</code> mengikuti tinggi viewport. Kalau layar selebar 1000 piksel, satu <code>vw</code> adalah 10 piksel. <code>vw</code> berguna untuk elemen yang harus mengikuti lebar jendela secara langsung.</p>
+<p>Aturan praktisnya begini. Pakai <code>rem</code> untuk ukuran huruf dan jarak, agar semua bagian berubah konsisten saat ukuran huruf dasar diubah. Pakai persen untuk proporsi di dalam satu kotak. Pakai <code>vw</code> untuk yang mengikuti lebar jendela. Ini panduan, bukan hukum.</p>
+
+<h2>clamp, ukuran yang dibatasi</h2>
+<p>Saat <code>vw</code> dipakai untuk ukuran huruf, ada risiko. Teks jadi terlalu kecil di layar sempit dan terlalu besar di layar lebar, karena mengikuti lebar sepenuhnya. <code>clamp()</code> membatasi.</p>
+<pre><code>font-size: clamp(1rem, 4vw, 2.5rem);</code></pre>
+<p><code>clamp()</code> menerima tiga nilai: batas bawah, nilai yang diharapkan, dan batas atas. CSS memakai nilai tengah, <code>4vw</code>, selama ia tidak keluar dari batas bawah dan atas. Di layar sangat sempit, <code>4vw</code> bisa berada di bawah <code>1rem</code>, maka yang dipakai <code>1rem</code>. Di layar sangat lebar, <code>4vw</code> bisa melebihi <code>2.5rem</code>, maka yang dipakai <code>2.5rem</code>. Di antaranya teks mengalir mengikuti lebar. Hasilnya ukuran yang berubah mulus, tidak pernah terlalu kecil dan tidak pernah terlalu besar.</p>
+
+<h2>Media query, aturan bersyarat</h2>
+<p>Unit relatif membuat ukuran mengalir mulus. Tapi ada saatnya kamu ingin keputusan yang keras: di layar lebar tampilkan tiga kolom, di layar sempit tampilkan satu kolom. Di sinilah media query masuk.</p>
+<p>Media query adalah cara menulis aturan CSS yang hanya berlaku bila kondisi tertentu benar. Bentuk yang paling umum mengecek lebar viewport.</p>
+<pre><code>@media (min-width: 640px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}</code></pre>
+<p>Baris <code>@media (min-width: 640px)</code> menyatakan, bila lebar viewport paling tidak 640 piksel, terapkan aturan di dalam kurung kurawal. Kalau lebih sempit, aturan diabaikan. <code>min-width</code> adalah batas bawah. Ada juga <code>max-width</code>, batas atas, yang berlaku bila lebar tidak melebihi angka itu.</p>
+<p>Angka tempat sebuah aturan berubah, seperti 640 di atas, disebut ambang, dan di kalangan pengembang, breakpoint. Pilih ambang dengan melihat kapan tampilan mulai terasa sempit, bukan dengan menebak merk ponsel. Mulai dari lebar paling kecil, lalu tambah aturan <code>min-width</code> untuk layar yang lebih lebar.</p>
+
+<h2>Analogi: meja yang bisa dipanjangkan</h2>
+<p>Satu gambar merangkum dua alat tadi. Bayangkan meja makan yang bisa dipanjangkan. Ruang makan yang sempit hanya menampung meja pendek untuk dua orang. Ruang yang luas menampung meja dengan daun tambahan untuk delapan orang. Kamu menambah daun hanya saat ruang cukup. Angka lebar ruang yang cukup itu adalah ambang. Media query seperti keputusan menambah daun: bila ruang paling tidak sekian, pasang daun, muat lebih banyak.</p>
+<p>Piring di atas meja memakai logika unit relatif. Separuh meja selalu separuh meja, besar atau kecil. Satu piring yang mengambil setengah meja tetap setengah, berapa pun panjang meja. Porsi yang mengikuti ukuran meja seperti ini adalah unit relatif. Lebar ruang makan mewakili lebar viewport, meja mewakili tampilan halaman.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah membuat satu set kartu yang jumlah kolomnya berubah. Versi vanilla menulis elemen HTML lalu aturan media query di CSS. Versi React menulis komponen yang menghasilkan elemen yang sama, dan media query di CSS bekerja sama saja.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;div class="grid"&gt;
+  &lt;div class="kartu"&gt;Kartu satu&lt;/div&gt;
+  &lt;div class="kartu"&gt;Kartu dua&lt;/div&gt;
+  &lt;div class="kartu"&gt;Kartu tiga&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+.kartu { font-size: clamp(1rem, 2vw, 1.4rem); }
+@media (min-width: 640px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+&lt;/style&gt;</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function GridKartu() {
+  return (
+    &lt;div className="grid"&gt;
+      &lt;div className="kartu"&gt;Kartu satu&lt;/div&gt;
+      &lt;div className="kartu"&gt;Kartu dua&lt;/div&gt;
+      &lt;div className="kartu"&gt;Kartu tiga&lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti ada pada asal elemen. Di vanilla, kamu menulis elemen dan aturan CSS di tempat yang terpisah tapi terbuka. Di React, elemen lahir dari komponen, dan aturan CSS tetap tinggal di file CSS. Responsif adalah kerja CSS, bukan kerja framework, jadi media query dan unit relatif yang kamu tulis berlaku sama di kedua versi. React hanya menyingkat cara elemen dibuat, tidak mengubah cara ukurannya dihitung.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah memakai tiga alat bab ini sekaligus. Media query menetapkan jumlah kolom pada ambang lebar. Grid membagi ruang dan kartu mengisi secara proporsional. Ukuran huruf memakai <code>rem</code> dan <code>clamp()</code>. Geser jendela, persempit dan lebarkan, lalu perhatikan kolom berubah dan angka lebar di bawah mengikuti.</p>
+
+<div class="demo">
+<p>Lebarkan dan sempitkan jendela browser kamu. Jumlah kolom kartu berubah pada ambang tertentu.</p>
+<div class="demo-grid">
+<div class="demo-kartu">
+<h3>Kartu satu</h3>
+<p>Grid membagi ruang secara proporsional, jadi kartu mengisi.</p>
+</div>
+<div class="demo-kartu">
+<h3>Kartu dua</h3>
+<p>Judul memakai clamp(), tidak mengecil atau membesar berlebihan.</p>
+</div>
+<div class="demo-kartu">
+<h3>Kartu tiga</h3>
+<p>rem memakai satu angka dasar yang konsisten untuk jarak dan huruf.</p>
+</div>
+</div>
+<p id="react-lebar">Lebar layar: geser jendela dan lihat angkanya bertambah di sini.</p>
+</div>
+
+<p>Begini cara baca demonya. Di bawah lebar 480 piksel, grid memakai satu kolom. Antara 480 dan 760 piksel, dua kolom. Di atas 760 piksel, tiga kolom. Ambang itu dipilih media query. Sementara itu lebar kartu dan ukuran huruf bergerak terus mengikuti lebar, berkat persen, <code>rem</code>, dan <code>clamp()</code>.</p>
+<p>Ringkasan bab ini. Responsif berarti tampilan menyesuaikan lebar viewport. Unit relatif, seperti persen, <code>rem</code>, dan <code>vw</code>, membuat ukuran mengikuti acuan yang berubah. <code>clamp()</code> membatasi ukuran agar tidak ekstrem. Media query memberlakukan aturan pada ambang lebar tertentu. Dengan ini satu halaman nyaman dibaca di ponsel maupun di layar lebar. Bab berikutnya mulai menyentuh JavaScript.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">MDN: Using media queries</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Values_and_units">MDN: CSS values and units</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/clamp">MDN: clamp()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/length">MDN: length units (px, em, rem, vw, vh)</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Glossary/Viewport">MDN: viewport</a></li>
+<li><a href="https://web.dev/learn/css/media-queries">web.dev: Media queries</a></li>
+<li><a href="https://web.dev/learn/css/sizing">web.dev: Sizing</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/04-css-layout-flex-grid/">Bab 4 - CSS Layout: Flex &amp; Grid</a> | Lanjut ke <a href="/06-javascript-variabel-tipe-kontrol-aliran/">Bab 6 - JavaScript: Variabel, Tipe &amp; Kontrol Aliran</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://cdn.jsdelivr.net/npm/react@18.3.1/+esm",
+    "react-dom/client": "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/client/+esm"
+  }
+}
+</script>
+<script type="module">
+import React from "react";
+import { createRoot } from "react-dom/client";
+
+function LebarLayar() {
+  var [lebar, ubahLebar] = React.useState(window.innerWidth);
+  React.useEffect(function () {
+    function perbarui() { ubahLebar(window.innerWidth); }
+    window.addEventListener("resize", perbarui);
+    return function () { window.removeEventListener("resize", perbarui); };
+  }, []);
+  var rem = (lebar / 16).toFixed(1);
+  return React.createElement("span", null,
+    "Lebar viewport sekarang ", lebar, " piksel, kira-kira ", rem, " rem. Semua angka berubah saat kamu menggeser jendela.");
+}
+createRoot(document.getElementById("react-lebar")).render(React.createElement(LebarLayar));
+</script>
+</body>
+</html>
