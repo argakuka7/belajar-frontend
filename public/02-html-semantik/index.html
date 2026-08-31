@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 2 - HTML: Struktur &amp; Semantik | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 2</span>
+<h1>HTML: Struktur &amp; Semantik</h1>
+<p>HTML menyusun isi halaman. Bab ini menjelaskan kenapa ia struktur terpenting, dan kenapa memilih elemen yang tepat itu soal makna, bukan sekadar tampilan.</p>
+</header>
+
+<main>
+<figure>
+<img src="/02-html-semantik/img/kuka-kerangka-bangunan.png" alt="Kuka berdiri di samping kerangka tulang bangunan yang menyerupai struktur halaman web.">
+<figcaption>HTML adalah kerangka tulang bangunan.</figcaption>
+</figure>
+
+<h2>HTML adalah kerangka tulang bangunan</h2>
+<p>Bayangkan halaman web sebagai sebuah bangunan. HTML adalah kerangka tulangnya. Kerangka menentukan di mana dinding berdiri, di mana pintu berada, dan ruangan mana yang menjadi ruang tamu. Tanpa kerangka, tidak ada yang menopang atap atau menahan dinding.</p>
+<p>Browser membangun DOM dari markup HTML. DOM adalah pohon yang mewakili halaman, seperti yang kamu pelajari di bab 1. Setiap elemen HTML menjadi satu cabang di pohon itu. CSS lalu menghias cabang-cabang itu, dan JavaScript menggerakkannya. Semua kerja itu berdiri di atas struktur HTML.</p>
+<p>Kenapa ini membuat HTML struktur terpenting? Karena semua yang lain bergantung padanya. Jika kerangka bangunan salah, cat dan perabot tidak akan memperbaikinya. Jika struktur HTML berantakan, CSS dan JavaScript hanya menutupi masalah, tidak menyelesaikannya. Struktur yang baik membuat sisa pekerjaan lebih mudah.</p>
+<p>Ada satu hal yang membedakan HTML dari dua bahasa lainnya. HTML tidak punya logika seperti JavaScript, dan tidak punya aturan tampilan seperti CSS. Ia hanya menyusun isi. Tapi justru karena sederhana, kesalahan di sini berdampak luas. Struktur yang buruk sulit dihias dan sulit digerakkan.</p>
+<p>Browser membaca HTML dari atas ke bawah. Saat membaca, ia membangun pohon DOM cabang demi cabang. Urutan elemen di markup menentukan urutan cabang di pohon. Itu sebabnya menulis HTML dengan rapi itu penting. Markup yang teratur menghasilkan pohon yang teratur, dan pohon yang teratur lebih mudah dihias dan digerakkan.</p>
+
+<h2>Semantik vs div soup</h2>
+<figure>
+<img src="/02-html-semantik/img/kuka-div-soup.png" alt="Kuka membandingkan dua panel, satu berisi kotak-kotak seragam dan satu berisi bagian berlabel.">
+<figcaption>Kuka membandingkan div soup dan markup semantik.</figcaption>
+</figure>
+<p>HTML punya banyak elemen. Sebagian elemen punya makna, sebagian netral. Elemen yang punya makna disebut semantik. Elemen netral tidak menyampaikan apa-apa tentang isinya.</p>
+<p>Contoh elemen netral adalah <code>div</code>. <code>div</code> hanya sebuah kotak. Ia tidak bilang apakah isinya judul, navigasi, atau isi utama. Kamu bisa memakai <code>div</code> untuk semuanya, dan browser tidak keberatan. Tapi halaman yang semuanya <code>div</code> disebut div soup. Semua bagian tampak sama, dan tidak ada yang tahu mana yang penting.</p>
+<p>Elemen semantik sebaliknya. <code>header</code> menandai bagian atas halaman. <code>nav</code> menandai navigasi. <code>main</code> menandai isi utama. Nama elemennya sendiri sudah menjelaskan perannya. Browser, pembaca layar, dan mesin pencari memakai makna ini untuk memahami halaman.</p>
+<p>Kenapa makna ini penting? Karena tidak semua orang melihat halaman dengan cara yang sama. Pembaca layar membacakan halaman dengan lantang untuk pengguna yang tidak bisa melihat. Ia memakai struktur HTML untuk tahu urutan dan peran tiap bagian. Halaman div soup terdengar seperti satu blok teks panjang. Halaman semantik terdengar terstruktur, dengan navigasi, isi utama, dan catatan kaki yang jelas.</p>
+<p>Makna juga membantu kamu sendiri. Saat kamu kembali ke kode setelah beberapa minggu, elemen semantik langsung memberi tahu isi tiap bagian. Kamu tidak perlu membaca semua teks untuk menemukan navigasi. Nama elemennya sudah cukup. Struktur yang bermakna membuat kode lebih mudah dirawat, dan itu menghemat waktu.</p>
+
+<h2>Elemen struktural</h2>
+<p>Ada tujuh elemen semantik yang membentuk kerangka halaman. Kamu akan memakainya hampir di setiap halaman.</p>
+<p><code>header</code> memuat bagian pembuka, biasanya judul dan pengantar. <code>nav</code> memuat tautan navigasi. <code>main</code> memuat isi utama halaman, dan hanya boleh ada satu. <code>article</code> memuat konten yang berdiri sendiri, seperti satu artikel atau satu postingan. <code>section</code> membagi isi menjadi bagian-bagian bertema. <code>aside</code> memuat konten sampingan, seperti tautan terkait atau catatan. <code>footer</code> memuat penutup, seperti informasi hak cipta.</p>
+<p>Elemen-elemen ini tidak mengubah tampilan. <code>header</code> dan <code>div</code> tampak sama di layar. Perbedaannya ada di makna. CSS dan JavaScript bisa memakai elemen semantik untuk menargetkan bagian tertentu. Pembaca layar memakainya untuk menavigasi. Mesin pencari memakainya untuk memahami isi.</p>
+
+<h2>Hierarki heading yang benar</h2>
+<p>Heading adalah judul bagian, dari <code>h1</code> sampai <code>h6</code>. <code>h1</code> adalah judul paling penting, biasanya judul halaman. <code>h2</code> adalah judul bagian, <code>h3</code> sub-bagian, dan seterusnya.</p>
+<p>Hierarki heading harus berurutan. Satu halaman punya satu <code>h1</code>. Setelah <code>h1</code>, bagian-bagian memakai <code>h2</code>. Sub-bagian memakai <code>h3</code>. Jangan melompat dari <code>h2</code> langsung ke <code>h4</code>. Lompatan membingungkan pembaca layar, yang memakai heading untuk membuat daftar isi halaman.</p>
+<p>Heading bukan soal ukuran huruf. Ukuran diatur CSS. Heading adalah soal struktur. Memilih heading yang benar sama seperti memberi nama ruangan di bangunan. Ruang tamu disebut ruang tamu, bukan sekadar ruangan besar.</p>
+
+<h2>Atribut dan metadata ringkas</h2>
+<p>Elemen HTML bisa membawa atribut, informasi tambahan tentang elemen. Dua atribut yang paling sering dipakai adalah <code>class</code> dan <code>id</code>. <code>class</code> memberi nama kelompok untuk CSS. <code>id</code> memberi nama unik untuk satu elemen, sering dipakai JavaScript.</p>
+<p>Ada juga metadata, informasi tentang halaman itu sendiri. Metadata diletakkan di dalam <code>head</code>, bukan di isi halaman. <code>lang</code> pada tag <code>html</code> menyatakan bahasa halaman. <code>title</code> memberi judul yang tampil di tab browser. <code>meta name="description"</code> memberi ringkasan yang tampil di hasil pencarian.</p>
+<p>Metadata terlihat kecil, tapi berpengaruh. <code>lang</code> membantu pembaca layar memilih aksen yang benar. <code>title</code> dan <code>description</code> membantu mesin pencari menampilkan halaman dengan benar. Kamu tidak perlu menghafal semua atribut. Cukup tahu bahwa atribut dan metadata memberi informasi tambahan yang membuat halaman lebih mudah dipahami.</p>
+<p>Atribut dan metadata adalah cara HTML menyimpan informasi di samping isi. Isi adalah apa yang dilihat pengguna. Atribut dan metadata adalah keterangan tentang isi itu. Keduanya bekerja bersama. Isi menyampaikan pesan, keterangan membantu browser dan alat lain memahaminya dengan benar.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah menyusun halaman sederhana dengan header, main, dan article. Versi vanilla menulis markup HTML langsung. Versi React menulis komponen JSX yang me-render markup semantik yang sama.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;header&gt;
+  &lt;h1&gt;Resep Nasi Goreng&lt;/h1&gt;
+&lt;/header&gt;
+&lt;main&gt;
+  &lt;article&gt;
+    &lt;h2&gt;Bahan&lt;/h2&gt;
+    &lt;p&gt;Beras, telur, kecap.&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/main&gt;</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Resep() {
+  return (
+    &lt;div&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Resep Nasi Goreng&lt;/h1&gt;
+      &lt;/header&gt;
+      &lt;main&gt;
+        &lt;article&gt;
+          &lt;h2&gt;Bahan&lt;/h2&gt;
+          &lt;p&gt;Beras, telur, kecap.&lt;/p&gt;
+        &lt;/article&gt;
+      &lt;/main&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perhatikan bahwa markup semantiknya sama. React tidak mengganti HTML dengan bahasa baru. Ia memakai JSX, cara menulis HTML di dalam JavaScript. Komponen <code>Resep</code> me-render struktur yang sama dengan halaman vanilla. Perbedaannya ada di cara keduanya disusun, bukan di elemen yang dipakai.</p>
+<p>Ini poin penting. Belajar HTML semantik tetap berguna di React. Komponen React pada akhirnya menghasilkan HTML yang sama. Jika kamu tahu struktur yang benar, kamu bisa menuliskannya di JSX dengan mudah. React menyembunyikan cara mengelola halaman, tapi tidak mengubah aturan struktur.</p>
+
+<h2>Demo Hidup</h2>
+<p>Panel di bawah berisi div soup, halaman yang semua bagiannya memakai <code>div</code>. Tekan tombolnya untuk menggantinya dengan markup semantik. Perhatikan perbedaannya.</p>
+<p>Secara tampilan, keduanya mirip. Perbedaannya ada di makna. Versi semantik memberi tahu pembaca layar bahwa ada navigasi, isi utama, dan catatan kaki. Versi div soup tidak memberi tahu apa-apa. Untuk pengguna yang memakai pembaca layar, perbedaan ini besar.</p>
+<p>Ini ringkasan bab ini. HTML adalah kerangka tulang bangunan. Elemen semantik memberi nama pada tiap bagian kerangka. Heading menyusun judul secara berurutan. Atribut dan metadata memberi keterangan tambahan. Semua itu membuat halaman lebih mudah dipahami oleh browser, pembaca layar, mesin pencari, dan kamu sendiri.</p>
+
+<div class="demo">
+<div id="demo-panel">
+<div>Judul Halaman</div>
+<div>Beranda | Tentang | Kontak</div>
+<div>
+<div>Artikel Utama</div>
+<div>Ini isi artikel.</div>
+</div>
+<div>Hak cipta 2026</div>
+</div>
+<button id="demo-ubah">Ganti dengan markup semantik</button>
+</div>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML">MDN: HTML</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">MDN: HTML elements reference</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/HTML_text_fundamentals">MDN: HTML text fundamentals</a></li>
+<li><a href="https://web.dev/learn/html/semantic-html">web.dev: Semantic HTML</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/01-apa-itu-front-end/">Bab 1 - Apa Itu Front End</a> | Lanjut ke <a href="/03-css-selektor/">Bab 3 - CSS: Selektor &amp; Box Model</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+document.getElementById("demo-ubah").addEventListener("click", function () {
+  document.getElementById("demo-panel").innerHTML =
+    "<header><h1>Judul Halaman</h1></header>" +
+    "<nav>Beranda | Tentang | Kontak</nav>" +
+    "<main><article><h2>Artikel Utama</h2><p>Ini isi artikel.</p></article></main>" +
+    "<footer>Hak cipta 2026</footer>";
+});
+</script>
+</body>
+</html>
