@@ -1,0 +1,17 @@
+:root { --fg: #1a1a2e; --bg: #fafafb; --accent: #e68a3c; --muted: #6b7280; }
+* { box-sizing: border-box; }
+body { margin: 0 auto; padding: 2rem 1.2rem 4rem; max-width: 720px; color: var(--fg); background: var(--bg);
+  font: 16px/1.75 "Segoe UI", system-ui, sans-serif; }
+h1, h2, h3 { line-height: 1.25; }
+a { color: var(--accent); }
+.demo { border: 2px dashed var(--accent); border-radius: .5rem; padding: 1rem; margin: 1.2rem 0; background: #fff; }
+.toc { padding-left: 1.2rem; } .toc li { margin: .35rem 0; }
+.bab-header .badge { display: inline-block; font-size: .78rem; color: var(--muted);
+  border: 1px solid var(--muted); border-radius: 999px; padding: .1rem .6rem; margin-bottom: .4rem; }
+code, pre { font: .92em/1.5 ui-monospace, monospace; background: #f0f1f4; border-radius: .3rem; }
+pre { padding: .8rem 1rem; overflow-x: auto; }
+.pair { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .pair { grid-template-columns: 1fr 1fr; } }
+.pair .pane { border: 1px solid #e5e7eb; border-radius: .5rem; padding: .8rem; }
+.pair h3 { font-size: .85rem; text-transform: uppercase; color: var(--muted); margin: 0 0 .5rem; }
+footer.site { margin-top: 3rem; font-size: .82rem; color: var(--muted); text-align: center; }
