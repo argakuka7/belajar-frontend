@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 4 - CSS Layout: Flex &amp; Grid | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 4</span>
+<h1>CSS Layout: Flex &amp; Grid</h1>
+<p>Setiap elemen adalah kotak. Bab ini menjelaskan cara menyusun kotak-kotak itu menjadi sebuah layout, susunan ruang halaman. kamu mengenal dua alat, Flexbox untuk satu arah dan Grid untuk dua arah.</p>
+</header>
+
+<main>
+<h2>Aliran bawaan browser</h2>
+<p>Browser punya cara bawaan untuk menempatkan elemen, yaitu aliran normal. Ini istilah untuk urutan tempat elemen jatuh tanpa aturan tambahan. Setiap elemen blok, seperti <code>div</code>, <code>h2</code>, atau <code>p</code>, memakan satu baris penuh dan menumpuk dari atas ke bawah. Sebuah <code>h2</code> lalu sebuah <code>p</code> akan terbaca dua baris, judul di atas dan paragraf di bawah, masing-masing selebar halaman.</p>
+<p>Aliran ini masuk akal untuk dokumen seperti surat atau artikel. Halaman dibaca dari atas ke bawah, jadi menumpuk adalah pilihan yang wajar. Tapi saat satu baris sudah penuh, elemen berikutnya turun ke baris baru. Ini berarti kamu tidak bisa meletakkan dua kotak berdampingan secara mudah hanya dengan struktur biasa. Untuk menyusun halaman dengan navigasi di samping dan isi lain di tengah, aliran normal saja tidak cukup.</p>
+
+<h2>Mengapa flex dan grid</h2>
+<p>Sebuah halaman web jarang berbentuk satu kolom saja. Ada bilah navigasi menyamping, sisi kiri untuk menu, sisi utama di tengah, kartu-kartu yang sejajar. Semua itu butuh kotak yang disusun bukan menumpuk. Flexbox dan Grid adalah dua alat CSS yang menjawab kebutuhan ini.</p>
+<p>Keduanya bekerja dengan mematikan aliran normal untuk satu bagian halaman. kamu menetapkan sebuah container, bungkus elemen-elemen yang ingin disusun, lalu elemen di dalamnya diatur oleh aturan layout. Container adalah istilah untuk elemen induk yang memuat dan menata elemen lain. Elemen di dalamnya disebut item.</p>
+<p>Kenapa ada dua alat, bukan satu? Karena ada dua kebutuhan berbeda. Ada bagian halaman yang hanya perlu satu arah, seperti deretan tombol atau tautan navigasi yang horizontal. Ada bagian yang perlu dua arah sekaligus, seperti dinding kartu dengan baris dan kolom. Flexbox menangani yang pertama, Grid menangani yang kedua.</p>
+
+<h2>Flexbox, satu arah</h2>
+<figure>
+<img src="/04-css-layout-flex-grid/img/kuka-flex.png" alt="Kuka berdiri di depan deretan kotak yang sejajar dalam satu garis, sebagian kotak menempel, sebagian berjarak seperti antrian.">
+<figcaption>Flex menyusun item dalam satu arah, seperti antrian.</figcaption>
+</figure>
+<p>Flexbox menyusun item dalam satu arah, horizontal atau vertikal. kamu mengubah sebuah container menjadi flex container dengan <code>display: flex</code>. Item di dalamnya langsung sejajar dalam satu garis, dari kiri ke kanan secara bawaan. Ini jalan tercepat untuk membuat deretan elemen berdampingan.</p>
+<pre><code>.nav {
+  display: flex;
+  gap: 1rem;
+}</code></pre>
+<p><code>display: flex</code> mengaktifkan flex. <code>gap</code> mengatur jarak antaritern tanpa tambahan margin. Semua item di dalam <code>.nav</code> sejajar dalam satu garis.</p>
+<p>Container flex mengendalikan posisi item di sepanjang sumbu utama, arah utama penataan yang secara bawaan dari kiri ke kanan. Properti yang sering dipakai tiga macam. <code>flex-direction</code> mengubah arah. <code>justify-content</code> mengatur posisi item di sepanjang sumbu utama. <code>align-items</code> mengatur posisi di sumbu silang, arah yang tegak lurus sumbu utama. Contoh, <code>justify-content: space-between</code> menyebar item hingga menempel di dua ujung dengan ruang sama rata di tengah.</p>
+<p>Bayangkan antrian di sebuah loket tiket. Orang-orang berbaris dalam satu garis menuju loket. Jarak antarmereka bisa diatur, rapat atau berjarak. Arahnya bisa diubah, dari kiri ke kanan atau sebaliknya. Ini analogi Flexbox, antrian satu baris.</p>
+
+<h2>Grid, dua arah</h2>
+<figure>
+<img src="/04-css-layout-flex-grid/img/kuka-grid.png" alt="Kuka menyusun kotak-kotak seperti ubin lantai dalam baris dan kolom yang bersilangan, dengan baris dan kolom diberi garis dan label.">
+<figcaption>Grid menyusun item dalam dua arah, seperti ubin lantai.</figcaption>
+</figure>
+<p>Grid menyusun item dalam dua arah sekaligus, baris dan kolom yang bersilangan. kamu mengubah container dengan <code>display: grid</code>, lalu menetapkan kolomnya dengan <code>grid-template-columns</code>. Item lalu memenuhi sel-sel yang terbentuk dari perpotongan baris dan kolom.</p>
+<pre><code>.dinding {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}</code></pre>
+<p>Aturan di atas membuat tiga kolom yang sama lebar. <code>1fr</code> adalah satuan khusus grid yang berarti satu bagian dari ruang yang tersisa. Tiga kolom <code>1fr</code> berarti tiga kolom sama lebar, dan mereka membagi lebar container secara merata. Item mengisi sel dari kiri atas, lalu mengalir ke kanan, dan turun ke baris berikutnya ketika satu baris penuh.</p>
+<p>Dua properti lain yang sering dipakai. <code>grid-template-rows</code> mengatur tinggi baris, dan <code>grid-template-columns</code> mengatur lebar kolom. kamu bisa mencampur ukuran tetap dengan <code>fr</code>. <code>gap</code> juga bekerja di grid, mengatur jarak antarbaris dan antarkolom sekaligus.</p>
+<p>Bayangkan lantai ubin. Ubin-ubin tersusun dalam baris dan kolom yang saling menyilang, membentuk pola persegi. Setiap ubin menempati satu sel hasil perpotongan satu baris dan satu kolom. Ini analogi Grid, pola dua arah.</p>
+
+<h2>Kapan memakai yang mana</h2>
+<p>Aturan praktisnya pendek. Pakai Flexbox saat kamu menyusun item dalam satu arah, satu baris atau satu kolom. Contohnya deretan tautan navigasi, deretan tombol, sebaris kartu tanpa susunan dua dimensi. Pakai Grid saat kamu membutuhkan baris dan kolom sekaligus, seperti kerangka seluruh halaman atau dinding kartu yang rapi. Grid lebih kuat untuk susunan dua dimensi, Flexbox lebih ringan untuk satu arah.</p>
+<p>Keduanya sering dipakai bersamaan dalam satu halaman. Sebuah halaman memakai Grid untuk kerangka utamanya, lalu Flexbox untuk baris kecil di dalam tiap sel, seperti deretan tombol dalam sebuah kartu. Ini bukan persaingan. Keduanya alat yang saling melengkapi.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah membuat bilah navigasi, sebuah baris tautan yang sejajar. Versi vanilla menulis HTML dengan aturan <code>display: flex</code> di CSS. Versi React menulis elemen yang sama di dalam komponen JSX.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;nav class="nav"&gt;
+  &lt;a href="#"&gt;Beranda&lt;/a&gt;
+  &lt;a href="#"&gt;Tentang&lt;/a&gt;
+  &lt;a href="#"&gt;Kontak&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;style&gt;
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+&lt;/style&gt;</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Navbar() {
+  return (
+    &lt;nav className="nav"&gt;
+      &lt;a href="#"&gt;Beranda&lt;/a&gt;
+      &lt;a href="#"&gt;Tentang&lt;/a&gt;
+      &lt;a href="#"&gt;Kontak&lt;/a&gt;
+    &lt;/nav&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perhatikan satu perbedaan yang sama seperti bab 3. HTML memakai <code>class</code> untuk menempelkan selektor class. React memakai <code>className</code>. Alasannya teknis, di JavaScript kata <code>class</code> sudah dipakai untuk arti lain, jadi JSX memakai <code>className</code>.</p>
+<p>Aturan CSS <code>.nav</code> dengan <code>display: flex</code> tetap sama di keduanya. React pada akhirnya menghasilkan HTML yang sama, jadi flex dan grid yang kamu pelajari tetap berlaku. React membuat halaman lebih mudah dikelola, tapi tidak mengubah cara CSS menyusun kotak.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo ini menampilkan dua panel. Panel pertama adalah container flex dengan kotak-kotak berwarna, dan tombol mengubah arah serta penyebarannya. Panel kedua adalah container grid dengan tombol mengubah jumlah kolom. Persempit jendela dan perhatikan item flex membungkus ke baris berikutnya ketika lebar tidak cukup. Ini cara nyata flex dan grid menentukan posisi kotak di halaman.</p>
+
+<div class="demo">
+<p><strong>Flex:</strong> satu arah. Persempit jendela agar item membungkus.</p>
+<div id="flex-bar" style="display:flex; flex-wrap:wrap; gap:.5rem; padding:.5rem; background:#f0f1f4; border-radius:.3rem; min-height:90px;">
+<div style="background:var(--accent); color:#fff; width:90px; padding:.6rem .5rem; text-align:center; border-radius:.3rem;">Satu</div>
+<div style="background:var(--accent); color:#fff; width:90px; padding:.6rem .5rem; text-align:center; border-radius:.3rem;">Dua</div>
+<div style="background:var(--accent); color:#fff; width:90px; padding:.6rem .5rem; text-align:center; border-radius:.3rem;">Tiga</div>
+<div style="background:var(--accent); color:#fff; width:90px; padding:.6rem .5rem; text-align:center; border-radius:.3rem;">Empat</div>
+</div>
+<p id="flex-info"></p>
+<button id="flex-arah">Ubah arah</button>
+<button id="flex-just">Ubah penyebaran</button>
+
+<p style="margin-top:1rem;"><strong>Grid:</strong> dua arah, baris dan kolom.</p>
+<div id="grid-panel" style="display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; padding:.5rem; background:#f0f1f4; border-radius:.3rem;">
+<div style="background:#1a1a2e; color:#fff; padding:.8rem .5rem; text-align:center; border-radius:.3rem;">1</div>
+<div style="background:#1a1a2e; color:#fff; padding:.8rem .5rem; text-align:center; border-radius:.3rem;">2</div>
+<div style="background:#1a1a2e; color:#fff; padding:.8rem .5rem; text-align:center; border-radius:.3rem;">3</div>
+<div style="background:#1a1a2e; color:#fff; padding:.8rem .5rem; text-align:center; border-radius:.3rem;">4</div>
+<div style="background:#1a1a2e; color:#fff; padding:.8rem .5rem; text-align:center; border-radius:.3rem;">5</div>
+<div style="background:#1a1a2e; color:#fff; padding:.8rem .5rem; text-align:center; border-radius:.3rem;">6</div>
+</div>
+<p id="grid-info"></p>
+<button id="grid-kolom">Ubah jumlah kolom</button>
+</div>
+
+<p>Ini ringkasan bab ini. Browser menumpuk elemen dari atas ke bawah secara bawaan. Flexbox menyusun item dalam satu arah. Grid menyusun item dalam baris dan kolom sekaligus. Pilih flex untuk satu arah, grid untuk dua arah. Memahami dua alat ini adalah kunci menyusun halaman yang teratur.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout">MDN: CSS flexible box layout</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout">MDN: CSS grid layout</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/gap">MDN: gap</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns">MDN: grid-template-columns</a></li>
+<li><a href="https://web.dev/learn/css/flexbox">web.dev: Flexbox</a></li>
+<li><a href="https://web.dev/learn/css/grid">web.dev: Grid</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/03-css-selektor-box-model/">Bab 3 - CSS: Selektor &amp; Box Model</a> | Lanjut ke <a href="/05-responsif/">Bab 5 - Responsif: Media Query &amp; Unit</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+(function () {
+  var flexBar = document.getElementById("flex-bar");
+  var flexInfo = document.getElementById("flex-info");
+  var arah = ["row", "column"];
+  var ia = 0;
+  var just = ["flex-start", "center", "space-between"];
+  var ij = 0;
+  function terapkanFlex() {
+    flexBar.style.flexDirection = arah[ia];
+    flexBar.style.justifyContent = just[ij];
+    flexInfo.textContent = "flex-direction: " + arah[ia] + ", justify-content: " + just[ij];
+  }
+  document.getElementById("flex-arah").addEventListener("click", function () {
+    ia = (ia + 1) % arah.length;
+    terapkanFlex();
+  });
+  document.getElementById("flex-just").addEventListener("click", function () {
+    ij = (ij + 1) % just.length;
+    terapkanFlex();
+  });
+
+  var gridPanel = document.getElementById("grid-panel");
+  var gridInfo = document.getElementById("grid-info");
+  var kolom = [2, 3, 6];
+  var ik = 1;
+  function terapkanGrid() {
+    gridPanel.style.gridTemplateColumns = "repeat(" + kolom[ik] + ", 1fr)";
+    gridInfo.textContent = "grid-template-columns: " + kolom[ik] + " kolom sama lebar";
+  }
+  document.getElementById("grid-kolom").addEventListener("click", function () {
+    ik = (ik + 1) % kolom.length;
+    terapkanGrid();
+  });
+
+  terapkanFlex();
+  terapkanGrid();
+})();
+</script>
+</body>
+</html>
