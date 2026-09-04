@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 13 - Form &amp; Validasi di Sisi Klien | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo input { padding: .4rem .6rem; border: 1px solid #e5e7eb; border-radius: .3rem; font: inherit; width: 100%; max-width: 320px; }
+.demo label { display: block; margin-top: .6rem; font-size: .9rem; }
+#demo-error { color: #b42318; font-size: .9rem; margin: .6rem 0 0; }
+#demo-sukses { color: #067647; font-weight: bold; margin: .6rem 0 0; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 13</span>
+<h1>Form &amp; Validasi di Sisi Klien</h1>
+<p>Sepuluh bab terakhir halaman hanya bekerja satu arah, menampilkan dan bereaksi. Bab ini membuka arah sebaliknya, pengguna memberi data ke halaman. Dua konsepnya form, sarana HTML mengumpulkan input, lalu validasi, pemeriksaan isi input sebelum data dipakai atau dikirim. Ini juga bab penutup bagian JavaScript &amp; Halaman.</p>
+</header>
+
+<main>
+<figure>
+<img src="/13-form-validasi/img/kuka-loket.png" alt="Kuka duduk di kursi loket pendaftaran sambil mengisi formulir kertas dengan pulpen, ada kotak-kotak isian di kertas, dan satu kotak bertanda bintang wajib diisi.">
+<figcaption>Form, formulir di loket yang kotaknya siap diisi.</figcaption>
+</figure>
+
+<h2>Mengapa form ada</h2>
+<p>Setiap interaksi selama ini menghasilkan satu perubahan di dalam halaman. Klik tombol menambah item, ketikan menyaring daftar. Tetapi tidak ada satu pun yang mengirim data keluar dari halaman untuk diproses lebih lanjut, misalnya mendaftar akun atau mengisi komentar. Untuk itu HTML menyediakan form. Form adalah sarana untuk mengumpulkan input dari pengguna menjadi satu kesatuan yang bisa dikirim. Isinya kotak-kotak isian, masing-masing satu <code>&lt;input&gt;</code>, dan setiap input diberi <code>&lt;label&gt;</code> agar jelas isinya untuk apa. Semua kotak itu dibungkus satu elemen <code>&lt;form&gt;</code>.</p>
+<pre><code>&lt;form&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;input type="email" id="email"&gt;
+  &lt;button&gt;Kirim&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+<h2>Apa yang terjadi saat submit</h2>
+<p>Momen pengguna menekan tombol kirim disebut submit. Perilaku bawaan browser saat submit sederhana dan sudah tua: kumpulkan isi semua input, bawa keluar dari halaman, dan muat ulang halaman. Sepuluh bab lalu ini tidak pernah kita urus karena tidak ada form. Bab 9 sempat menunjuk masalah ini lewat <code>event.preventDefault()</code>, yang menghentikan perilaku bawaan sebuah kejadian. Saat itu contohnya menggantung, sekarang ia dipakai sungguhan. Dengan satu baris itu, submit tidak lagi memuat ulang halaman, dan JavaScript yang memegang datanya.</p>
+<pre><code>const form = document.querySelector("form");
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+});</code></pre>
+
+<h2>Mengapa validasi ada</h2>
+<p>Form mengumpulkan apa pun yang pengguna ketik, termasuk yang salah. Email tanpa tanda @, kolom nama yang kosong, umur berupa teks. Data salah yang lolos akan meracuni semua yang memakainya, dari tampilan sampai basis data. Validasi adalah pemeriksaan bahwa isi input sesuai bentuk yang diharapkan, dan penolakan sebelum data dipakai. Validasi di sisi klien berarti pemeriksaan itu jalan di browser, sebelum data berangkat ke mana pun. Keuntungannya kecepatan, pengguna tahu salahnya dalam sekejap tanpa menunggu perjalanan ke server.</p>
+<p>Satu batas yang harus jujur diakui sejak awal. Validasi sisi klien bukan pengaman, kode di browser bisa ditembus atau dimatikan siapa pun yang tahu caranya. Server tetap wajib memeriksa ulang semua yang datang. Pemeriksaan klien itu layanan untuk pengguna yang baik hati, bukan tembok untuk yang jahat.</p>
+
+<h2>Validasi bawaan HTML</h2>
+<p>Cara termurah memvalidasi adalah meminta browser yang memeriksa. HTML menyediakan atribut untuk itu. Atribut <code>required</code> menandai kolom wajib isi, <code>type="email"</code> menuntut bentuk email, <code>minlength</code> dan <code>maxlength</code> membatasi panjang teks, <code>min</code> dan <code>max</code> membatasi angka. Browser memeriksa semuanya otomatis saat submit, memblokir pengiriman, dan menampilkan pesan kesalahan tanpa satu baris JavaScript.</p>
+<pre><code>&lt;input type="email" id="email" required minlength="5"&gt;</code></pre>
+<p>Cara ini jalan dan layak dipakai, tetapi kendalinya terbatas. Pesannya gaya browser, bukan gaya halaman. Pemeriksaannya baru jalan saat submit, tidak bisa dipanggil kapan saja dari kode. Untuk itu HTML juga membuka pintu ke JavaScript.</p>
+
+<h2>Validasi dengan JavaScript, Constraint Validation API</h2>
+<figure>
+<img src="/13-form-validasi/img/kuka-periksa.png" alt="Petugas loket mengembalikan formulir kertas ke Kuka melalui jendela loket sambil menunjuk satu kotak isian yang ditandai lingkaran merah, Kuka menunduk melihat kotak itu.">
+<figcaption>Validasi, petugas menunjuk kotak yang salah sebelum berkas masuk.</figcaption>
+</figure>
+<p>Di balik atribut-atribut tadi ada mesin yang bernama Constraint Validation API, kumpulan properti dan metode untuk memeriksa input dari kode. Setiap input punya metode <code>checkValidity()</code>, yang mengembalikan <code>true</code> bila isinya sah dan <code>false</code> bila tidak. Setiap input juga punya objek <code>validity</code>, yang menjelaskan sebab kegagalan lewat tanda boolean. <code>validity.valueMissing</code> berarti kolom wajib kosong. <code>validity.typeMismatch</code> berarti bentuk isinya tidak cocok dengan <code>type</code>, misalnya email tanpa @. Dengan dua itu halaman bisa menulis pesan kesalahannya sendiri, sespesifik apa pun sebabnya.</p>
+<pre><code>if (!email.checkValidity()) {
+  if (email.validity.valueMissing) {
+    pesan.textContent = "Email wajib diisi.";
+  } else if (email.validity.typeMismatch) {
+    pesan.textContent = "Bentuk email belum benar, harus ada tanda @.";
+  }
+}</code></pre>
+<p>Satu penghalang kecil yang wajib diketahui. Kalau form punya atribut seperti <code>required</code>, browser memeriksa sendiri dan memblokir submit sebelum kejadian <code>submit</code> sempat sampai ke JavaScript. Solusinya atribut <code>novalidate</code> pada form, yang mematikan pemeriksaan otomatis browser. Pemeriksaannya pindah tangan, atribut dan <code>checkValidity()</code> tetap bisa dipakai, tetapi kini JavaScript yang memutuskan kapan dan bagaimana pesan muncul.</p>
+
+<h2>Kapan memeriksa, saat submit atau saat mengetik</h2>
+<p>Waktu pemeriksaan adalah keputusan rasa, dan dua ujungnya punya harga. Memeriksa saat submit paling aman, pengguna mengisi tenang dulu, kesalahan dilaporkan sekali di satu tempat. Memeriksa saat mengetik terasa cepat, tetapi menyergap pengguna yang belum selesai, pesan "email tidak sah" muncul padahal ia sedang mengetik setengahnya. Kompromi yang umum dipakai halaman nyata: periksa pertama kali saat submit, dan setelah itu periksa langsung setiap ketikan, karena pengguna sudah tahu aturannya. Untuk bab ini pola saat submit saja sudah cukup.</p>
+
+<h2>Analogi: loket pendaftaran</h2>
+<p>Satu gambar untuk semuanya. Form adalah formulir kertas di loket pendaftaran, kotaknya sudah dicetak, ada yang bertanda wajib. Submit adalah menyerahkan formulir ke petugas loket. Validasi adalah petugas yang memeriksa berkas sebelum menerimanya, kotak wajib kosong ditunjuk, bentuk email yang salah ditandai, berkas dikembalikan seketika tanpa masuk ke dalam. <code>preventDefault</code> adalah petugas yang menahan berkas di loket alih-alih membiarkannya tersedot ke bagian belakang. Dan bagian belakang kantor yang memeriksa ulang semua berkas yang lolos loket, itulah server. Loket membuat pengunjung cepat tahu salahnya, bagian belakang yang menjaga kebenaran arsip.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya form berlangganan email, satu input dan satu tombol. Versi vanilla menuliskan semuanya dengan tangan, pendengar submit, <code>preventDefault</code>, <code>checkValidity()</code>, pembacaan <code>validity</code> untuk memilih pesan, dan pengosongan input saat sah. Versi React menyimpan isi input di state lewat controlled input, yaitu input yang nilainya diatur <code>value</code> dari state dan setiap ketikan melapor lewat <code>onChange</code>, lalu <code>onSubmit</code> yang memeriksa dan menyimpan pesan error di state sendiri.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>form.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  if (email.checkValidity()) {
+    pesan.textContent = "Terima kasih, " + email.value;
+    email.value = "";
+  } else if (email.validity.valueMissing) {
+    pesan.textContent = "Email wajib diisi.";
+  } else if (email.validity.typeMismatch) {
+    pesan.textContent = "Bentuk email belum benar.";
+  }
+});</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Langganan() {
+  const [email, setEmail] = React.useState("");
+  const [pesan, setPesan] = React.useState("");
+
+  function kirim(e) {
+    e.preventDefault();
+    if (!email.includes("@") || email.length &lt; 5) {
+      setPesan("Bentuk email belum benar.");
+    } else {
+      setPesan("Terima kasih, " + email);
+      setEmail("");
+    }
+  }
+
+  return (
+    &lt;form onSubmit={kirim}&gt;
+      &lt;input value={email}
+             onChange={(e) =&gt; setEmail(e.target.value)} /&gt;
+      &lt;button&gt;Kirim&lt;/button&gt;
+      &lt;p&gt;{pesan}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Di vanilla, nilai input dibaca dari DOM saat dibutuhkan, HTML adalah pemilik nilai dan JavaScript cuma penumpang yang menengok. Di React, keadaan terbalik, state adalah pemilik nilai, dan input hanya cermin yang mengikuti state lewat <code>value</code>. Itulah controlled input. Konsekuensinya pemeriksaan di React jalan atas state, bukan atas elemen DOM, jadi Constraint Validation API kalah praktis dibanding pemeriksaan sendiri pada string state. React tidak menghapus pekerjaan vanilla, ia memindahkan sumber kebenarannya ke tempat yang bisa di-render ulang secara konsisten.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah adalah formulir pendaftaran mini, satu input email wajib diisi. Submit kosong memunculkan pesan kolom wajib. Email tanpa @ memunculkan pesan bentuk tidak cocok. Isian sah mengganti form dengan pesan sukses. Halaman tidak pernah dimuat ulang di semua jalur itu, itulah <code>preventDefault</code> yang sedang bekerja.</p>
+
+<div class="demo">
+<form id="demo-form" novalidate>
+<label for="demo-email">Email</label>
+<input type="email" id="demo-email" placeholder="nama@contoh.com" required>
+<p id="demo-error"></p>
+<button type="submit">Daftar</button>
+</form>
+<p id="demo-sukses" hidden>Terima kasih sudah mendaftar. Muat ulang halaman, form kembali kosong, data tadi tidak dikirim ke mana pun.</p>
+</div>
+
+<p>Begini cara baca demonya. Form punya <code>novalidate</code>, jadi pemeriksaan <code>required</code> dan <code>type="email"</code> tidak memblokir submit sendiri, dan JavaScript yang memeriksa lewat <code>checkValidity()</code>. Kolom kosong terdeteksi lewat <code>validity.valueMissing</code>, email tanpa @ lewat <code>validity.typeMismatch</code>, dan pesannya ditulis halaman sendiri. Isian sah menyembunyikan form dan menampilkan pesan sukses. Kalau <code>preventDefault</code> dihapus dari kodenya, setiap klik Daftar akan memuat ulang halaman dan semua pesan hilang seketika.</p>
+
+<p>Ringkasan bab ini. Form adalah sarana HTML mengumpulkan input, submit momen pengiriman dengan perilaku bawaan muat ulang halaman, dan <code>preventDefault</code> mengambil alihnya. Validasi memastikan isi input benar bentuknya sebelum dipakai, sisi klien memberi umpan balik cepat dan server tetap memeriksa ulang. Atribut <code>required</code> dan <code>type</code> memberi pemeriksaan gratis, Constraint Validation API dengan <code>checkValidity()</code> dan <code>validity</code> memberi kendali penuh, <code>novalidate</code> memindahkan tuasnya ke JavaScript. Bab berikutnya membuka bagian React, mengapa framework ada dan apa yang dibungkusnya dari semua yang sudah dipelajari sejauh ini.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Forms">MDN: Web forms, working with user data</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Forms/Form_validation">MDN: Client-side form validation</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Constraint_validation_API">MDN: Constraint validation API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event">MDN: HTMLFormElement: submit event</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault">MDN: Event.preventDefault</a></li>
+<li><a href="https://web.dev/learn/forms">web.dev: Learn Forms</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/12-merender-data/">Bab 12 - Merender Data: List, Kondisi &amp; Template</a> | Lanjut ke <a href="/14-react-mengapa-framework/">Bab 14 - React: Mengapa Framework Ada</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const form = document.querySelector("#demo-form");
+const email = document.querySelector("#demo-email");
+const errorEl = document.querySelector("#demo-error");
+const suksesEl = document.querySelector("#demo-sukses");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  if (email.checkValidity()) {
+    form.hidden = true;
+    suksesEl.hidden = false;
+  } else if (email.validity.valueMissing) {
+    errorEl.textContent = "Email wajib diisi.";
+  } else if (email.validity.typeMismatch) {
+    errorEl.textContent = "Bentuk email belum benar, harus ada tanda @.";
+  }
+});
+
+email.addEventListener("input", function () {
+  errorEl.textContent = "";
+});
+</script>
+</body>
+</html>
