@@ -157,14 +157,14 @@ for (let i = 1; i &lt;= 3; i++) {
 </footer>
 
 <script>
-var input = document.getElementById("demo-input");
-var tombol = document.getElementById("demo-run");
-var output = document.getElementById("demo-output");
+const input = document.getElementById("demo-input");
+const tombol = document.getElementById("demo-run");
+const output = document.getElementById("demo-output");
 
 function jalankan() {
   try {
-    var hasil = eval(input.value);
-    var tipe = typeof hasil;
+    const hasil = eval(input.value);
+    let tipe = typeof hasil;
     if (hasil === null) { tipe = "null"; }
     output.textContent = "Hasil: " + hasil + "\nTipe: " + tipe;
   } catch (err) {
