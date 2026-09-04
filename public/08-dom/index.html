@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 8 - DOM: Memilih &amp; Mengubah Halaman | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo input[type="text"] { width: 16rem; max-width: 100%; padding: .4rem .6rem; font: .92em ui-monospace, monospace; border: 1px solid #e5e7eb; border-radius: .3rem; }
+.demo button { margin-top: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+#demo-paragraf { padding: .5rem .7rem; border-radius: .3rem; }
+#demo-paragraf.sorot { background: #fdebd9; outline: 2px solid var(--accent); }
+#demo-daftar { margin: .6rem 0 0; padding-left: 1.4rem; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 8</span>
+<h1>DOM: Memilih &amp; Mengubah Halaman</h1>
+<p>Bab 7 melengkapi alat bahasa JavaScript: fungsi, array, dan objek. Bab ini memakai alat itu pada target sungguhan, halaman. Kamu belajar DOM, peta objek yang dibuat browser dari HTML, lalu memilih elemen dan mengubahnya dengan kode.</p>
+</header>
+
+<main>
+<figure>
+<img src="/08-dom/img/kuka-peta.png" alt="Kuka berdiri di depan peta besar bergambar silsilah keluarga, dengan garis penghubung dari satu kotak berlabel dokumen di puncak sampai anggota-anggota di ranting.">
+<figcaption>Pohon DOM, silsilah keluarga halaman.</figcaption>
+</figure>
+
+<h2>Mengapa DOM ada</h2>
+<p>Bab 2 sampai 5 membuat halaman yang diam. Browser membaca HTML dan CSS, menampilkannya, lalu berhenti. Tidak ada yang berubah setelah halaman terbuka. Padahal halaman yang kamu pakai setiap hari hidup. Daftar tugas bertambah saat tombol ditekan, keranjang belanja menghitung ulang, tombol suka berubah warna. Perubahan itu dikerjakan JavaScript. Untuk itu JavaScript butuh sesuatu yang bisa digenggam, yaitu representasi halaman yang bisa dibaca dan ditulis program. Tanpa representasi itu, kode hanya bisa mencetak teks ke console. Representasi itu bernama DOM.</p>
+
+<h2>Apa itu DOM</h2>
+<p>DOM adalah Document Object Model, peta objek halaman yang disusun browser saat membaca HTML. Objek artinya bagian halaman yang bisa diprogram. Browser membaca file HTML dan membentuk pohon. Pohon adalah struktur bertingkat di mana satu elemen berada di dalam elemen lain. Setiap objek di pohon disebut node. Pintu masuknya bernama <code>document</code>, objek bawaan browser yang mewakili seluruh halaman. Lewat <code>document</code>, JavaScript bisa bertanya tentang halaman dan mengubahnya.</p>
+<pre><code>&lt;h2 id="judul"&gt;Daftar belanja&lt;/h2&gt;
+&lt;ul id="daftar"&gt;
+  &lt;li&gt;kopi&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+<p>Browser menyusunnya berlapis. <code>document</code> di puncak, lalu <code>html</code>, lalu <code>body</code>. Di dalam <code>body</code> ada <code>h2</code> dan <code>ul</code>. Di dalam <code>ul</code> ada <code>li</code>. Susunan ini tetap, dan JavaScript memakainya untuk menemukan elemen.</p>
+
+<h2>Memilih elemen</h2>
+<p>Sebelum mengubah sesuatu, kamu harus menunjuknya. <code>document.querySelector</code> adalah perintah untuk memilih satu elemen. Ia menerima satu selektor. Selektor adalah pola pencarian yang menyalin cara CSS memilih elemen, materi bab 3. Tanda pagar <code>#</code> memilih elemen dengan id tertentu, titik <code>.</code> memilih elemen dengan class tertentu, dan menulis nama tag seperti <code>li</code> memilih tag itu.</p>
+<pre><code>const judul = document.querySelector("#judul");
+const daftar = document.querySelector("#daftar");</code></pre>
+<p><code>querySelector</code> mengembalikan elemen pertama yang cocok. Kalau tidak ada yang cocok, ia mengembalikan <code>null</code>, nilai khusus yang berarti tidak ada. Untuk memilih semua elemen yang cocok sekaligus, pakai <code>document.querySelectorAll</code>. Hasilnya mirip array dan bisa diputar dengan <code>forEach</code>.</p>
+
+<h2>Mengubah isi dan atribut</h2>
+<figure>
+<img src="/08-dom/img/kuka-ubah.png" alt="Kuka menunjuk satu kotak anggota pada peta silsilah sambil memberinya sorot warna oranye, anggota lain tetap pucat.">
+<figcaption>Memilih satu anggota, lalu mengubahnya.</figcaption>
+</figure>
+<p>Setelah terpilih, elemen bisa diubah. Properti <code>textContent</code> adalah isi teks elemen. Memberi nilai padanya langsung mengganti teks di halaman.</p>
+<pre><code>judul.textContent = "Daftar belanja minggu ini";</code></pre>
+<p>Elemen juga membawa atribut, informasi tambahan seperti <code>id</code>, <code>class</code>, dan <code>href</code>. Yang paling sering diubah adalah <code>class</code>, dan cara resminya lewat <code>classList</code>, daftar class milik elemen.</p>
+<pre><code>judul.classList.add("sorot");    // menambah class
+judul.classList.remove("sorot"); // melepas class
+judul.classList.toggle("sorot"); // menambah bila belum ada, melepas bila sudah</code></pre>
+<p>Ada juga <code>innerHTML</code>, pengganti <code>textContent</code> yang membaca teks sebagai HTML lengkap dengan tag. Berguna untuk menyisipkan markup, tapi berbahaya bila isinya berasal dari pengguna, karena orang lain bisa menyelundupkan kode lewat situ. Untuk teks biasa, selalu pakai <code>textContent</code>.</p>
+
+<h2>Membuat elemen baru</h2>
+<p>Memilih dan mengubah belum lengkap tanpa menambah. <code>document.createElement</code> membuat elemen baru yang belum menempel di halaman. <code>appendChild</code> menempelkannya sebagai anak terakhir dari elemen lain.</p>
+<pre><code>const item = document.createElement("li");
+item.textContent = "teh";
+daftar.appendChild(item);</code></pre>
+<p>Elemen juga bisa dilepas dengan <code>remove()</code>. Semua perubahan ini terjadi langsung pada halaman, dan pembaca melihat hasilnya seketika tanpa memuat ulang.</p>
+
+<h2>Analogi: silsilah keluarga</h2>
+<p>Satu gambar untuk semuanya. Bayangkan peta silsilah keluarga. <code>document</code> adalah leluhur paling tua yang menyimpan semua nama. Setiap elemen adalah anggota keluarga. Elemen yang membungkus elemen lain adalah orang tua, elemen di dalamnya adalah anak, dan <code>h2</code> serta <code>ul</code> pada contoh tadi adalah saudara di bawah <code>body</code>. Memilih elemen sama dengan memanggil anggota lewat namanya, lewat id atau ciri lain pada selektor. Mengubah halaman sama dengan mengubah keadaan anggota itu. Ganti ucapannya dengan <code>textContent</code>. Ganti pakaiannya dengan <code>classList</code>. Hadirkan anggota baru dengan <code>createElement</code> dan <code>appendChild</code>.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah menambah satu barang ke daftar belanja dan menyorot judulnya. Versi vanilla memerintah halaman langkah demi langkah. Versi React tidak menyentuh DOM sama sekali, ia mengubah data dan membiarkan React mengubah halaman.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const judul = document.querySelector("#judul");
+judul.textContent = "Daftar belanja";
+judul.classList.add("sorot");
+
+const daftar = document.querySelector("#daftar");
+const item = document.createElement("li");
+item.textContent = "teh";
+daftar.appendChild(item);</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function DaftarBelanja() {
+  const [items, setItems] = React.useState(["kopi"]);
+  return (
+    &lt;div&gt;
+      &lt;h2 className="sorot"&gt;Daftar belanja&lt;/h2&gt;
+      &lt;ul&gt;
+        {items.map((nama) =&gt; (
+          &lt;li key={nama}&gt;{nama}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+      &lt;button onClick={() =&gt; setItems([...items, "teh"])}&gt;
+        Tambah teh
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Cara vanilla disebut imperatif, kamu menyuruh halaman langkah demi langkah: pilih elemen, ubah teksnya, tambah anaknya. Cara React disebut deklaratif, kamu mendeskripsikan tampilan dari data yang ada, lalu membiarkan React mengurus DOM saat data berubah. <code>items</code> adalah state, data milik komponen yang bila berubah membuat komponen dirender ulang. Untuk halaman kecil, memerintah DOM secara manual terasa ringan. Untuk halaman besar yang datanya terus berubah, cara manual melelahkan dan rawan lupa, dan di situ React mengambil alih. Bab 14 membahas itu lebih jauh.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah memakai semua perintah bab ini pada halaman sungguhan. Satu tombol mengganti teks paragraf lewat <code>textContent</code>. Satu tombol menyalakan dan mematikan class lewat <code>classList.toggle</code>. Satu tombol membuat <code>li</code> baru dengan <code>createElement</code> lalu menempelkannya dengan <code>appendChild</code>. Semuanya jalan tanpa build tool.</p>
+
+<div class="demo">
+<p>Ubah halaman ini langsung. Teks baru mengganti isi paragraf, Sorot menyalakan dan mematikan warna, Tambah item menambah baris daftar.</p>
+<label for="demo-input">Teks baru:</label>
+<input id="demo-input" type="text" value="Halo dari Bab 8">
+<button id="demo-ubah">Ubah teks</button>
+<button id="demo-sorot" class="ghost">Sorot</button>
+<button id="demo-tambah" class="ghost">Tambah item</button>
+<p id="demo-paragraf">Paragraf ini bisa diubah oleh kode di atas.</p>
+<ul id="demo-daftar">
+  <li>kopi</li>
+</ul>
+</div>
+
+<p>Begini cara baca demonya. Setiap tombol dipasang pendengar klik dengan <code>addEventListener</code>, perintah untuk menjalankan fungsi saat suatu kejadian terjadi. Kejadian dibahas penuh di bab 9, di sini cukup tahu tombolnya berfungsi. Tombol Ubah teks membaca isi kotak, memotong spasi di ujungnya dengan <code>trim</code>, lalu mengganti <code>textContent</code> paragraf, dengan satu pengaman: teks kosong diabaikan agar paragraf tidak hilang tanpa sengaja. Tombol Sorot memanggil <code>classList.toggle</code>, menyalakan class saat belum ada dan mematikan saat sudah ada. Tombol Tambah item membuat <code>li</code> baru, memberi nomor dari jumlah anak daftar, lalu menempelkannya di akhir. Coba tekan Sorot dua kali, lalu tambah tiga item.</p>
+<p>Ringkasan bab ini. DOM adalah peta objek halaman yang disusun browser dari HTML, dan <code>document</code> adalah pintu masuknya. <code>querySelector</code> memilih satu elemen dengan selektor bergaya CSS, <code>querySelectorAll</code> memilih semuanya. <code>textContent</code> mengganti isi teks, <code>classList</code> mengatur class, <code>createElement</code> dan <code>appendChild</code> menambah elemen baru. Versi vanilla memerintah halaman langkah demi langkah, versi React mendeskripsikan tampilan dari data. Bab berikutnya membahas event, cara halaman bereaksi pada klik dan ketikan.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction">MDN: Introduction to the DOM</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector">MDN: Document.querySelector</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll">MDN: Document.querySelectorAll</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent">MDN: Node.textContent</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList">MDN: Element.classList</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement">MDN: Document.createElement</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/07-fungsi-array-objek/">Bab 7 - Fungsi, Array &amp; Objek</a> | Lanjut ke <a href="/09-event-delegasi/">Bab 9 - Event &amp; Delegasi</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const input = document.querySelector("#demo-input");
+const tombolUbah = document.querySelector("#demo-ubah");
+const tombolSorot = document.querySelector("#demo-sorot");
+const tombolTambah = document.querySelector("#demo-tambah");
+const paragraf = document.querySelector("#demo-paragraf");
+const daftar = document.querySelector("#demo-daftar");
+
+tombolUbah.addEventListener("click", () => {
+  const teks = input.value.trim();
+  if (teks !== "") { paragraf.textContent = teks; }
+});
+
+tombolSorot.addEventListener("click", () => {
+  paragraf.classList.toggle("sorot");
+});
+
+tombolTambah.addEventListener("click", () => {
+  const item = document.createElement("li");
+  item.textContent = "Item " + (daftar.children.length + 1);
+  daftar.appendChild(item);
+});
+</script>
+</body>
+</html>
