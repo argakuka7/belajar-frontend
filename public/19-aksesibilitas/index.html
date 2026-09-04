@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 19 - Aksesibilitas (a11y) | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo button:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+#demo-daftar { margin: .8rem 0 0; }
+.demo-hint { font-size: .9rem; color: var(--muted); margin: .6rem 0 0; }
+figure { margin: 1.2rem 0; }
+figure img { max-width: 100%; height: auto; }
+figcaption { font-size: .85rem; color: var(--muted); margin-top: .4rem; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 19</span>
+<h1>Aksesibilitas (a11y)</h1>
+<p>Delapan belas bab, halaman selalu diuji dengan satu cara, mata melihat dan mouse mengklik. Tidak semua pembaca memakai dua cara itu. Bab ini membahas aksesibilitas, sering disingkat a11y, supaya halaman buatanmu tetap bisa dipakai semua orang.</p>
+</header>
+
+<main>
+<figure>
+<img src="/19-aksesibilitas/img/kuka-ram-gedung.png" alt="Kuka dan temannya yang duduk di kursi roda berada di depan sebuah gedung bertangga, di sisi kanan tangga ada jalan landai berturut yang dinaiki teman Kuka dengan senyum, pintu gedung terbuka lebar untuk keduanya.">
+<figcaption>Jalan landai di sisi tangga, dua jalan menuju pintu yang sama.</figcaption>
+</figure>
+
+<h2>Mengapa aksesibilitas ada</h2>
+<p>Aksesibilitas adalah sifat halaman yang bisa dipakai semua orang, termasuk orang dengan disabilitas. Singkatannya a11y, huruf a, sebelas huruf di tengah, lalu huruf y. Angkanya bukan kategori kecil. WHO memperkirakan sekitar 1,3 miliar orang, sekitar satu dari enam manusia, hidup dengan disabilitas yang berarti.</p>
+<p>Yang terbantu bukan cuma satu kelompok. Orang buta warna sulit membedakan pesan kesalahan yang hanya ditandai merah. Pengguna dengan gangguan motorik mungkin tidak bisa menekan tombol kecil, tapi lancar memakai keyboard. Pengguna tua butuh teks lebih besar dan kontras lebih jelas. Aksesibilitas juga menolong semua orang di saat tertentu, subtitle di kereta yang bising, keyboard saat mouse rusak, alt text saat gambar gagal dimuat.</p>
+<p>Halaman yang tidak aksesibel menolak pembaca tanpa pernah mengatakannya. Kabar baiknya, bedanya dengan halaman yang aksesibel sering bukan fitur tambahan, melainkan pilihan elemen yang lebih benar sejak awal.</p>
+
+<h2>Bagaimana halaman dibaca tanpa mata</h2>
+<p>Alat yang paling sering mewakili pengguna disabilitas disebut teknologi bantu, perangkat lunak atau alat yang membantu orang memakai komputer. Contohnya pembaca layar, perangkat lunak yang membacakan isi layar dengan suara.</p>
+<p>Pembaca layar tidak melihat tampilan. Ia membaca pohon DOM, struktur objek yang dibangun browser dari HTML seperti di bab 8. Lewat DOM itulah ia tahu mana judul, mana tombol, mana daftar, dan urutan bacanya mengikuti urutan elemen di HTML. Halaman dengan HTML rapi sudah setengah aksesibel. Halaman dengan tumpukan div tanpa makna terdengar seperti kalimat tanpa tanda baca.</p>
+
+<h2>HTML semantik adalah fondasi</h2>
+<p>Bab 2 memperkenalkan elemen semantik, elemen yang membawa makna, bukan sekadar kotak. Ini fondasi aksesibilitas yang paling murah. Elemen <code>&lt;button&gt;</code> lahir dengan tiga kemampuan sekaligus, bisa menerima fokus, bisa ditekan dengan Enter dan Spasi, dan diumumkan pembaca layar sebagai tombol. Elemen <code>&lt;div&gt;</code> dengan pendengar klik hanya bisa satu hal, diklik mouse.</p>
+<p>Aturan pertamanya sederhana. Sebelum menambah apa pun, pilih elemen HTML yang benar. <code>&lt;label&gt;</code> untuk nama input, <code>&lt;nav&gt;</code> untuk navigasi, <code>&lt;button&gt;</code> untuk aksi, <code>&lt;img&gt;</code> dengan <code>alt</code> untuk gambar. Bagian besar pekerjaan aksesibilitas selesai sebelum JavaScript menyentuh apa pun.</p>
+
+<h2>Keyboard harus selalu jalan</h2>
+<figure>
+<img src="/19-aksesibilitas/img/kuka-fokus-keyboard.png" alt="Kuka duduk di meja dengan tangan di keyboard dan tanpa mouse di meja, di layar depannya sebuah tombol bersorot cincin fokus tebal berwarna oranye sementara tombol lain tampil biasa.">
+<figcaption>Tab memindahkan fokus, cincin fokus menandakan letaknya.</figcaption>
+</figure>
+<p>Uji tercepat sebuah halaman aksesibel, cabut mouse lalu coba pakai halamannya dengan Tab. Saat berpindah dengan Tab, satu elemen ditandai kotak atau cincin. Tanda itu disebut fokus, penanda letak aksi keyboard berikutnya akan mendarat. Urutannya mengikuti urutan elemen di HTML, jadi HTML yang tertata logis menghasilkan urutan keyboard yang logis.</p>
+<p>Kebiasaan yang merusak ini biasanya kecil. Outline fokus yang dihapus karena dianggap mengganggu, tombol tiruan dari div, atau urutan elemen yang dibalik lewat CSS. Kalau suatu elemen memang bukan elemen bawaan yang bisa difokus, atribut <code>tabindex="0"</code> bisa memasukkannya ke urutan Tab. Tetapi kalau solusinya butuh tabindex, biasanya elemennya salah dari awal.</p>
+
+<h2>Alt text dan kontras</h2>
+<p>Dua hal kecil yang sering terlewat. Pertama alt text, isi atribut <code>alt</code> yang menjelaskan gambar dalam teks untuk yang tidak bisa melihatnya. Kalimatnya pendek dan menjelaskan isi gambar, misalnya "grafik konsumsi kopi naik dua kali lipat". Gambar dekoratif yang tidak membawa informasi diberi <code>alt=""</code> kosong, agar dilewati pembaca layar, bukan dibacakan sebagai "gambar".</p>
+<p>Kedua kontras, ukuran perbedaan terang antara warna teks dan warna latarnya. Teks abu muda di atas putih sering tidak terbaca bagi pengguna dengan penglihatan rendah. Standar dunia untuk ini bernama WCAG, Web Content Accessibility Guidelines, kumpulan pedoman aksesibilitas web yang jadi rujukan di banyak negara. WCAG menetapkan rasio kontras minimal untuk teks, dan DevTools punya pemeriksa kontras bawaan untuk mengujinya.</p>
+
+<h2>ARIA, tambahan bukan pengganti</h2>
+<p>Ada keadaan saat HTML baku tidak cukup menjelaskan. Tombol yang membuka dan menutup bagian halaman, misalnya, sebaiknya mengumumkan keadaannya, terbuka atau tertutup. Untuk ini ada ARIA, Accessible Rich Internet Applications, kumpulan atribut yang menambahkan makna ke elemen. Atribut <code>aria-expanded="true"</code> pada tombol memberi tahu pembaca layar bahwa tombol itu membuka bagian lain yang sedang terbuka.</p>
+<p>Aturan pakainya jelas, ARIA adalah jalan terakhir. Elemen HTML yang benar mengalahkan elemen salah yang diberi ARIA. ARIA di elemen yang salah bahkan bisa menipu, seperti papan petunjuk yang dipasang di tembok mati.</p>
+
+<h2>Analogi: tangga dan ram</h2>
+<p>Satu gambar untuk semuanya. Gedung yang hanya punya tangga menolak pengguna kursi roda. Gedung dengan ram, jalan landai di sisi tangga, menerima semua orang, termasuk tamu yang bawa koper dan orang yang dorong kereta bayi. Itulah aksesibilitas web. HTML semantik adalah pintu lebar yang sudah baku. Keyboard dan fokus adalah ramnya, jalan masuk tanpa tangga. Alt text dan kontras adalah pencahayaan dan label ruangannya. ARIA adalah papan petunjuk tambahan, dipasang hanya kalau pintu baku tidak menjelaskan apa pun.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya tombol buka tutup daftar belanja. Tombol yang benar memakai elemen <code>&lt;button&gt;</code>, atribut <code>aria-expanded</code>, dan daftar yang disembunyikan dengan atribut <code>hidden</code>. Vanilanya menyimpan dua elemen di variabel, pendengar klik membaca keadaan sekarang, membalik properti <code>hidden</code>, lalu menulis ulang <code>aria-expanded</code> dan teks tombol. React-nya menyimpan keadaan <code>terbuka</code> di state, atribut <code>aria-expanded</code> dan isi tombol ditulis dari state yang sama, dan daftar hanya muncul saat <code>terbuka</code> benar. JSX di kolom kanan sudah diajarkan di bab 15.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;button id="tombol-daftar" aria-expanded="false"&gt;
+  Tampilkan daftar
+&lt;/button&gt;
+&lt;ul id="daftar" hidden&gt;
+  &lt;li&gt;Kopi&lt;/li&gt;
+  &lt;li&gt;Teh&lt;/li&gt;
+  &lt;li&gt;Gula&lt;/li&gt;
+&lt;/ul&gt;
+
+const tombol = document.querySelector("#tombol-daftar");
+const daftar = document.querySelector("#daftar");
+
+tombol.addEventListener("click", function () {
+  const terbuka =
+    tombol.getAttribute("aria-expanded") === "true";
+  daftar.hidden = terbuka;
+  tombol.setAttribute("aria-expanded", String(!terbuka));
+  tombol.textContent = terbuka
+    ? "Tampilkan daftar"
+    : "Sembunyikan daftar";
+});</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function DaftarBelanja() {
+  const [terbuka, setTerbuka] = React.useState(false);
+  return (
+    &lt;&gt;
+      &lt;button aria-expanded={terbuka}
+        onClick={() =&gt; setTerbuka(!terbuka)}&gt;
+        {terbuka ? "Sembunyikan daftar"
+          : "Tampilkan daftar"}
+      &lt;/button&gt;
+      {terbuka &amp;&amp; (
+        &lt;ul&gt;
+          &lt;li&gt;Kopi&lt;/li&gt;
+          &lt;li&gt;Teh&lt;/li&gt;
+          &lt;li&gt;Gula&lt;/li&gt;
+        &lt;/ul&gt;
+      )}
+    &lt;/&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Aksesibilitas tidak berpindah antara stack, sebutan untuk pasangan teknologi yang dipakai, di sini vanilla atau React. Kedua versi memakai elemen dan atribut yang sama persis, <code>&lt;button&gt;</code> dan <code>aria-expanded</code>. Yang berganti hanya cara nilainya diperbarui, perintah DOM langsung di vanilla, state yang menurunkan atribut di React. Prinsip yang dipelajari sekali, dipakai di dua dunia.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo memasang tombol buka tutup yang sama dengan pasangan contoh, vanilla JavaScript tanpa build tool. Tekan tombolnya dengan mouse, daftar muncul. Lalu coba tanpa mouse, tekan Tab sampai tombolnya mendapat cincin fokus, tekan Enter atau Spasi, dan perilakunya sama persis.</p>
+
+<div class="demo">
+<p>Demo ini memakai elemen button sungguhan dan atribut aria-expanded. Tanpa mouse pun tetap bisa dipakai, dan cincin fokusnya terlihat saat tombol ditab.</p>
+<button id="demo-tombol" aria-expanded="false">Tampilkan daftar</button>
+<ul id="demo-daftar" hidden>
+<li>Kopi</li>
+<li>Teh</li>
+<li>Gula</li>
+</ul>
+<p class="demo-hint">Buka DevTools, pilih elemen tombolnya, dan lihat aria-expanded berpindah antara false dan true setiap kali ditekan.</p>
+</div>
+
+<p>Begini cara baca demonya. Pendengar klik membaca keadaan sekarang dari atribut <code>aria-expanded</code>, true berarti daftar sedang terbuka. Nilai itu dipakai untuk mengisi properti <code>hidden</code> daftar, maka daftar berpindah tersembunyi dan terlihat. <code>setAttribute</code> menulis ulang <code>aria-expanded</code> dengan kebalikannya, dan teks tombol mengikuti. Pembaca layar yang mendengar aria-expanded berpindah ke false tahu persis bahwa daftarnya ikut tertutup, tanpa melihat apa pun.</p>
+
+<p>Ringkasan bab ini. Aksesibilitas berarti halaman bisa dipakai semua orang, dan teknologi bantu membacanya lewat pohon DOM. Fondasinya HTML semantik, diteruskan dengan keyboard dan fokus, alt text, kontras, lalu ARIA sebagai tambahan terakhir. Bab berikutnya kembali ke tampilan, styling modern dengan variabel dan design token.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Accessibility">MDN: Accessibility overview</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML">MDN: HTML, a good basis for accessibility</a></li>
+<li><a href="https://web.dev/learn/accessibility">web.dev: Learn Accessibility</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA">MDN: ARIA</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/alt">MDN: HTMLImageElement alt</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_WCAG/Perceivable/Color_contrast">MDN: Color contrast</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/18-routing/">Bab 18 - Routing di Front End</a> | Lanjut ke <a href="/20-design-token/">Bab 20 - Styling Modern: Variabel &amp; Design Token</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const tombol = document.querySelector("#demo-tombol");
+const daftar = document.querySelector("#demo-daftar");
+
+tombol.addEventListener("click", function () {
+  const terbuka = tombol.getAttribute("aria-expanded") === "true";
+  daftar.hidden = terbuka;
+  tombol.setAttribute("aria-expanded", String(!terbuka));
+  tombol.textContent = terbuka ? "Tampilkan daftar" : "Sembunyikan daftar";
+});
+</script>
+</body>
+</html>
