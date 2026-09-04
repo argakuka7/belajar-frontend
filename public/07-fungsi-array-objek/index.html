@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 7 - Fungsi, Array &amp; Objek | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo input[type="number"] { width: 8rem; padding: .4rem .6rem; font: .92em ui-monospace, monospace; border: 1px solid #e5e7eb; border-radius: .3rem; }
+.demo button { margin-top: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+#demo-output { background: #f0f1f4; padding: .6rem .8rem; border-radius: .3rem; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 7</span>
+<h1>Fungsi, Array &amp; Objek</h1>
+<p>Bab 6 memperkenalkan variabel, tipe data, dan kontrol aliran. Bab ini menambah tiga alat yang membuat program lebih kuat: fungsi untuk memakai ulang perintah, array untuk menyimpan banyak nilai berurutan, dan objek untuk menyimpan nilai dengan label.</p>
+</header>
+
+<main>
+<figure>
+<img src="/07-fungsi-array-objek/img/kuka-fungsi.png" alt="Kuka berdiri di belakang meja toko sambil memegang kartu resep berlabel hitung total, dan di depannya beberapa pelanggan menunggu giliran.">
+<figcaption>Fungsi, perintah berlabel yang bisa dipanggil kapan saja.</figcaption>
+</figure>
+
+<h2>Mengapa fungsi, array, dan objek</h2>
+<p>Bab 6 menulis program yang menangani satu nilai. Program sungguhan menangani banyak nilai, dan perintah yang sama sering dipakai berulang. Tanpa alat bantu, kode jadi panjang, berulang, dan sulit diubah. Fungsi, array, dan objek adalah tiga alat dasar untuk menyusun kode dan data. Fungsi memakai ulang perintah. Array menyimpan banyak nilai berurutan. Objek menyimpan nilai dengan label.</p>
+
+<h2>Fungsi</h2>
+<p>Fungsi adalah perintah yang diberi nama dan bisa dipanggil kapan saja. Bayangkan kamu menulis langkah "hitung total harga" sekali, lalu memanggilnya setiap kali butuh. Fungsi membuat kode tidak perlu ditulis ulang.</p>
+<p>Cara membuat fungsi ada dua: deklarasi dan arrow.</p>
+<pre><code>function sapa(nama) {
+  return "Halo, " + nama;
+}
+
+const sapaArrow = (nama) => "Halo, " + nama;</code></pre>
+<p>Deklarasi fungsi memakai kata <code>function</code> diikuti nama. Arrow memakai tanda <code>=&gt;</code> dan disimpan dalam variabel. Keduanya menghasilkan fungsi yang sama. Arrow lebih ringkas dan dipakai luas di kode modern.</p>
+<p>Fungsi menerima masukan lewat parameter. Parameter adalah nilai yang dimasukkan ke dalam kurung saat fungsi dipanggil. Fungsi mengembalikan hasil lewat <code>return</code>. <code>return</code> adalah perintah untuk menyerahkan nilai hasil ke pemanggil. Tanpa <code>return</code>, fungsi mengembalikan <code>undefined</code>.</p>
+<pre><code>function tambah(a, b) {
+  return a + b;
+}
+let hasil = tambah(2, 3); // hasil = 5</code></pre>
+<p><code>tambah(2, 3)</code> memanggil fungsi dengan dua parameter, <code>a</code> dan <code>b</code>. Fungsi menjumlahkan dan mengembalikan 5. Nilai itu disimpan di variabel <code>hasil</code>.</p>
+
+<h2>Array</h2>
+<figure>
+<img src="/07-fungsi-array-objek/img/kuka-array-objek.png" alt="Kuka menaruh barang ke rak bernomor mulai dari nol, dan di tangannya memegang kartu stok berlabel nama, harga, dan stok.">
+<figcaption>Array, rak bernomor. Objek, kartu stok berlabel.</figcaption>
+</figure>
+<p>Array adalah tempat menyimpan banyak nilai dalam satu variabel, berurutan. Tiap nilai menempati posisi yang disebut indeks. Indeks dimulai dari nol.</p>
+<pre><code>let buah = ["apel", "mangga", "pisang"];
+console.log(buah[0]); // apel
+console.log(buah[2]); // pisang</code></pre>
+<p><code>buah[0]</code> mengambil nilai di posisi pertama. Tanda kurung siku dengan angka memilih posisi. Ini disebut akses indeks.</p>
+<p>Array bisa diubah. <code>push</code> menambah nilai di akhir, <code>pop</code> menghapus nilai di akhir.</p>
+<pre><code>buah.push("durian");
+console.log(buah); // ["apel", "mangga", "pisang", "durian"]
+buah.pop();
+console.log(buah); // ["apel", "mangga", "pisang"]</code></pre>
+<p>Dua metode yang paling berguna untuk mengolah array adalah <code>map</code> dan <code>filter</code>. Metode adalah fungsi yang menempel pada nilai. <code>map</code> membuat array baru dengan mengubah tiap nilai. <code>filter</code> membuat array baru yang hanya berisi nilai yang lolos syarat.</p>
+<pre><code>let angka = [1, 2, 3, 4];
+let duaKali = angka.map((n) =&gt; n * 2);
+console.log(duaKali); // [2, 4, 6, 8]
+
+let genap = angka.filter((n) =&gt; n % 2 === 0);
+console.log(genap); // [2, 4]</code></pre>
+<p><code>map</code> memanggil fungsi untuk tiap nilai dan mengumpulkan hasilnya. <code>filter</code> memanggil fungsi untuk tiap nilai dan hanya menyimpan yang mengembalikan <code>true</code>. Keduanya tidak mengubah array asli, melainkan membuat array baru.</p>
+
+<h2>Objek</h2>
+<p>Objek menyimpan nilai di balik label. Label disebut kunci, nilai di baliknya disebut nilai. Objek cocok untuk data yang punya banyak bagian, seperti satu barang dengan nama, harga, dan stok.</p>
+<pre><code>let barang = {
+  nama: "kopi",
+  harga: 25000,
+  stok: 10
+};
+console.log(barang.nama); // kopi
+console.log(barang["harga"]); // 25000</code></pre>
+<p>Dua cara mengambil nilai dari objek. Titik, <code>barang.nama</code>, memakai nama kunci langsung. Kurung siku, <code>barang["harga"]</code>, memakai string nama kunci. Titik lebih ringkas dan paling sering dipakai. Kurung siku berguna saat nama kunci disimpan dalam variabel.</p>
+<pre><code>let kunci = "harga";
+console.log(barang[kunci]); // 25000</code></pre>
+
+<h2>Analogi: toko kecil</h2>
+<p>Satu gambar merangkum ketiganya. Bayangkan kamu mengelola toko kecil. Fungsi adalah resep standar yang bisa dipanggil kapan saja, seperti cara menghitung total belanja. Kamu menulis resepnya sekali, lalu memanggilnya untuk tiap pelanggan. Array adalah rak berisi banyak barang berurutan. Tiap posisi rak bernomor, mulai dari nol, dan kamu mengambil barang dengan menyebut nomornya. Objek adalah kartu stok, satu kartu per barang, dengan label nama, harga, dan stok. Kamu membaca harga dengan mencari label "harga" di kartu.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah membuat program yang mengolah daftar barang. Versi vanilla menulis fungsi, array, dan objek langsung di file JavaScript. Versi React membungkus logika yang sama dalam komponen, dan daftar barang menjadi state yang bisa berubah saat halaman berinteraksi.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const barang = [
+  { nama: "kopi", harga: 25000 },
+  { nama: "teh", harga: 15000 }
+];
+
+const namaBarang = barang.map((b) =&gt; b.nama);
+console.log(namaBarang); // ["kopi", "teh"]
+
+const murah = barang.filter((b) =&gt; b.harga &lt; 20000);
+console.log(murah); // [{ nama: "teh", harga: 15000 }]</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function DaftarBarang() {
+  const [barang, setBarang] = React.useState([
+    { nama: "kopi", harga: 25000 },
+    { nama: "teh", harga: 15000 }
+  ]);
+  return (
+    &lt;ul&gt;
+      {barang.map((b) =&gt; (
+        &lt;li key={b.nama}&gt;{b.nama}: {b.harga}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti ada pada tempat logika hidup. Di vanilla, kamu menulis fungsi dan array langsung, lalu browser menjalankannya. Di React, logika yang sama tinggal di dalam komponen, dan daftar barang menjadi state, nilai yang bisa berubah dan membuat komponen dijalankan ulang. <code>map</code> tetap bekerja di kedua versi. Di vanilla, <code>map</code> mengubah array menjadi array baru. Di React, <code>map</code> mengubah array menjadi daftar elemen halaman. React hanya membungkus cara data dipakai, tidak mengubah cara fungsi dan array bekerja.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah mengolah array. Kamu mengetik angka, menekan tombol Tambah, dan melihat tiga hasil langsung: array asli, hasil <code>map</code> yang mengalikan tiap angka dengan dua, dan hasil <code>filter</code> yang hanya menyimpan bilangan genap. Ini memakai fungsi, array, dan objek sekaligus tanpa build tool.</p>
+
+<div class="demo">
+<p>Ketik angka, lalu tekan Tambah. Hasil <code>map</code> dan <code>filter</code> berubah langsung di bawah.</p>
+<label for="demo-input">Angka:</label>
+<input id="demo-input" type="number" value="3">
+<button id="demo-add">Tambah</button>
+<button id="demo-reset" class="ghost">Kosongkan</button>
+<pre id="demo-output"></pre>
+</div>
+
+<p>Begini cara baca demonya. Kotak berisi angka yang bisa kamu ubah. Tombol Tambah memasukkan angka itu ke array. Baris pertama menampilkan array asli. Baris kedua menampilkan hasil <code>map</code>, tiap angka dikali dua. Baris ketiga menampilkan hasil <code>filter</code>, hanya bilangan genap. Tombol Kosongkan mengosongkan array. Coba tambahkan 2, 4, dan 5 untuk melihat hasilnya berubah.</p>
+<p>Ringkasan bab ini. Fungsi membungkus perintah agar bisa dipakai ulang, dengan parameter untuk masukan dan <code>return</code> untuk hasil. Array menyimpan banyak nilai berurutan, diakses lewat indeks, diubah dengan <code>push</code> dan <code>pop</code>, diolah dengan <code>map</code> dan <code>filter</code>. Objek menyimpan nilai di balik label, diakses dengan titik atau kurung siku. Bab berikutnya membahas DOM, cara memilih dan mengubah halaman.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions">MDN: Functions</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">MDN: Arrow function expressions</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">MDN: Array</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map">MDN: Array.prototype.map</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter">MDN: Array.prototype.filter</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objects">MDN: Working with objects</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/06-js-dasar/">Bab 6 - JavaScript: Variabel, Tipe &amp; Kontrol Aliran</a> | Lanjut ke <a href="/08-dom/">Bab 8 - DOM: Memilih &amp; Mengubah Halaman</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const input = document.getElementById("demo-input");
+const tombolTambah = document.getElementById("demo-add");
+const tombolReset = document.getElementById("demo-reset");
+const output = document.getElementById("demo-output");
+
+let angka = [];
+
+function tampilkan() {
+  const duaKali = angka.map((n) => n * 2);
+  const genap = angka.filter((n) => n % 2 === 0);
+  output.textContent =
+    "Array: [" + angka.join(", ") + "]\n" +
+    "map (kali 2): [" + duaKali.join(", ") + "]\n" +
+    "filter (genap): [" + genap.join(", ") + "]";
+}
+
+tombolTambah.addEventListener("click", () => {
+  const nilai = Number(input.value);
+  if (Number.isNaN(nilai)) { return; }
+  angka.push(nilai);
+  tampilkan();
+});
+
+tombolReset.addEventListener("click", () => {
+  angka = [];
+  tampilkan();
+});
+
+tampilkan();
+</script>
+</body>
+</html>
