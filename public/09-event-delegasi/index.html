@@ -23,7 +23,7 @@
 
 <main>
 <figure>
-<img src="/09-event-delegasi/img/kuka-resepsionis.png" alt="Kuka duduk di meja resepsionis lobi gedung kantor, menyerahkan kartu tamu kepada satu pengunjung, dengan pintu-pintu ruangan bernomor di latar belakang.">
+<img loading="lazy" decoding="async" src="/09-event-delegasi/img/kuka-resepsionis.png" alt="Kuka duduk di meja resepsionis lobi gedung kantor, menyerahkan kartu tamu kepada satu pengunjung, dengan pintu-pintu ruangan bernomor di latar belakang.">
 <figcaption>Event dan pendengarnya, resepsionis gedung.</figcaption>
 </figure>
 
@@ -61,7 +61,7 @@ tombol.addEventListener("click", function () {
 
 <h2>Delegasi: satu pendengar untuk banyak anak</h2>
 <figure>
-<img src="/09-event-delegasi/img/kuka-delegasi.png" alt="Kuka berdiri di tengah lobi membaca kartu tamu sambil menunjuk ke beberapa pintu ruangan sekaligus, tanpa ada petugas di depan pintu mana pun.">
+<img loading="lazy" decoding="async" src="/09-event-delegasi/img/kuka-delegasi.png" alt="Kuka berdiri di tengah lobi membaca kartu tamu sambil menunjuk ke beberapa pintu ruangan sekaligus, tanpa ada petugas di depan pintu mana pun.">
 <figcaption>Satu resepsionis di lobi melayani semua pintu.</figcaption>
 </figure>
 <p>Bubbling terdengar seperti detail teknis, padahal ini alat. Masalahnya begini. Daftar seratus tugas, tiap tugas punya tombol hapus. Memasang satu pendengar per tombol berarti seratus pendaftaran, dan tiap tugas baru butuh pendaftaran lagi. Delegasi membalik arahnya: satu pendengar dipasang di induk, lalu pendengar itu membaca <code>event.target</code> untuk tahu siapa yang diklik.</p>

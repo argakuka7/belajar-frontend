@@ -18,7 +18,7 @@
 
 <main>
 <figure>
-<img src="/14-react-mengapa/img/kuka-arsitek-denah.png" alt="Kuka duduk di meja gambar menggambar satu denah rumah dengan penggaris, di belakangnya sebuah tim tukang kecil berdiri siaga membawa perkakas, menunggu denah selesai.">
+<img loading="lazy" decoding="async" src="/14-react-mengapa/img/kuka-arsitek-denah.png" alt="Kuka duduk di meja gambar menggambar satu denah rumah dengan penggaris, di belakangnya sebuah tim tukang kecil berdiri siaga membawa perkakas, menunggu denah selesai.">
 <figcaption>Menggambar denah, bukan memasang bata sendiri. Gaya deklaratif ala framework.</figcaption>
 </figure>
 
@@ -45,7 +45,7 @@
 
 <h2>Di balik re-render</h2>
 <figure>
-<img src="/14-react-mengapa/img/kuka-tukang-ruangan.png" alt="Kuka berdiri di rumah dua ruangan sambil memegang denah, satu tukang hanya merombak ruangan kanan yang denahnya berubah, ruangan kiri utuh dan tidak ada yang menyentuhnya.">
+<img loading="lazy" decoding="async" src="/14-react-mengapa/img/kuka-tukang-ruangan.png" alt="Kuka berdiri di rumah dua ruangan sambil memegang denah, satu tukang hanya merombak ruangan kanan yang denahnya berubah, ruangan kiri utuh dan tidak ada yang menyentuhnya.">
 <figcaption>Re-render, tukang yang merombak hanya ruangan yang denahnya berubah.</figcaption>
 </figure>
 <p>Terdengar mahal, fungsi dijalankan ulang setiap ada perubahan. React menahan biayanya. Hasil render baru dibandingkan dengan hasil sebelumnya, dan hanya bagian yang berubah yang disentuh di DOM. Salinan ringan tampilan yang dipakai untuk membandingkan itu disebut virtual DOM. Angka 3 jadi 4 pada satu baris teks, hanya teks baris itu yang diperbarui, sisanya dibiarkan.</p>

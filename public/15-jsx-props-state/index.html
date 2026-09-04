@@ -29,7 +29,7 @@
 
 <main>
 <figure>
-<img src="/15-jsx-props-state/img/kuka-koki-resep.png" alt="Kuka berjuluk koki berdiri di dapur restoran, menempelkan kartu pesanan pelanggan ke rel dapur, di samping kartu resep penyajian yang bergambar bentuk piring dengan beberapa kolom isian kosong.">
+<img loading="lazy" decoding="async" src="/15-jsx-props-state/img/kuka-koki-resep.png" alt="Kuka berjuluk koki berdiri di dapur restoran, menempelkan kartu pesanan pelanggan ke rel dapur, di samping kartu resep penyajian yang bergambar bentuk piring dengan beberapa kolom isian kosong.">
 <figcaption>JSX dan props, kartu resep dengan lubang isian yang diisi kartu pesanan dari luar dapur.</figcaption>
 </figure>
 
@@ -47,7 +47,7 @@
 
 <h2>State: ingatan yang memicu render ulang</h2>
 <figure>
-<img src="/15-jsx-props-state/img/kuka-papan-catatan.png" alt="Kuka berdiri di depan papan catatan di dinding dapur, sedang menghapus tulisan es teh tinggal 2 dengan kain, sementara tulisan baru es teh tinggal 1 sudah tersedia di tangan lainnya, dan piring di meja dapur terlihat di latar belakang.">
+<img loading="lazy" decoding="async" src="/15-jsx-props-state/img/kuka-papan-catatan.png" alt="Kuka berdiri di depan papan catatan di dinding dapur, sedang menghapus tulisan es teh tinggal 2 dengan kain, sementara tulisan baru es teh tinggal 1 sudah tersedia di tangan lainnya, dan piring di meja dapur terlihat di latar belakang.">
 <figcaption>State, papan catatan dapur yang tiap kali diganti memicu penyajian ulang meja.</figcaption>
 </figure>
 <p>Di sinilah masalah muncul. Komponen React adalah fungsi yang dijalankan berulang-ulang, dan variabel lokal fungsi mati setiap fungsi selesai, seperti diajarkan bab 7. Padahal tampilan butuh ingatan, isi keranjang, jumlah pesanan, teks kotak pencarian. React menyimpan ingatan itu sendiri, di luar fungsi komponen, lalu menyambungkannya lewat hook bernama <code>useState</code>. Hook, fungsi khusus React yang hanya boleh dipanggil di dalam komponen.</p>

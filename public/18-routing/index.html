@@ -20,7 +20,7 @@
 
 <main>
 <figure>
-<img src="/18-routing/img/kuka-resepsionis-nomor.png" alt="Kuka berdiri di lobi hotel memakai rompi resepsionis, satu tangan menunjuk papan nomor kamar, tangan lain memegang buku tamu terbuka, di belakangnya lorong dengan beberapa pintu bernomor.">
+<img loading="lazy" decoding="async" src="/18-routing/img/kuka-resepsionis-nomor.png" alt="Kuka berdiri di lobi hotel memakai rompi resepsionis, satu tangan menunjuk papan nomor kamar, tangan lain memegang buku tamu terbuka, di belakangnya lorong dengan beberapa pintu bernomor.">
 <figcaption>Resepsionis membaca nomor kamar, lalu mengantar tamu ke kamar yang tepat. Gaya kerja router.</figcaption>
 </figure>
 
@@ -34,7 +34,7 @@
 
 <h2>Di baliknya: tumpukan history</h2>
 <figure>
-<img src="/18-routing/img/kuka-buku-tamu.png" alt="Kuka duduk di meja resepsionis menelusuri baris buku tamu yang tebal dengan jarinya dari bawah ke atas, di sampingnya tumpukan kartu nomor kamar dan panah besar menunjuk ke belakang.">
+<img loading="lazy" decoding="async" src="/18-routing/img/kuka-buku-tamu.png" alt="Kuka duduk di meja resepsionis menelusuri baris buku tamu yang tebal dengan jarinya dari bawah ke atas, di sampingnya tumpukan kartu nomor kamar dan panah besar menunjuk ke belakang.">
 <figcaption>Tumpukan history adalah buku tamu, dan tombol back membacanya mundur satu baris.</figcaption>
 </figure>
 <p>Browser menyimpan jejak kunjungan dalam tumpukan history, barisan alamat yang bisa ditelusuri lewat tombol back dan forward. Dua alat di dalamnya menjadi fondasi semua router. Yang pertama history.pushState(nilai, judul, url), perintah untuk menambah barisan tanpa memuat ulang halaman. Yang kedua event popstate, sinyal yang dipancarkan window setiap tombol back atau forward memindahkan posisi dalam barisan.</p>

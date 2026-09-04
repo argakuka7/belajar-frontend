@@ -18,7 +18,7 @@
 
 <main>
 <figure>
-<img src="/23-caching-pwa/img/kuka-dapur-lemari.png" alt="Kuka berdiri di dapur mengambil kaleng dari lemari persediaan yang pintunya terbuka berisi bahan bertatakan tanggal, sementara lewat jendela dapur terlihat sebuah pasar dengan atap terasah.">
+<img loading="lazy" decoding="async" src="/23-caching-pwa/img/kuka-dapur-lemari.png" alt="Kuka berdiri di dapur mengambil kaleng dari lemari persediaan yang pintunya terbuka berisi bahan bertatakan tanggal, sementara lewat jendela dapur terlihat sebuah pasar dengan atap terasah.">
 <figcaption>Ambil dari lemari dulu, ke pasar hanya kalau stoknya kosong.</figcaption>
 </figure>
 
@@ -38,7 +38,7 @@
 
 <h2>Service worker: penjaga di pintu</h2>
 <figure>
-<img src="/23-caching-pwa/img/kuka-asisten-pintu.png" alt="Kuka membaca selembar daftar aturan stok sambil berdiri di dapur, di depannya seorang asisten berapron berdiri di pintu belakang yang pintunya terbuka menuju pasar, satu tangan memegang kertas aturan, tangan lain menghalau membawa tas belanja.">
+<img loading="lazy" decoding="async" src="/23-caching-pwa/img/kuka-asisten-pintu.png" alt="Kuka membaca selembar daftar aturan stok sambil berdiri di dapur, di depannya seorang asisten berapron berdiri di pintu belakang yang pintunya terbuka menuju pasar, satu tangan memegang kertas aturan, tangan lain menghalau membawa tas belanja.">
 <figcaption>Asisten yang mengatur lalu lintas bahan, dari lemari atau dari pasar.</figcaption>
 </figure>
 <p>Lapisan ketiga mengambil keputusan. Service worker adalah skrip yang dipasang browser sebagai penjaga di pintu jaringan sebuah halaman. Setiap permintaan halaman itu, berkas, gambar, data API, lewat tangannya lebih dulu. Ia boleh meneruskan ke jaringan, boleh menjawab dari cache, boleh mencampur keduanya.</p>
