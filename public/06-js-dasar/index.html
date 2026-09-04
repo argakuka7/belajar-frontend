@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 6 - JavaScript: Variabel, Tipe &amp; Kontrol Aliran | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo input[type="text"] { width: 100%; padding: .4rem .6rem; font: .92em ui-monospace, monospace; border: 1px solid #e5e7eb; border-radius: .3rem; }
+.demo button { margin-top: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+#demo-output { background: #f0f1f4; padding: .6rem .8rem; border-radius: .3rem; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 6</span>
+<h1>JavaScript: Variabel, Tipe &amp; Kontrol Aliran</h1>
+<p>HTML menyusun halaman, CSS memberi tampilan, dan JavaScript membuat halaman bertindak. Bab ini membuka JavaScript untuk pembaca yang belum pernah koding: cara menyimpan nilai, mengenal macam nilai, dan membuat keputusan.</p>
+</header>
+
+<main>
+<figure>
+<img src="/06-js-dasar/img/kuka-variabel.png" alt="Kuka menaruh bahan ke dalam stoples kaca berlabel, dan satu stoples berisi angka, satu berisi teks, satu berisi saklar.">
+<figcaption>Variabel, kotak berlabel yang menyimpan nilai.</figcaption>
+</figure>
+
+<h2>Mengapa JavaScript</h2>
+<p>Halaman web punya tiga lapisan. HTML menyusun struktur, CSS memberi tampilan, JavaScript memberi perilaku. Tanpa JavaScript, halaman hanya menampilkan teks dan gambar yang tetap. Dengan JavaScript, halaman bisa menghitung, memutuskan, dan mengubah isinya saat pembaca berinteraksi.</p>
+<p>JavaScript adalah bahasa pemrograman yang berjalan di browser. Bahasa pemrograman adalah cara memberi perintah ke komputer dengan aturan yang jelas. Browser membaca perintah itu dan menjalankannya baris demi baris. Setiap baris perintah disebut pernyataan. Bab ini membahas tiga fondasi JavaScript: variabel, tipe data, dan kontrol aliran.</p>
+
+<h2>Variabel</h2>
+<p>Program menyimpan nilai agar bisa dipakai lagi. Tempat menyimpan nilai itu disebut variabel. Variabel seperti kotak berlabel: kamu menulis nama di luar kotak, lalu meletakkan isi di dalamnya. Nama itu yang kamu pakai untuk mengambil isinya nanti.</p>
+<p>Dua cara membuat variabel di JavaScript: <code>let</code> dan <code>const</code>.</p>
+<pre><code>let umur = 25;
+const nama = "Kuka";</code></pre>
+<p><code>let</code> membuat variabel yang isinya bisa diganti. <code>const</code> membuat variabel yang isinya tetap, tidak bisa diganti setelah diisi. Kata const singkatan dari constant, tetap. Aturan praktisnya: pakai <code>const</code> sebagai bawaan, dan <code>let</code> hanya saat kamu tahu isinya akan berubah. Ada juga <code>var</code>, cara lama yang sebaiknya dihindari.</p>
+
+<h2>Tipe data</h2>
+<p>Setiap nilai di JavaScript punya macam, yang disebut tipe data. Tipe data menentukan apa yang bisa dilakukan dengan nilai itu. Lima tipe dasar yang sering dipakai.</p>
+<p>String adalah teks, ditulis di antara tanda kutip. <code>"halo"</code> dan <code>'Kuka'</code> adalah string. Number adalah angka, ditulis tanpa kutip, seperti <code>25</code> dan <code>3.14</code>. Boolean adalah nilai benar atau salah, ditulis <code>true</code> atau <code>false</code>. Boolean dipakai untuk keputusan.</p>
+<p>Dua tipe untuk keadaan kosong. <code>null</code> berarti sengaja kosong, kamu yang mengosongkannya. <code>undefined</code> berarti belum diisi sama sekali. Bedanya halus tapi penting: <code>null</code> adalah pilihan sadar, <code>undefined</code> adalah belum sempat.</p>
+<pre><code>let teks = "halo";      // string
+let angka = 25;         // number
+let aktif = true;       // boolean
+let kosong = null;      // null
+let belum;              // undefined</code></pre>
+
+<h2>Kontrol aliran: if dan else</h2>
+<figure>
+<img src="/06-js-dasar/img/kuka-kontrol-aliran.png" alt="Kuka membaca buku resep yang bercabang dua, satu jalan untuk oven panas dan satu untuk oven dingin, dengan panah pengulangan di samping.">
+<figcaption>Kontrol aliran, keputusan dan pengulangan dalam resep.</figcaption>
+</figure>
+<p>Program berjalan baris demi baris dari atas ke bawah. Kontrol aliran mengubah urutan itu. Kontrol aliran adalah cara memberi tahu program kapan menjalankan perintah tertentu. Yang paling dasar adalah <code>if</code> dan <code>else</code>.</p>
+<p><code>if</code> menjalankan perintah hanya bila sebuah kondisi benar. Kondisi adalah pertanyaan yang jawabannya <code>true</code> atau <code>false</code>. <code>else</code> menjalankan perintah lain bila kondisi itu salah.</p>
+<pre><code>let umur = 25;
+if (umur &gt;= 18) {
+  console.log("Sudah dewasa");
+} else {
+  console.log("Masih muda");
+}</code></pre>
+<p><code>console.log</code> adalah perintah untuk menulis pesan ke panel konsol browser, tempat pengembang melihat hasil. <code>&gt;=</code> adalah operator, simbol untuk membandingkan, di sini berarti lebih besar atau sama dengan.</p>
+
+<h2>Kontrol aliran: loop</h2>
+<p>Ada kalanya kamu ingin mengulang perintah. Loop adalah cara mengulang perintah beberapa kali. Yang paling sering dipakai adalah <code>for</code>.</p>
+<pre><code>for (let i = 1; i &lt;= 3; i++) {
+  console.log("Hitung: " + i);
+}</code></pre>
+<p><code>for</code> menerima tiga bagian dalam kurung: nilai awal <code>i = 1</code>, kondisi lanjut <code>i &lt;= 3</code>, dan langkah <code>i++</code> yang menambah <code>i</code> satu setiap putaran. Selama kondisi benar, perintah di dalam kurung kurawal dijalankan. Hasilnya tiga baris: Hitung: 1, Hitung: 2, Hitung: 3.</p>
+
+<h2>Kontrol aliran: switch</h2>
+<p>Saat kamu membandingkan satu nilai dengan banyak kemungkinan, <code>if</code> berantai jadi panjang. <code>switch</code> memilih satu dari banyak cabang berdasarkan nilai.</p>
+<pre><code>let hari = "senin";
+switch (hari) {
+  case "senin":
+    console.log("Mulai minggu");
+    break;
+  case "jumat":
+    console.log("Akhir minggu");
+    break;
+  default:
+    console.log("Hari biasa");
+}</code></pre>
+<p><code>switch</code> membandingkan nilai <code>hari</code> dengan tiap <code>case</code>. Yang cocok dijalankan, lalu <code>break</code> menghentikan. <code>default</code> menangkap nilai yang tidak cocok dengan cabang mana pun. <code>switch</code> tidak wajib, tapi membuat kode lebih rapi saat cabangnya banyak.</p>
+
+<h2>Analogi: dapur dan resep</h2>
+<p>Satu gambar merangkum ketiganya. Bayangkan dapur dan resep. Variabel adalah stoples berlabel di rak: satu berlabel "gula", satu "telur", satu "jumlah tamu". Kamu menaruh isi di stoples dan memanggilnya lewat label. Tipe data adalah macam isi stoples: gula adalah bubuk, telur adalah butir, jumlah tamu adalah angka. Kamu memperlakukan bubuk dan angka secara berbeda, sama seperti program memperlakukan string dan number secara berbeda.</p>
+<p>Kontrol aliran adalah resepnya. "Kalau oven sudah panas, masukkan adonan" adalah <code>if</code>. "Ulangi untuk tiap telur" adalah loop. "Kalau hari jumat, buat kue spesial" adalah <code>switch</code>. Resep menentukan urutan dan keputusan, sama seperti kontrol aliran menentukan urutan perintah program.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah membuat program kecil yang menilai umur dan menghitung. Versi vanilla menulis variabel, <code>if</code>, dan loop langsung di file JavaScript. Versi React membungkus logika yang sama dalam komponen, dan variabelnya menjadi state yang bisa berubah saat halaman berinteraksi.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>let nama = "Kuka";
+let umur = 25;
+
+if (umur &gt;= 18) {
+  console.log(nama + " sudah dewasa");
+} else {
+  console.log(nama + " masih muda");
+}
+
+for (let i = 1; i &lt;= 3; i++) {
+  console.log("Hitung: " + i);
+}</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function KartuUmur() {
+  const [umur, setUmur] = React.useState(25);
+  let pesan;
+  if (umur &gt;= 18) {
+    pesan = "Sudah dewasa";
+  } else {
+    pesan = "Masih muda";
+  }
+  return &lt;p&gt;{pesan}&lt;/p&gt;;
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti ada pada tempat logika hidup. Di vanilla, kamu menulis variabel dan keputusan langsung, lalu browser menjalankannya. Di React, logika yang sama tinggal di dalam komponen, dan variabelnya menjadi state, nilai yang bisa berubah dan membuat komponen dijalankan ulang. <code>if</code> dan <code>else</code> tetap bekerja sama di kedua versi. React hanya membungkus cara logika itu dipakai, tidak mengubah cara variabel dan keputusan bekerja.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah adalah taman bermain kecil. Kamu mengetik ekspresi JavaScript di kotak, menekan tombol, dan melihat hasil serta tipe datanya. Ekspresi adalah potongan kode yang menghasilkan nilai. Coba <code>let umur = 25; umur + 5</code>, lalu coba <code>if (10 &gt; 5) { "ya" } else { "tidak" }</code>.</p>
+
+<div class="demo">
+<p>Ketik ekspresi JavaScript di kotak, lalu tekan Jalankan. Hasil dan tipe datanya muncul di bawah.</p>
+<label for="demo-input">Ekspresi:</label>
+<input id="demo-input" type="text" value="let umur = 25; umur + 5">
+<button id="demo-run">Jalankan</button>
+<pre id="demo-output"></pre>
+</div>
+
+<p>Begini cara baca demonya. Kotak berisi ekspresi yang bisa kamu ubah. Tombol Jalankan menjalankan ekspresi itu. Baris pertama hasil menampilkan nilai akhir, baris kedua menampilkan tipe datanya. Kalau ekspresi salah, muncul pesan error. Coba ganti isi kotak dengan <code>let nama = "Kuka"; nama</code> untuk melihat tipe string, atau <code>10 &gt; 5</code> untuk melihat boolean.</p>
+<p>Ringkasan bab ini. JavaScript membuat halaman bertindak. Variabel menyimpan nilai, <code>let</code> untuk yang berubah dan <code>const</code> untuk yang tetap. Tipe data mengenal macam nilai: string, number, boolean, null, dan undefined. Kontrol aliran mengubah urutan perintah: <code>if</code> dan <code>else</code> untuk keputusan, <code>for</code> untuk pengulangan, <code>switch</code> untuk banyak cabang. Bab berikutnya membahas fungsi, array, dan objek.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps">MDN: JavaScript first steps</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/Variables">MDN: Storing the information you need, variables</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures">MDN: JavaScript data types and structures</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/conditionals">MDN: Making decisions in your code, conditionals</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Looping_code">MDN: Looping code</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch">MDN: switch</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/05-responsif-media-query-unit/">Bab 5 - Responsif: Media Query &amp; Unit</a> | Lanjut ke <a href="/07-fungsi-array-objek/">Bab 7 - Fungsi, Array &amp; Objek</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+var input = document.getElementById("demo-input");
+var tombol = document.getElementById("demo-run");
+var output = document.getElementById("demo-output");
+
+function jalankan() {
+  try {
+    var hasil = eval(input.value);
+    var tipe = typeof hasil;
+    if (hasil === null) { tipe = "null"; }
+    output.textContent = "Hasil: " + hasil + "\nTipe: " + tipe;
+  } catch (err) {
+    output.textContent = "Error: " + err.message;
+  }
+}
+
+tombol.addEventListener("click", jalankan);
+jalankan();
+</script>
+</body>
+</html>
