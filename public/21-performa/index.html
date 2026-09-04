@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 21 - Performa: Bundle, Lazy Load &amp; Gambar | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+#demo-galeri { max-height: 260px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: .4rem; background: #fff; }
+.demo-slot { margin: .4rem; }
+.demo-slot img { display: block; width: 100%; height: auto; border-radius: .3rem; }
+.demo-log { max-height: 8.5rem; overflow-y: auto; font-size: .85rem; padding-left: 1.2rem; margin: .4rem 0 0; }
+figure img { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 21</span>
+<h1>Performa: Bundle, Lazy Load &amp; Gambar</h1>
+<p>Halaman bagus yang lambat tetap halaman yang ditinggalkan. Bab ini membahas tiga sumber beban terbesar dan cara menakarnya: bundle JavaScript, lazy load, dan perawatan gambar.</p>
+</header>
+
+<main>
+<figure>
+<img src="/21-performa/img/kuka-tas-piknik.png" alt="Kuka mengepak satu tas piknik besar di atas meja, semua sendok termos dan bekal dari meja yang penuh barang sedang masuk ke satu tas itu, jalan ke arah mobil sudah terbuka lebar.">
+<figcaption>Satu tas, satu perjalanan. Ide di balik bundle.</figcaption>
+</figure>
+
+<h2>Mengapa performa ada</h2>
+<p>Performa (performance) adalah ukuran seberapa cepat halaman siap dipakai sejak dibuka. Halaman yang tampil dalam sekitar satu detik terasa langsung. Yang menunggu sepuluh detik membuat pembaca pergi sebelum melihat apa pun, apalagi di ponsel dengan sinyal lemah. Karena itu performa bukan pemanis di akhir pekerjaan, ia bagian dari pengalaman, sejajar dengan aksesibilitas di bab 19.</p>
+<p>Alasannya sederhana dan bisa dihitung. Setiap halaman adalah unduhan. Browser mengambil HTML, CSS, JavaScript, dan gambar lewat jaringan, dan jaringan itu lambat serta berbayar kuota. Makin banyak dan makin besar yang diunduh, makin lama pembaca menunggu. Pekerjaan bab ini adalah menimbang tiga hal: apa yang diunduh, kapan diunduh, dan seberapa besar.</p>
+
+<h2>Apa yang dibawa browser saat membuka halaman</h2>
+<p>Rekap cara browser bekerja dari bab 1. Browser mengunduh HTML, membacanya dari atas ke bawah, lalu setiap kali menemukan berkas lain, CSS, JavaScript, atau gambar, ia mengunduhnya juga. Setiap unduhan dimulai dengan request, permintaan ke server, dan permintaan itu butuh waktu walau berkasnya kecil. Urutan unduhan sebuah halaman bisa dilihat di tab Network pada DevTools dari bab 0.</p>
+<p>Dari sana muncul pola yang khas di hampir semua situs. Dua jenis berkas paling berat biasanya JavaScript dan gambar. JavaScript yang besar menahan halaman karena kode harus diunduh lalu dijalankan sebelum tombol dan daftar hidup. Gambar yang besar membengkakkan kuota dan membuat tata letak melompat saat gambarnya tiba. Lompatan ini disebut layout shift, pergeseran tata letak yang mengganggu mata dan jari. Tiga teknik bab ini menyasar dua beban itu: bundle mengatur JavaScript, lazy load menundanya, dan perawatan gambar mengecilkan beban terberatnya.</p>
+
+<h2>Bundle: banyak berkas jadi satu</h2>
+<p>Di proyek nyata, kode JavaScript jarang tinggal satu berkas. Ada berkas untuk tombol, untuk form, untuk galeri, untuk fitur yang jarang dibuka. Mengunduhnya satu per satu boros, karena tiap berkas membayar biaya request yang sama. Bundle adalah satu berkas JavaScript berisi banyak berkas kode yang sudah digabung. Alat penggabungnya disebut bundler, dan bundler termasuk build tool, alat yang memproses kode sebelum diterbitkan. Seri ini sengaja tidak memakai build tool supaya semua contoh bisa dicoba langsung di browser, sesuai ADR-0003, jadi di sini bundle cukup dipahami konsepnya.</p>
+<p>Penggabungan menghemat, tapi menyimpan tagihan. Satu bundle besar berarti pembaca mengunduh semua kode, bahkan bagian yang tidak pernah ia buka. Halaman yang hanya menampilkan daftar tetap mengunduh kode galeri dan kode form. Jawabannya bukan memilih antara satu berkas raksasa dan banyak berkas kecil, tapi menggabungkan lalu memecah kembali dengan cerdas. Caranya di bagian berikutnya.</p>
+
+<h2>Lazy load: memuat saat dibutuhkan</h2>
+<figure>
+<img src="/21-performa/img/kuka-payung-bagasi.png" alt="Kuka membuka bagasi mobil dan baru mengambil satu payung saat hujan mulai turun, jaket tebal dan speaker piknik tetap tertata di dalam bagasi dan tidak ada yang disentuh.">
+<figcaption>Lazy load, payung diambil dari bagasi hanya saat hujan turun.</figcaption>
+</figure>
+<p>Lazy load berarti menunda pemuatan sesuatu sampai benar-benar dibutuhkan. Lawannya disebut eager, memuat semuanya sejak awal. Untuk kode, tekniknya bernama code splitting, memecah bundle menjadi beberapa bagian yang diunduh terpisah. Bagian yang jarang dipakai, misalnya kode galeri foto, baru diunduh saat pembaca benar-benar membuka galerinya. Pemicu unduhannya dynamic import, perintah <code>import()</code> yang boleh dijalankan kapan saja saat halaman sudah hidup, bukan cuma di awal. Di React, kebiasaan ini dibungkus React.lazy dan komponen Suspense. React.lazy menunda pengunduhan kode komponen, Suspense menampilkan sesuatu, biasanya tulisan Memuat, selama kode itu di jalan.</p>
+<p>Untuk gambar, browser sudah menyediakan cara paling murah: atribut <code>loading="lazy"</code> pada img. Tanpa satu baris JavaScript pun, browser menahan unduhan gambar sampai gambar itu mendekati layar. Demo Hidup di bawah membangun ulang perilaku itu secara manual dengan IntersectionObserver, API browser yang memberi tahu saat elemen masuk atau keluar dari layar, supaya urutan pemuatannya terlihat dan bisa diikuti.</p>
+
+<h2>Gambar: beban terberat</h2>
+<p>Di kebanyakan halaman, gambar adalah porsi unduhan terbesar, lebih besar daripada HTML dan JavaScript digabung. Tiga langkah perawatannya. Pertama, ukuran yang sesuai. Gambar 4000 piksel untuk avatar 48 piksel itu membawa galon untuk minum segelas, kecilkan gambar sampai seukuran tempatnya tampil. Kedua, format modern. Format adalah cara menyimpan gambar menjadi berkas, dan WebP serta AVIF menyimpan gambar yang sama bagus dalam berkas jauh lebih kecil daripada JPG atau PNG. Ketiga, srcset, atribut yang memberi beberapa pilihan berkas untuk satu gambar, lalu browser memilih sendiri sesuai lebar layar. Ponsel kecil tidak perlu mengunduh berkas ukuran desktop.</p>
+<p>Dua kebiasaan kecil melengkapi. Pasang width dan height pada img supaya browser menyiapkan ruangnya sebelum gambar tiba, dan layout shift-nya hilang. Lalu pasang <code>loading="lazy"</code> untuk semua gambar di bawah lipatan, bagian halaman yang belum terlihat sebelum digulir.</p>
+
+<h2>Analogi: tas piknik</h2>
+<p>Satu gambar untuk semuanya. Kamu berangkat piknik. Bundle adalah mengepak semua barang ke satu tas besar, satu perjalanan dari dapur ke mobil, bukan bolak-balik untuk tiap sendok. Lazy load adalah menyisakan payung dan jaket tebal di bagasi mobil, diambil hanya kalau hujan benar-benar turun, membawanya jalan kaki hanya menambah beban. Dan gambar adalah galon air, beban terberat di dalam tas. Membawa galon 19 liter untuk empat orang minum segelas adalah halaman yang memuat gambar 4000 piksel untuk avatar kecil. Perkecil galonnya, tas langsung ringan.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya galeri foto yang ditunda. Halaman baru memuat tiga foto setelah pembaca menekan tombol Muat galeri. Vanilanya satu pendengar klik. Di dalamnya, createElement membuat elemen img satu per satu, atribut <code>loading</code> diisi lazy, lalu appendChild memasangnya ke galeri. React-nya satu state <code>dimuat</code> yang awalnya false. Tombol mengubahnya jadi true, dan daftar img dirender hanya saat state itu sudah true.</p>
+<p>Perilaku kedua sisi identik, yang berbeda cuma cara menulisnya, DOM dibangun dengan tangan atau tampilan lahir dari state. Kode React di kolom kanan memakai JSX yang sudah dipelajari sejak bab 15.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const tombol = document.querySelector("#muat");
+const galeri = document.querySelector("#galeri");
+
+tombol.addEventListener("click", function () {
+  for (let i = 1; i &lt;= 3; i++) {
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.src = "foto-" + i + ".jpg";
+    img.alt = "Foto " + i;
+    galeri.appendChild(img);
+  }
+  tombol.disabled = true;
+});</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Galeri() {
+  const [dimuat, setDimuat] = React.useState(false);
+  if (!dimuat) {
+    return (
+      &lt;button onClick={() =&gt; setDimuat(true)}&gt;
+        Muat galeri
+      &lt;/button&gt;
+    );
+  }
+  return (
+    &lt;div&gt;
+      {[1, 2, 3].map((i) =&gt; (
+        &lt;img key={i} loading="lazy"
+          src={"foto-" + i + ".jpg"}
+          alt={"Foto " + i} /&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Kedua versi menunda pekerjaan yang sama sampai pembaca memintanya. Vanilanya menunda lewat aksi, elemen img baru dibuat saat tombol ditekan. React-nya menunda lewat data, tampilan yang dirender mengikuti state. Kalau daftarnya nanti berubah jadi sepuluh foto, versi vanilla menambah baris, versi React cukup mengubah datanya. Dan di kedua versi, atribut <code>loading="lazy"</code> tetap yang mengurus penundaan terakhirnya ke browser.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo menampilkan kotak yang bisa digulir berisi delapan gambar. Saat halaman dibuka, tidak ada satu pun gambar yang diunduh, yang ada hanya kotak kosong bertinggi tetap. Gulir kotaknya, dan begitu sebuah kotak mendekati area layar, log di bawahnya mencatat bahwa src gambar itu baru dipasang saat itu. Gambarnya berupa data URI, gambar yang disandikan langsung sebagai teks di dalam halaman, supaya demo jalan tanpa jaringan. Mekanismenya sama persis dengan foto sungguhan, src hanya terpasang saat gambar dibutuhkan.</p>
+
+<div class="demo">
+<p>Gulir kotak gambar di bawah perlahan dan perhatikan lognya. Tekan Ulangi demo untuk kembali ke awal.</p>
+<button id="demo-ulang">Ulangi demo</button>
+<div id="demo-galeri"></div>
+<p><strong>Log pemuatan</strong></p>
+<ul id="demo-log" class="demo-log"></ul>
+</div>
+
+<p>Begini cara baca demonya. Fungsi mulai membuat delapan kotak, masing-masing berisi elemen img tanpa src, dengan width dan height yang sudah ditentukan supaya ruangnya siap dari awal. IntersectionObserver mengawasi kotak-kotak itu, dan hanya saat sebuah kotak mendekati area layar, baru atribut src dipasang dan log mencatatnya. Observer yang lama diputus lewat disconnect sebelum demo diulang, supaya tidak ada pengamat ganda. Di halaman nyata, pekerjaan ini sering cukup dengan atribut <code>loading="lazy"</code>, tapi versi manualnya membuat urutan pemuatannya kelihatan, bukan cuma terjadi.</p>
+
+<p>Ringkasan bab ini. Halaman adalah unduhan, dan unduhan terbesarnya biasanya JavaScript dan gambar. Bundle menggabungkan kode supaya jumlah request turun, code splitting dan lazy load menunda bagian yang belum dibutuhkan, dan gambar dirawat dengan ukuran pas, format modern, srcset, serta <code>loading="lazy"</code>. Bab berikutnya menjaga halaman tetap benar dengan cara mengujinya: testing front end.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Performance">MDN: Web performance</a></li>
+<li><a href="https://web.dev/learn/performance">web.dev: Learn Performance</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Lazy_loading">MDN: Lazy loading</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import">MDN: import() dynamic import</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">MDN: Intersection Observer API</a></li>
+<li><a href="https://web.dev/articles/optimize-webp-avif">web.dev: Serve images in modern formats (WebP, AVIF)</a></li>
+<li><a href="https://web.dev/articles/serve-responsive-images">web.dev: Responsive images (srcset)</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/20-design-token/">Bab 20 - Styling Modern: Variabel &amp; Design Token</a> | Lanjut ke <a href="/22-testing/">Bab 22 - Testing Front End</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+(function () {
+  const galeri = document.querySelector("#demo-galeri");
+  const log = document.querySelector("#demo-log");
+  const warna = ["#e68a3c", "#3c7de6", "#3ce68a", "#e63c9d", "#9d3ce6", "#e6c53c", "#3cc5e6", "#7de63c"];
+  let pengamat = null;
+
+  function buatSvg(n) {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300">' +
+      '<rect width="600" height="300" fill="' + warna[n - 1] + '"/>' +
+      '<text x="300" y="165" font-size="44" font-family="sans-serif" fill="#ffffff" text-anchor="middle">Gambar ' + n + '</text></svg>';
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+
+  function catat(teks) {
+    const li = document.createElement("li");
+    li.textContent = teks;
+    log.appendChild(li);
+  }
+
+  function mulai() {
+    if (pengamat) pengamat.disconnect();
+    galeri.textContent = "";
+    log.textContent = "";
+    catat("Halaman siap. Belum ada gambar yang diunduh.");
+
+    const kotak = [];
+    for (let i = 1; i <= 8; i++) {
+      const wadah = document.createElement("div");
+      wadah.className = "demo-slot";
+      wadah.dataset.n = i;
+      const img = document.createElement("img");
+      img.width = 600;
+      img.height = 300;
+      img.alt = "Gambar contoh " + i;
+      wadah.appendChild(img);
+      galeri.appendChild(wadah);
+      kotak.push(wadah);
+    }
+
+    pengamat = new IntersectionObserver(function (entri) {
+      entri.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        const img = e.target.querySelector("img");
+        if (img.src) return;
+        img.src = buatSvg(Number(e.target.dataset.n));
+        catat("Gambar " + e.target.dataset.n + " mendekati layar, src dipasang sekarang.");
+        pengamat.unobserve(e.target);
+      });
+    }, { root: galeri, rootMargin: "60px" });
+    kotak.forEach(function (k) { pengamat.observe(k); });
+  }
+
+  document.querySelector("#demo-ulang").addEventListener("click", mulai);
+  mulai();
+})();
+</script>
+</body>
+</html>
