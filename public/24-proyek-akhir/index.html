@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 24 - Proyek Penutup: Dashboard Konsumsi API | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo form { margin-top: .5rem; }
+.demo select { padding: .35rem .5rem; border: 1px solid #e5e7eb; border-radius: .3rem; margin: 0 .5rem; }
+.kartu { display: flex; align-items: center; gap: .5rem; padding: .5rem .7rem; border: 1px solid #e5e7eb; border-radius: .4rem; margin: .4rem 0; background: #fff; }
+.kartu button { margin-left: auto; padding: .25rem .6rem; background: #f0f1f4; color: var(--fg); border: 0; border-radius: .3rem; cursor: pointer; font-size: .85rem; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 24</span>
+<h1>Proyek Penutup: Dashboard Konsumsi API</h1>
+<p>Dua puluh tiga bab membangun potongan demi potongan. Bab ini menyatukannya. Tugasnya satu proyek: dashboard cuaca yang mengambil data dari API, menyimpan cache, dan merendernya sebagai daftar, dengan form untuk menambah dan menghapus kota.</p>
+</header>
+
+<main>
+<figure>
+<img src="/24-proyek-akhir/img/kuka-dapur-menu.png" alt="Kuka berdiri di dapur membuka satu buku resep di atas meja, bahan-bahan mentah tertata berkelompok di talenan, dan satu piring menu lengkap sudah jadi di sisi lain meja.">
+<figcaption>Memasak satu menu lengkap dari teknik yang sudah dipelajari satu per satu.</figcaption>
+</figure>
+
+<h2>Mengapa bab penutup berbentuk proyek</h2>
+<p>Mengetahui dan bisa memakai adalah dua hal berbeda. Contoh di setiap bab kecil dan sengaja dibuat kecil, jadi urutan penyusunan tidak pernah jadi soal. Proyek menanyakan hal yang tidak ditanyakan bab satuan. Potongan itu disusun dalam urutan apa. Siapa yang menyimpan data. Apa yang jalan duluan saat halaman dibuka.</p>
+<p>Proyeknya dashboard cuaca. Dashboard adalah papan informasi yang mengumpulkan beberapa angka penting di satu layar, seperti dashboard mobil yang menyatukan kecepatan dan bahan bakar. Pilihan jatuh ke cuaca karena datanya nyata, gratis, tanpa kunci API, dan sudah pernah ditemu di bab 11 lewat API publik Open-Meteo.</p>
+<p>Hitung bab yang terpakai. Form dan validasi dari bab 13 menambah kota. State dan localStorage dari bab 10 menyimpan daftarnya. fetch dan async dari bab 11 mengambil data. Perenderan daftar dari bab 12 menyusun kartu. Cache dari bab 23 membuat data lama dipakai ulang. Aksesibilitas bab 19 dan design token bab 20 ikut di markup dan warnanya. Hampir seluruh buku bekerja di satu halaman, dan justru itulah isi bab penutup.</p>
+
+<h2>Merencanakan proyek sebelum mengetik</h2>
+<p>Proyek selalu mulai dari daftar fitur, bukan dari kode. Fitur dashboard ini tiga. Pertama, menampilkan suhu terkini untuk setiap kota yang tersimpan. Kedua, menambah dan menghapus kota lewat form. Ketiga, saat halaman dibuka ulang, daftar kota tetap ada dan datanya tampil secepat mungkin.</p>
+<p>Dari daftar fitur itu, alur data bisa digambar sebelum mengetik. Form mengirim nama kota. Daftar kota disimpan di localStorage. Setiap kota memicu satu permintaan fetch. Hasilnya dirender sebagai kartu. Urutan ini penting. Kalau tampilan ditulis duluan tanpa state yang jelas, halaman cepat jadi, lalu berantakan saat fitur berikutnya masuk. Data dulu, tampilan menyusul, pola yang sama dengan bab 10 dan bab 14.</p>
+<p>Satu keputusan lingkup perlu disebut jujur. Kota yang boleh ditambah dibatasi enam pilihan dengan koordinat yang sudah tertulis di kode. Mengetik nama kota bebas memang lebih bebas, tetapi butuh API pencarian lokasi tambahan, dan fitur itu tidak dibayar kebutuhan bab ini. Batas yang disengaja lebih baik daripada lingkup yang melebar sendiri.</p>
+
+<h2>Alur data dari form ke layar</h2>
+<p>Semua perubahan lewat satu pintu. Ada satu fungsi render yang membaca state dan menggambar ulang daftar dari awal. Menambah kota berarti satu nama masuk state, lalu render dipanggil. Menghapus kota sama, satu nama keluar dari state. Tidak ada kode yang mengubah kartu satu per satu di tempat, karena daftar selalu digambar ulang dari state. Itulah cara bab 12 merender daftar, dipakai sungguhan.</p>
+
+<h2>Cache, minta sekali, pakai beberapa kali</h2>
+<figure>
+<img src="/24-proyek-akhir/img/kuka-kulkas-label.png" alt="Kuka membuka pintu kulkas berisi beberapa kotak makanan berlabel dan bertanggal, satu kotak dengan tanggal yang sudah lewat diangkatnya keluar.">
+<figcaption>Cache ala dapur, kotak berlabel tanggal, yang sudah lewat dibuang.</figcaption>
+</figure>
+<p>Setiap kartu butuh satu permintaan fetch, dan permintaan butuh waktu serta kuota. Cache, simpanan jawaban agar permintaan yang sama tidak diulang, sudah ditemu di bab 23. Aturannya dua langkah. Sebelum fetch, lihat cache. Ada datanya dan belum kedaluwarsa, pakai yang lama. Tidak ada atau sudah kedaluwarsa, minta yang baru lalu simpan.</p>
+<p>Umur cache ditulis bersama datanya. localStorage menyimpan waktu jawaban diterima, dan setiap kali dibaca, selisihnya dihitung dengan Date.now(). Lebih dari sepuluh menit, data dianggap basi dan diminta ulang. Angka sepuluh menit tidak ada rumusnya, cukup sesuai cuaca yang berubah perlahan. Menghapus kota dari daftar juga ikut menghapus cache-nya, supaya kulkas tidak menumpuk kotak yang tidak diminta lagi.</p>
+
+<h2>Kondisi menunggu dan gagal</h2>
+<p>Jaringan tidak secepat kode. Selama menunggu, kartu menampilkan tulisan Mengambil, bukan kosong. Kalau permintaan gagal, kartu itu menampilkan pesan galat dan kota lain tetap aman, karena setiap kota mencoba dengan try/catch sendiri, pola bab 11. Daftar yang masih kosong juga punya tulisan, suruh menambah kota pertama. Halaman yang diam tanpa penjelasan terlihat seperti macet.</p>
+
+<h2>Batas proyek</h2>
+<p>Proyek ini sengaja kecil. Tidak ada grafik, tidak ada pembaruan otomatis, tidak ada login. Tujuan bab ini menyatukan yang sudah dipelajari, bukan menambah yang baru. Dashboard sungguhan akan menambah penyegaran berkala lewat cache bab 23, berpindah halaman tanpa muat ulang lewat bab 18, dan jaring pengaman lewat tes bab 22. Kalau pembaca mau melanjutkan proyek ini sendiri, tiga bab itu petanya.</p>
+
+<h2>Analogi: dapur</h2>
+<p>Satu gambar untuk semuanya. Proyek adalah memasak satu menu lengkap, bukan latihan memotong satu bahan. Data cuaca adalah bahan mentahnya, dan fetch adalah perjalanan ke pasar. Cache adalah kulkas, beli sekali, pakai beberapa kali, dan yang terlalu lama dibuang. State adalah catatan pesanan di meja dapur, sumber tunggal yang menentukan apa yang sedang dibuat. Render adalah menata piring, dan setiap pesanan baru menata ulang piring dari catatan, bukan mengubah satu piring di tempat. Bahan habis bukan bencana, cukup tulis di piring itu, pesanan lain tetap keluar.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contoh yang dipasangkan adalah unit intinya, satu kartu kota, dari ambil data sampai jadi tampilan. Vanilanya satu async function, cek cache, fetch kalau perlu, simpan cache bersama waktunya, lalu mengisi kartu dengan textContent. React-nya kartu yang sama sebagai komponen, data cuaca masuk state lewat useEffect, dan tampilan membaca state. Kode fetch dan cache-nya sama persis, yang berubah hanya tempat hasilnya dititipkan.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const JEDA_CACHE = 10 * 60 * 1000;
+
+function urlKota(nama) {
+  const k = KOTA[nama]; // koordinat tiap kota
+  return "https://api.open-meteo.com/v1/forecast"
+    + "?latitude=" + k.lat + "&amp;longitude=" + k.lon
+    + "&amp;current=temperature_2m";
+}
+
+async function kartuKota(nama, status) {
+  const simpanan = JSON.parse(localStorage.getItem("cuaca-" + nama));
+  if (simpanan &amp;&amp; Date.now() - simpanan.waktu &lt; JEDA_CACHE) {
+    status.textContent = " " + simpanan.suhu + " °C (cache)";
+    return;
+  }
+  try {
+    const jawaban = await fetch(urlKota(nama));
+    if (!jawaban.ok) throw new Error("status " + jawaban.status);
+    const data = await jawaban.json();
+    const baru = { suhu: data.current.temperature_2m, waktu: Date.now() };
+    localStorage.setItem("cuaca-" + nama, JSON.stringify(baru));
+    status.textContent = " " + baru.suhu + " °C";
+  } catch (galat) {
+    status.textContent = " gagal mengambil data";
+  }
+}</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function KartuKota({ nama }) {
+  const [status, setStatus] = React.useState("mengambil...");
+
+  React.useEffect(() =&gt; {
+    async function ambil() {
+      const simpanan =
+        JSON.parse(localStorage.getItem("cuaca-" + nama));
+      if (simpanan &amp;&amp; Date.now() - simpanan.waktu &lt; JEDA_CACHE) {
+        setStatus(simpanan.suhu + " °C (cache)");
+        return;
+      }
+      const jawaban = await fetch(urlKota(nama));
+      const data = await jawaban.json();
+      const baru = { suhu: data.current.temperature_2m,
+        waktu: Date.now() };
+      localStorage.setItem("cuaca-" + nama, JSON.stringify(baru));
+      setStatus(baru.suhu + " °C");
+    }
+    ambil().catch(() =&gt; setStatus("gagal mengambil data"));
+  }, [nama]);
+
+  return &lt;p&gt;{nama}: {status}&lt;/p&gt;;
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini, dan pendek. Logikanya sama persis, cek cache dulu, fetch kalau basi, simpan lagi. Vanilanya mengisi elemen langsung, dan urutannya jalan karena kedisiplinan penulis kode. React menaruh hasil fetch di state dan membiarkan tampilan mengikuti, slot yang sama dengan bab 16. Tidak ada satu pun konsep baru di kolom kanan. Setelah dua puluh tiga bab, itu kabar baiknya.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah menjalankan dashboard utuhnya. Pilih kota, tekan Tambah, satu kartu muncul dan mengambil suhunya dari server. Buka ulang halaman, daftarnya tetap ada dan datanya tampil seketika dari cache. Setelah sepuluh menit, angka diminta ulang. Tombol Hapus mengeluarkan kota dari daftar sekaligus dari cache.</p>
+
+<div class="demo">
+<p>Dashboard cuaca kecil. Data diambil dari API publik Open-Meteo, daftar kota dan cache disimpan di localStorage browser ini, dan daftar digambar ulang dari state setiap ada perubahan.</p>
+<form id="demo-form">
+<label for="demo-pilih">Tambah kota</label>
+<select id="demo-pilih">
+<option value="Jakarta">Jakarta</option>
+<option value="Bandung">Bandung</option>
+<option value="Surabaya">Surabaya</option>
+<option value="Yogyakarta">Yogyakarta</option>
+<option value="Medan">Medan</option>
+<option value="Denpasar">Denpasar</option>
+</select>
+<button type="submit">Tambah</button>
+</form>
+<p id="demo-pesan" role="status"></p>
+<div id="demo-daftar" aria-live="polite"></div>
+</div>
+
+<p>Begini cara baca demonya. Fungsi render membaca satu state, yaitu daftar kota, dan menggambar seluruh daftar dari awal setiap dipanggil. Form tidak pernah menambah kartu sendiri, ia hanya menambah nama ke state lalu memanggil render, dan validasinya satu, tolak kota yang sudah ada di daftar. Setiap kartu menitipkan pengambilan datanya ke kartuKota, yang mengecek cache di localStorage sebelum fetch, dan mencoba dengan try/catch sendiri sehingga satu kota gagal tidak menjatuhkan yang lain. Waktu jawaban disimpan bersama suhunya, dan selisihnya dengan Date.now() yang menentukan basi atau tidak.</p>
+
+<p>Ringkasan bab ini, sekaligus buku ini. Proyek menyatukan potongan-potongan jadi satu halaman yang bekerja, dengan alur yang satu arah. Form mengubah state, state tersimpan di localStorage, render menggambar ulang dari state, dan setiap kota mengambil datanya sendiri dengan cache di depannya. Tidak ada teknik baru di bab ini, dan justru itu ujiannya. Kalau alur ini terbaca jelas, seluruh isi buku sudah sampai. Proyek ini titik mulai, bukan garis akhir.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">MDN: Fetch API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Response">MDN: Response</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">MDN: Window.localStorage</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">MDN: async function</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON">MDN: JSON</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+<li><a href="https://open-meteo.com/en/docs">Open-Meteo: API Documentation</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/23-caching-pwa/">Bab 23 - Caching, PWA &amp; Offline</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const KOTA = {
+  Jakarta: { lat: -6.2, lon: 106.8 },
+  Bandung: { lat: -6.9, lon: 107.6 },
+  Surabaya: { lat: -7.25, lon: 112.75 },
+  Yogyakarta: { lat: -7.8, lon: 110.36 },
+  Medan: { lat: 3.59, lon: 98.67 },
+  Denpasar: { lat: -8.65, lon: 115.22 }
+};
+const JEDA_CACHE = 10 * 60 * 1000;
+const KUNCI_DAFTAR = "dash24-daftar";
+const KUNCI_CACHE = "dash24-cache";
+
+let daftarKota = JSON.parse(localStorage.getItem(KUNCI_DAFTAR)) || [];
+let cache = JSON.parse(localStorage.getItem(KUNCI_CACHE)) || {};
+
+function simpanState() {
+  localStorage.setItem(KUNCI_DAFTAR, JSON.stringify(daftarKota));
+  localStorage.setItem(KUNCI_CACHE, JSON.stringify(cache));
+}
+
+function urlKota(nama) {
+  const k = KOTA[nama];
+  return "https://api.open-meteo.com/v1/forecast?latitude=" + k.lat +
+    "&longitude=" + k.lon + "&current=temperature_2m";
+}
+
+function render() {
+  const wadah = document.querySelector("#demo-daftar");
+  wadah.innerHTML = "";
+  if (daftarKota.length === 0) {
+    const kosong = document.createElement("p");
+    kosong.innerHTML = "<em>Belum ada kota. Tambah satu lewat form di atas.</em>";
+    wadah.append(kosong);
+    return;
+  }
+  daftarKota.forEach(function (nama) {
+    const kartu = document.createElement("div");
+    kartu.className = "kartu";
+    const judul = document.createElement("strong");
+    judul.textContent = nama;
+    kartu.append(judul);
+    const status = document.createElement("span");
+    status.textContent = " mengambil...";
+    kartu.append(status);
+    const hapus = document.createElement("button");
+    hapus.textContent = "Hapus";
+    hapus.setAttribute("aria-label", "Hapus " + nama);
+    hapus.addEventListener("click", function () {
+      daftarKota = daftarKota.filter(function (k) { return k !== nama; });
+      delete cache[nama];
+      simpanState();
+      render();
+    });
+    kartu.append(hapus);
+    wadah.append(kartu);
+    muatKota(nama, status);
+  });
+}
+
+async function muatKota(nama, status) {
+  const simpanan = cache[nama];
+  if (simpanan && Date.now() - simpanan.waktu < JEDA_CACHE) {
+    status.textContent = " " + simpanan.suhu + " °C (cache)";
+    return;
+  }
+  try {
+    const jawaban = await fetch(urlKota(nama));
+    if (!jawaban.ok) throw new Error("status " + jawaban.status);
+    const data = await jawaban.json();
+    cache[nama] = { suhu: data.current.temperature_2m, waktu: Date.now() };
+    simpanState();
+    status.textContent = " " + cache[nama].suhu + " °C";
+  } catch (galat) {
+    status.textContent = " gagal mengambil data";
+  }
+}
+
+document.querySelector("#demo-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const pilih = document.querySelector("#demo-pilih");
+  const pesan = document.querySelector("#demo-pesan");
+  if (daftarKota.includes(pilih.value)) {
+    pesan.textContent = "Kota itu sudah ada di daftar.";
+    return;
+  }
+  pesan.textContent = "";
+  daftarKota.push(pilih.value);
+  simpanState();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
