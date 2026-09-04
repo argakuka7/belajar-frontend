@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 22 - Testing Front End | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo ul { margin: .4rem 0; padding-left: 1.2rem; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 22</span>
+<h1>Testing Front End</h1>
+<p>Halaman yang sudah jadi belum selesai. Satu perubahan kecil bisa merusak bagian lain tanpa terlihat. Bab ini membahas testing front end, cara menuliskan pemeriksaan halaman jadi kode yang dijalankan komputer berulang-ulang, supaya yang menemukan kerusakan adalah test, bukan pembaca.</p>
+</header>
+
+<main>
+<figure>
+<img src="/22-testing/img/kuka-bangku-daftar-periksa.png" alt="Kuka berdiri di bengkel memegang papan klip berisi daftar periksa bertanda centang, di bangku kerja depannya satu komponen mesin kecil diperiksa dengan kabel pengukur, satu lampu indikator hijau menyala di sampingnya.">
+<figcaption>Mengecek satu komponen di bangku kerja, cepat dan pasti. Unit test.</figcaption>
+</figure>
+
+<h2>Mengapa halaman perlu diuji</h2>
+<p>Kamu sebenarnya sudah menguji sejak bab 0. Halaman dibuka, tombol ditekan, form diisi, hasilnya dilihat. Itu testing manual, menguji dengan tangan dan mata. Cara ini jalan, dan bab-bab sebelumnya memakainya.</p>
+<p>Masalahnya muncul saat halaman tumbuh. Halaman dengan dua puluh fitur tidak bisa diperiksa semuanya setiap kali ada perubahan, waktunya tidak cukup. Pemeriksaan akhirnya dipangkas, dan bagian yang terlewat rusak diam-diam. Rusaknya baru terasa saat pembaca menemukannya, bukan saat kamu.</p>
+<p>Testing front end adalah jawabannya. Pemeriksaan yang tadinya dijalankan dengan tangan ditulis jadi kode, disebut test. Komputer yang menjalankannya, berulang-ulang, dengan urutan dan hasil yang sama setiap kali. Test adalah kode yang memeriksa kode.</p>
+
+<h2>Test paling sederhana: membandingkan harapan dan hasil</h2>
+<p>Bentuk dasar semua test satu kalimat, kalau inputnya ini, hasilnya harus itu. Fungsi normalkanEmail menerima "  A@B.COM ", harapannya "a@b.com". Kalau hasil fungsi sama dengan harapan, test lolos (pass). Kalau beda, test gagal (fail).</p>
+<p>Pernyataan hasilnya harus sama dengan ini disebut assertion. Test yang menguji satu bagian kecil secara terpisah, satu fungsi misalnya, disebut unit test. Fungsi yang paling mudah diuji adalah fungsi murni, yang hasilnya hanya bergantung pada input dan tidak menyentuh halaman. Validasi form di bab 13 punya bentuk seperti itu, jadi dia titik mulai yang baik.</p>
+
+<h2>Regresi, bug lama yang kambuh</h2>
+<figure>
+<img src="/22-testing/img/kuka-uji-jalan-peringatan.png" alt="Kuka mengemudikan mobil kecil saat uji jalan di jalan raya, satu lampu peringatan kuning berbentuk ikon mesin menyala di panel instrumen, menandakan kerusakan yang baru terdeteksi.">
+<figcaption>Lampu peringatan menyala saat uji jalan. Regresi tertangkap oleh pemeriksaan, bukan oleh pembeli.</figcaption>
+</figure>
+<p>Ada pola rusak yang paling sering di halaman. Satu bug diperbaiki, lama-lama hilang, lalu beberapa perubahan kemudian muncul lagi. Perbaikan di form memecah daftar, pembenahan tombol merusak total keranjang. Pola ini disebut regresi, bug yang sudah pernah diperbaiki tapi kembali karena perubahan lain.</p>
+<p>Test adalah jaring pengamannya. Kebiasaannya sederhana, setiap bug yang ditemukan ditulis jadi satu test yang menegaskan perbaikannya. Test lama tidak pernah dibuang, semuanya dijalankan setiap ada perubahan. Kalau perubahan baru membangunkan bug lama, test berubah merah beberapa detik setelah disimpan, bukan pembaca yang menemukannya dua minggu kemudian.</p>
+
+<h2>Tiga lapis pengujian</h2>
+<p>Halaman bisa diuji dari tiga ketinggian. Unit test menguji satu bagian kecil secara terpisah, satu fungsi normalisasi email, satu penghitung. Cepat, murah, jumlahnya bisa banyak. Integration test menguji beberapa bagian yang bekerja sama, misalnya form, validasi, dan pesan errornya. End-to-end test, sering disingkat e2e, menguji halaman dari luar seperti pengguna, browser sungguhan membuka halaman, mengisi form, menekan tombol, lalu hasil akhirnya dicek.</p>
+<p>Semakin ke atas, test makin mirip pengguna, tapi makin lambat dan makin mahal dirawat. Porsi yang lazim menyerupai piramida, unit banyak di dasar, e2e sedikit di puncak. Karena itu bab ini fokus ke lapisan bawah, yang bisa dijalankan tanpa alat tambahan.</p>
+
+<h2>Di balik test runner</h2>
+<p>Test yang dijalankan komputer butuh pemandunya. Test runner adalah program yang mencari semua berkas test, menjalankan tiap test satu per satu, menghitung yang lolos dan gagal, lalu meringkasnya dalam satu baris. Vitest dan Jest adalah test runner yang umum di proyek front end, dan keduanya jalan di Node, JavaScript di luar browser.</p>
+<p>Mesinnya sebenarnya sederhana, daftar test, satu loop yang menjalankan, penghitung hasil. Demo di bawah membangun versi mini dari mesin itu langsung di halaman, puluhan baris, supaya mesinnya terlihat, bukan tersembunyi di alat pemasangan.</p>
+
+<h2>Menguji komponen React</h2>
+<p>Komponen React adalah fungsi, sudah ditemu di bab 14, jadi dia bisa diuji juga. Pertanyaannya, apa yang ditegaskan. Yang paling tahan lama bukan isi state atau nama variabel, tapi apa yang pengguna lihat dan bisa lakukan, teks yang muncul, tombol yang jalan, pesan yang tampil.</p>
+<p>Testing Library, pasangan umum React untuk pengujian, dibangun di prinsip itu. Dia merender komponen, memasangnya ke halaman, lalu mencari elemen cara pengguna mencarinya, lewat teks dan peran elemen, bukan lewat detail internal komponen. getByRole dan getByText mencari elemen, fireEvent meniru ketikan dan klik, expect menyatakan harapan. Peran elemen, role, sudah lewat di bab aksesibilitas. Kode ini jalan di test runner dengan lingkungan DOM tiruan, bukan di halaman publik, jadi di pasangan contoh ia ditampilkan, bukan dijalankan.</p>
+
+<h2>Analogi: bengkel mobil</h2>
+<p>Halamanmu adalah mobil. Unit test adalah mekanik yang mengecek satu komponen di bangku kerja, aki dicek satu, lampu dicek satu, cepat dan pasti. Integration test adalah merakit beberapa komponen jadi satu set lalu menyalanya, mesin dan transmisi harus cocok. End-to-end adalah uji jalan di jalan raya, mobil utuh dikendarai seperti pembeli. Regresi adalah kerusakan lama yang kambuh. Bengkel menjaganya dengan buku riwayat, setiap servis semua pemeriksaan lama diulang dari daftar, supaya yang pernah rusak tidak lolos lagi. Test suite, kumpulan semua testmu, adalah buku riwayat itu.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya fungsi normalkanEmail yang sama dengan di demo, memangkas spasi di ujung dan mengubah huruf jadi kecil, persiapan sebelum email disimpan seperti di bab 13. Vanilanya tiga test sederhana, fungsi asersi yang membandingkan hasil dengan harapan, dan tiga pemanggilan langsung yang mencatat PASS atau FAIL ke console. Harapan ditulis lebih dulu, kode fungsinya menyusul dibandingkan ke sana.</p>
+<p>Kolom React menguji komponen FormEmail dengan Testing Library. Test me-render komponen, mencari kotak input lewat perannya, mengetik email berantakan lewat fireEvent, lalu menegaskan hasil bersihnya muncul di layar. Perhatikan testnya tidak membuka state React sama sekali, ia melihat halaman seperti pengguna. Kode ini membutuhkan test runner di Node, jadi di halaman ini ia hanya ditampilkan, demo di bawah menjalankan versi vanilanya.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>function normalkanEmail(email) {
+  return email.trim().toLowerCase();
+}
+
+function asersi(hasil, harapan) {
+  if (hasil === harapan) {
+    console.log("PASS: " + harapan);
+  } else {
+    console.error("FAIL: harapan " + harapan + ", hasil " + hasil);
+  }
+}
+
+asersi(normalkanEmail("A@B.COM"), "a@b.com");
+asersi(normalkanEmail("  a@b.com  "), "a@b.com");
+asersi(normalkanEmail("  A@B.COM "), "a@b.com");</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function FormEmail() {
+  const [email, setEmail] = React.useState("");
+  return (
+    &lt;div&gt;
+      &lt;input value={email}
+        onChange={(e) =&gt; setEmail(e.target.value)} /&gt;
+      &lt;p&gt;Hasil bersih: {email.trim().toLowerCase()}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+test("email berantakan dibersihkan", () =&gt; {
+  render(&lt;FormEmail /&gt;);
+  fireEvent.change(screen.getByRole("textbox"), {
+    target: { value: "  A@B.COM " },
+  });
+  expect(
+    screen.getByText("Hasil bersih: a@b.com")
+  ).toBeTruthy();
+});</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Di vanilla, pemeriksaan ditulis dari bahan paling dasar, nilai yang diharapkan dan satu fungsi pembanding. Testing Library mengangkat levelnya, yang ditegaskan bukan nilai balik fungsi tapi apa yang terlihat di halaman. Keduanya berbagi satu bentuk yang sama, susun harapan, jalankan kode, bandingkan. Bentuk itulah testing, sisanya perkakas.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah adalah test runner mini yang jalan tanpa alat apa pun. Tekan Jalankan tes, tiga test untuk normalkanEmail dijalankan, semuanya hijau. Lalu tekan Rusak fungsi, tes ulang, fungsi sengaja dirusak dengan membuang pemangkasan spasi, dan dua test berubah merah. Itu regresi tertangkap oleh test, bukan oleh pembaca. Tekan sekali lagi untuk memperbaikinya.</p>
+
+<div class="demo">
+<p>Demo ini menjalankan test runner mini. Tiga test memeriksa fungsi normalkanEmail. Jalankan tesnya saat fungsi sehat, lalu rusak fungsinya dan jalankan lagi untuk melihat test menahan regresi.</p>
+<div id="demo-hasil"><p><em>Tekan Jalankan tes untuk memulai.</em></p></div>
+<p style="margin: .6rem 0 0;">
+<button id="btn-jalan">Jalankan tes</button>
+<button id="btn-rusak">Rusak fungsi, tes ulang</button>
+</p>
+</div>
+
+<p>Begini cara baca demonya. Daftar test hanya data, tiap baris berisi nama, input, dan harapan. Tombol memanggil jalankanTes, yang melakukan satu loop, memanggil normalkanEmail dengan input, membandingkan hasilnya dengan harapan, lalu mencatat lolos atau gagal. Ringkasan di bawah daftar menghitung keduanya. Saat fungsinya dirusak, tidak ada satu test pun yang diubah, yang berubah hanya hasilnya. Perbedaan antara hasil dan harapan itulah yang dilaporkan merah.</p>
+
+<p>Ringkasan bab ini. Testing front end memindahkan pemeriksaan manual jadi test, kode yang membandingkan harapan dengan hasil. Unit test menguji fungsi kecil, integration test menguji bagian yang bekerja sama, end-to-end menguji halaman utuh seperti pengguna, dan semuanya dijalankan oleh test runner. Regresi ditahan dengan kebiasaan sederhana, bug yang ditemukan jadi test yang tetap dijalankan. Bab berikutnya menjaga halaman tetap hidup tanpa jaringan: caching, PWA, dan offline.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Testing/Introduction">MDN: Introduction to cross browser testing</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Testing/Testing_strategies">MDN: Strategies for carrying out testing</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Testing/Automated_testing">MDN: Introduction to automated testing</a></li>
+<li><a href="https://testing-library.com/docs/react-testing-library/intro">Testing Library: React Testing Library introduction</a></li>
+<li><a href="https://vitest.dev/guide/">Vitest: Getting started</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/21-performa/">Bab 21 - Performa: Bundle, Lazy Load &amp; Gambar</a> | Lanjut ke <a href="/23-caching-pwa/">Bab 23 - Caching, PWA &amp; Offline</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+(function () {
+  var rusak = false;
+
+  function normalkanEmail(email) {
+    if (rusak) {
+      return email.toLowerCase();
+    }
+    return email.trim().toLowerCase();
+  }
+
+  var tes = [
+    { nama: "huruf besar jadi kecil", input: "A@B.COM", harapan: "a@b.com" },
+    { nama: "spasi di ujung dibuang", input: "  a@b.com  ", harapan: "a@b.com" },
+    { nama: "kombinasi keduanya", input: "  A@B.COM ", harapan: "a@b.com" }
+  ];
+
+  function jalankanSatu(t) {
+    return normalkanEmail(t.input) === t.harapan;
+  }
+
+  function jalankanTes() {
+    var wadah = document.querySelector("#demo-hasil");
+    var lolos = 0;
+    var html = "<ul>";
+    for (var i = 0; i < tes.length; i++) {
+      var t = tes[i];
+      var ok = jalankanSatu(t);
+      if (ok) {
+        lolos = lolos + 1;
+      }
+      html += '<li style="color: ' + (ok ? "#15803d" : "#b91c1c") + ';">' + (ok ? "LOLOS" : "GAGAL") + " - " + t.nama + "</li>";
+    }
+    html += "</ul>";
+    html += "<p><strong>" + lolos + " dari " + tes.length + " test lolos.</strong> Fungsi saat ini " + (rusak ? "rusak, test menunjukkan regresinya." : "sehat.") + "</p>";
+    wadah.innerHTML = html;
+  }
+
+  document.querySelector("#btn-jalan").addEventListener("click", jalankanTes);
+  document.querySelector("#btn-rusak").addEventListener("click", function () {
+    rusak = !rusak;
+    this.textContent = rusak ? "Perbaiki fungsi" : "Rusak fungsi, tes ulang";
+    jalankanTes();
+  });
+})();
+</script>
+</body>
+</html>
