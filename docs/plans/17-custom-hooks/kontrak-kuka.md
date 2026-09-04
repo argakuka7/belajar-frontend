@@ -2,7 +2,7 @@
 
 Kembali ke [overview](overview.md).
 
-Kuka adalah persona ilustrasi seri ini. Kontrak ini memesan ilustrasi untuk diproduksi pada fase ilustrasi. Gambar belum dibuat di fase ini. Path dan alt text di bawah sudah dipakai di halaman publik, jadi ilustrator harus memenuhi nama file dan deskripsi ini.
+Kuka adalah persona ilustrasi seri ini. Kontrak ini memesan ilustrasi untuk diproduksi pada fase ilustrasi. Path dan alt text di bawah sudah dipakai di halaman publik, jadi ilustrator harus memenuhi nama file dan deskripsi ini.
 
 ## Ilustrasi 1: Kuka menempel satu resep di dua dapur, tiap panci berisi masakan berbeda (custom hook)
 
