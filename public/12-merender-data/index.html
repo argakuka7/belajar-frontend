@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 12 - Merender Data: List, Kondisi &amp; Template | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo label { display: block; margin-top: .8rem; font-size: .95rem; }
+#demo-status { color: var(--muted); font-style: italic; min-height: 1.5rem; margin: .8rem 0 0; }
+#demo-lista { margin: .4rem 0 0; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 12</span>
+<h1>Merender Data: List, Kondisi &amp; Template</h1>
+<p>Bab 11 mengambil data dari server dengan fetch. Tetapi data yang masih berupa array dan objek di variabel tidak terlihat di layar. Bab ini mengubah data menjadi tampilan dengan tiga peralatan: list, satu array menjadi banyak elemen; kondisi, tampilan yang berganti mengikuti keadaan data; dan template, cetakan bentuk tetap yang dipakai ulang untuk tiap item.</p>
+</header>
+
+<main>
+<figure>
+<img src="/12-merender-data/img/kuka-mesin-cetak.png" alt="Kuka berdiri di mesin cetak percetakan, memasukkan satu lembar berkas ke mesin, sementara deretan kartu hasil cetakan yang bentuknya sama persis keluar di sisi lain.">
+<figcaption>List dan template, berkas dari klien dicetak satu kartu per baris dengan satu desain yang sama.</figcaption>
+</figure>
+
+<h2>Mengapa merender data ada</h2>
+<p>Data dari server datang sebagai teks JSON yang sudah diubah menjadi array dan objek oleh kode bab 11. Angka, string, nilai <code>true</code> dan <code>false</code>, semuanya rapi di variabel. Tetapi browser tidak pernah menebak bahwa objek bernama <code>judul</code> harus tampil sebagai <code>li</code>, atau bahwa array berisi tiga objek berarti tiga baris di halaman. Ada satu pekerjaan yang tidak dilakukan siapa pun kecuali penulis kode, menyusun elemen dari data. Pekerjaan itu disebut merender, mengubah data menjadi elemen yang terlihat di halaman.</p>
+<p>Merender bukan sekali jadi. Data berubah, tampilan harus mengikuti. Server membalas dengan data baru, daftar harus berganti. Pengguna menyalakan saringan, daftar menyusut. Karena itu merender diatur sebagai fungsi, satu fungsi yang tugasnya membaca data dan menuliskannya ke halaman. Data berubah, fungsi dipanggil lagi. Pola ini yang membuat bab-bab sebelumnya menekan satu hal penting, pisahkan data dari tampilan.</p>
+
+<h2>List: satu array, banyak elemen</h2>
+<p>Array berisi banyak nilai, dan halaman butuh banyak elemen untuk menampilkannya. Jalurnya loop. Untuk tiap item di array, buat elemen dengan <code>createElement</code>, isi teksnya dengan <code>textContent</code>, tempel ke induknya dengan <code>appendChild</code>. Semua alat ini sudah dipakai bab 8, kini diputar berulang oleh <code>forEach</code> dari bab 7.</p>
+<pre><code>const ul = document.querySelector("#daftar");
+data.forEach(function (tugas) {
+  const li = document.createElement("li");
+  li.textContent = tugas.judul;
+  ul.appendChild(li);
+});</code></pre>
+<p>Ada satu jebakan yang baru terasa saat daftar dirender lebih dari sekali. Panggil fungsi merender dua kali, isi halaman jadi dua kali lipat, karena <code>appendChild</code> selalu menambah, tidak pernah mengganti. Kebiasaannya satu baris, kosongkan induk sebelum mengisi. <code>ul.replaceChildren()</code> menghapus semua anak <code>ul</code>, lalu loop mengisinya dari nol. Kosongkan, lalu isi, itu pola tetap fungsi merender list.</p>
+
+<h2>Kondisi: tampilan yang berganti</h2>
+<figure>
+<img src="/12-merender-data/img/kuka-papan-status.png" alt="Kuka berdiri di depan papan status di jendela percetakan, sedang membalik tulisan dari Menunggu berkas menjadi Sedang mencetak, dengan mesin cetak terlihat di dalam toko.">
+<figcaption>Kondisi, papan status yang hanya menampilkan satu keadaan pada satu waktu.</figcaption>
+</figure>
+<p>Data yang diambil dari server tidak selalu siap. Ada jeda, ada jawaban kosong, ada data yang terisi. Halaman yang baik menunjukkan keadaannya, bukan diam tanpa kabar. Inilah kondisi, keputusan apa yang dirender tergantung data saat itu. Alatnya if dan else dari bab 6, dan pilihannya biasanya tiga. Sedang memuat, data belum tiba, tampilkan tulisan "Memuat...". Kosong, data tiba tapi arraynya kosong array, tampilkan tulisan seperti "Belum ada tugas". Terisi, barulah loop list jalan. Ketiganya masuk satu fungsi render yang sama.</p>
+<pre><code>function render() {
+  ul.replaceChildren();
+  if (sedangMemuat) {
+    status.textContent = "Memuat...";
+    return;
+  }
+  if (data.length === 0) {
+    status.textContent = "Belum ada tugas.";
+    return;
+  }
+  status.textContent = "";
+  data.forEach(tulisItem);
+}</code></pre>
+<p>Satu peringatan yang disambung dari bab 8. <code>innerHTML</code> berbahaya bila isinya berasal dari luar, dan data server adalah data dari luar, sama asingnya dengan ketikan pengguna. Orang jahat bisa menyelundupkan kode lewat situ. Untuk data dari fetch, <code>textContent</code> tetap pilihan amannya.</p>
+
+<h2>Template: cetakan yang dipakai ulang</h2>
+<p>Item yang dirender jarang sebatas teks polos. Kartu tugas punya judul, tanggal, dan tombol. Menulis <code>createElement</code> untuk tiap potongannya melelahkan. JavaScript punya jalan pendek, template literal, string yang memakai tanda kutip balik dan menyisipkan nilai dengan <code>${}</code>.</p>
+<pre><code>const kartu = `
+  &lt;div class="kartu"&gt;
+    &lt;h3&gt;${tugas.judul}&lt;/h3&gt;
+    &lt;p&gt;${tugas.tanggal}&lt;/p&gt;
+  &lt;/div&gt;`;</code></pre>
+<p>Cara ini enak dibaca, tapi isinya berakhir di <code>innerHTML</code> jika dimasukkan ke halaman, dan bagian tadi baru saja melarang itu untuk data dari luar. HTML menyediakan jalan lain, elemen <code>&lt;template&gt;</code>. Isinya tidak dirender browser, tidak terlihat dan tidak dihitung, sampai kode mengambilnya. <code>template.content</code> adalah wadah berisi bentuk jadi, dan <code>cloneNode(true)</code> membuat salinan utuh dari potongan dokumen itu, yang disebut fragment. Salin, isi bagian yang berubah, tempel. Bentuk tetap tinggal di HTML, data tinggal di JavaScript.</p>
+<pre><code>&lt;template id="item-tugas"&gt;&lt;li&gt;&lt;/li&gt;&lt;/template&gt;</code></pre>
+<pre><code>const cetakan = document.querySelector("#item-tugas");
+data.forEach(function (tugas) {
+  const salinan = cetakan.content.cloneNode(true);
+  salinan.querySelector("li").textContent = tugas.judul;
+  ul.appendChild(salinan);
+});</code></pre>
+
+<h2>Analogi: percetakan</h2>
+<p>Satu gambar untuk semuanya. Sebuah percetakan menerima berkas dari klien, dan berkas itu adalah data dari server, isinya bukan buatan percetakan. Di dalam toko ada satu desain cetak yang disiapkan sekali, bentuknya tetap tiap hari, dan itulah template. Mesin mengulang desain itu untuk tiap baris berkas, satu kartu per baris, dan itulah list. Di jendela toko ada papan status. "Menunggu berkas" saat berkas belum tiba. "Berkas kosong" saat klien membalas tanpa pesanan. "Sedang mencetak" saat mesin berjalan. Papan itu kondisi, satu tulisan yang berganti mengikuti keadaan. Karyawan tidak menulis kartu dengan tangan, ia merawat desain dan mesin yang mengulang, lalu membiarkan papan status bicara selama pekerjaan belum selesai.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya daftar tugas yang dirender dari array, data yang sama bentuknya dengan jawaban fetch. Versi vanilla memakai pola lengkap bab ini, <code>replaceChildren</code>, kondisi memuat dan kosong, lalu <code>forEach</code> dengan <code>cloneNode</code> dan <code>textContent</code>. Versi React memutar <code>map</code> di dalam JSX, dan tiap item membawa <code>key</code>, penanda yang memberi tahu React item mana tetap item itu saat daftar berganti.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>function render() {
+  ul.replaceChildren();
+  if (sedangMemuat) {
+    status.textContent = "Memuat...";
+    return;
+  }
+  if (data.length === 0) {
+    status.textContent = "Belum ada tugas.";
+    return;
+  }
+  status.textContent = "";
+  data.forEach(function (tugas) {
+    const salinan = cetakan.content.cloneNode(true);
+    salinan.querySelector("li").textContent = tugas.judul;
+    ul.appendChild(salinan);
+  });
+}</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function DaftarTugas() {
+  const [tugas, setTugas] = React.useState([]);
+
+  return (
+    &lt;div&gt;
+      {tugas.length === 0 &amp;&amp; &lt;p&gt;Belum ada tugas.&lt;/p&gt;}
+      &lt;ul&gt;
+        {tugas.map(function (t) {
+          return &lt;li key={t.id}&gt;{t.judul}&lt;/li&gt;;
+        })}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Versi vanilla merender dengan tangan di tempat yang ditentukan sendiri, ia mengosongkan induk, memilih kondisi, lalu menempel elemen satu per satu. Versi React mendeklarasikan hasilnya saja. Yang ditulis hanya satu rumus, bentuk halaman dari data sekarang, berupa list <code>map</code> dengan <code>key</code> dan kondisi kosong dengan <code>&amp;&amp;</code>. Setiap data berubah, React menjalankan rumus itu lagi, membandingkan hasilnya dengan halaman lama, lalu menyentuh DOM hanya di bagian yang benar-benar berubah. <code>key</code> ikut kerja di sini, ia identitas tiap item, dan dengan identitas itu React tahu item mana yang tinggal digeser dan mana yang benar-benar baru. Pekerjaan kosongkan lalu isi ulang tidak hilang di React, hanya pindah ke tangan framework. Bab 14 membongkarnya lebih jauh.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah memakai server tiruan, array konstan yang dijawab lewat <code>setTimeout</code>, supaya jalan tanpa jaringan. Satu tombol mengambil data, status "Memuat..." muncul dulu, lalu list terisi lewat <code>&lt;template&gt;</code>. Tombol kedua membuat server membalas array kosong dan halaman menunjukkan kondisi kosong. Satu kotak centang menyaring tugas selesai, dan tiap perubahan merender ulang daftar dari nol.</p>
+
+<div class="demo">
+<p>Dua tombol di bawah pura-pura menjadi server. Tekan salah satu, perhatikan papan statusnya, lalu lihat daftar yang terisi atau kosong. Kotak centang menyaring daftar tanpa memanggil server lagi.</p>
+<button id="demo-ambil">Ambil data dari server</button>
+<button id="demo-kosong">Server balas kosong</button>
+<label><input type="checkbox" id="demo-filter"> Hanya yang selesai</label>
+<p id="demo-status"></p>
+<template id="demo-item"><li></li></template>
+<ul id="demo-lista"></ul>
+</div>
+
+<p>Begini cara baca demonya. Tombol pertama menaikkan penanda <code>sedangMemuat</code> lalu memanggil <code>render</code>, dan kondisi if menampilkan "Memuat data dari server...". Delapan ratus milidetik kemudian <code>setTimeout</code> menurunkan penanda itu dan mengisi array <code>data</code>, lalu <code>render</code> dipanggil lagi. Tiap pemanggilan dimulai dari <code>replaceChildren</code>, karena itu daftar tidak pernah menumpuk. Tiap item lahir dari <code>demo-item.content.cloneNode(true)</code>, salinan cetakan yang isinya diisi lewat <code>textContent</code>. Kotak centang memutar <code>filter</code> atas array yang sama, dan <code>render</code> memilih kondisi kosong bila hasil saringannya tidak ada satu pun.</p>
+
+<p>Ringkasan bab ini. Merender adalah mengubah data menjadi elemen yang terlihat, dan ia fungsi yang dipanggil ulang setiap data berubah. List dirender dengan loop, kosongkan induk dulu dengan <code>replaceChildren</code>, lalu isi ulang. Kondisi dipilih if dan else, sedang memuat, kosong, atau terisi. Template literal menulis bentuk di string, <code>&lt;template&gt;</code> menyimpan bentuk di HTML dan <code>cloneNode</code> menyalinnya. Bab berikutnya menerima masukan dari pengguna lewat form dan validasinya di sisi klien.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template">MDN: The Template element</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode">MDN: Node.cloneNode</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceChildren">MDN: Element.replaceChildren</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach">MDN: Array.prototype.forEach</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter">MDN: Array.prototype.filter</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/11-fetch-async/">Bab 11 - Fetch &amp; Async: Konsumsi API</a> | Lanjut ke <a href="/13-form-validasi/">Bab 13 - Form &amp; Validasi di Sisi Klien</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const DATA_SERVER = [
+  { id: 1, judul: "beli kopi", selesai: true },
+  { id: 2, judul: "balas email klien", selesai: false },
+  { id: 3, judul: "tarik laporan mingguan", selesai: true }
+];
+
+const statusEl = document.querySelector("#demo-status");
+const listaEl = document.querySelector("#demo-lista");
+const cetakan = document.querySelector("#demo-item");
+const filterEl = document.querySelector("#demo-filter");
+
+let data = [];
+let sedangMemuat = false;
+
+function render() {
+  statusEl.textContent = sedangMemuat ? "Memuat data dari server..." : "";
+  listaEl.replaceChildren();
+  if (sedangMemuat) return;
+  const tampil = filterEl.checked ? data.filter(function (t) { return t.selesai; }) : data;
+  if (tampil.length === 0) {
+    statusEl.textContent = "Belum ada tugas untuk ditampilkan.";
+    return;
+  }
+  tampil.forEach(function (tugas) {
+    const salinan = cetakan.content.cloneNode(true);
+    salinan.querySelector("li").textContent = tugas.selesai ? tugas.judul + " (selesai)" : tugas.judul;
+    listaEl.appendChild(salinan);
+  });
+}
+
+function ambil(isiKosong) {
+  sedangMemuat = true;
+  render();
+  setTimeout(function () {
+    data = isiKosong ? [] : DATA_SERVER.slice();
+    sedangMemuat = false;
+    render();
+  }, 800);
+}
+
+document.querySelector("#demo-ambil").addEventListener("click", function () { ambil(false); });
+document.querySelector("#demo-kosong").addEventListener("click", function () { ambil(true); });
+filterEl.addEventListener("change", render);
+</script>
+</body>
+</html>
