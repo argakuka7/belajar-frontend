@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 11 - Fetch &amp; Async: Konsumsi API | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+#demo-suhu { font-size: 1.3rem; font-weight: bold; margin: .6rem 0 0; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 11</span>
+<h1>Fetch &amp; Async: Konsumsi API</h1>
+<p>Bab 10 membuat data bertahan di penyimpanan milik halaman. Bab ini keluar dari data sendiri: halaman meminta data dari server lain lewat fetch, dan mengurus waktu tunggunya dengan async.</p>
+</header>
+
+<main>
+<figure>
+<img src="/11-fetch-async/img/kuka-kantin-bon.png" alt="Kuka berdiri di konter kantin memegang satu bon berisi nomor pesanan, petugas konter mengangguk, dapur dan beberapa pengunjung yang mengobrol santai terlihat di belakangnya.">
+<figcaption>fetch, memesan di konter dan menerima bon berisi nomor pesanan.</figcaption>
+</figure>
+
+<h2>Mengapa fetch ada</h2>
+<p>Sampai bab 10, semua data yang dipakai halaman lahir dari halaman itu juga. Halaman nyata tidak hidup seperti itu. Harga di toko online, pos di media sosial, dan suhu di aplikasi cuaca tinggal di server. Bab ini mengajarkan cara meminta data itu dengan fetch dan cara mengurus waktu tunggunya dengan async dan await. Judulnya konsumsi API. Konsumsi berarti memakai, dan API adalah pintu resmi untuk meminta data dari program lain.</p>
+<p>Setiap halaman sebenarnya sudah pernah mengambil data. Saat kamu membuka sebuah alamat, browser meminta berkas HTML ke server, dan halaman tersusun dari jawaban itu. Aturan tanya jawab antara browser dan server disebut HTTP. Bedanya, permintaan itu terjadi sekali di awal, sebelum halaman tampil. Setelah halaman jadi, datanya beku. Untuk harga terbaru atau pos baru, halaman lama harus dimuat ulang seluruhnya.</p>
+<p>fetch mengubah urutan itu. fetch adalah perintah browser untuk meminta data ke server saat halaman sudah jalan, tanpa memuat ulang apa pun. Tempat data disajikan disebut API, singkatan dari Application Programming Interface. API adalah cara satu program meminta sesuatu dari program lain dengan aturan yang jelas, tanpa perlu tahu isi di baliknya. Banyak perusahaan menyediakan API publik untuk cuaca, peta, dan berita, dan halaman mana pun boleh memintanya.</p>
+
+<h2>Jaringan lambat, JavaScript satu jalur</h2>
+<p>Permintaan ke server butuh waktu. Data menempuh jarak nyata lewat kabel dan tower, dan server butuh waktu menyusun jawaban. Kadang sesaat, kadang sampai hitungan detik. Selama menunggu, halaman sedang apa?</p>
+<p>JavaScript menjalankan kode satu baris pada satu waktu, seperti kasir yang melayani satu antrean saja. Kalau kode memaksa menunggu jaringan selesai, seluruh halaman ikut membeku. Tombol tidak merespons, dan semua antre di belakang permintaan yang lambat.</p>
+<p>Karena itu ada istilah async, singkatan dari asynchronous. Kerja async diletakkan di belakang, kode lain jalan dulu, dan hasilnya diantar begitu siap. Halaman tetap hidup selama data masih di jalan.</p>
+
+<h2>Promise: janji nilai akan datang</h2>
+<p>Cara JavaScript menjanjikan hasil yang belum ada adalah objek bernama Promise. Promise adalah janji bahwa sebuah nilai akan ada nanti. Baru lahir, janjinya masih menunggu. Begitu data datang, janjinya terpenuhi dan berisi nilai. Kalau permintaan gagal, janjinya gagal dan berisi penyebabnya.</p>
+<p>Analogi tunggal bab ini mulai di sini, kantin. Kamu memesan makan di konter, petugas memberi bon berisi nomor pesanan. Bon itu bukan makanan, tetapi janji bahwa makanan akan datang. Sambil menunggu kamu tidak berdiri kaku memandangi konter, kamu duduk dan mengobrol. Kantin tetap bergerak, dan nomormu dipanggil begitu pesanan siap.</p>
+
+<h2>async dan await</h2>
+<p>Menunggu janji punya beberapa gaya penulisan, dan seri ini memakai async serta await karena tulisannya paling mirip urutan kejadian nyata. Fungsi yang diberi kata async disebut async function, dan hanya di dalamnya await boleh dipakai. await berarti tunggu di baris ini sampai janjinya selesai, lalu lanjutkan.</p>
+<pre><code>async function ambilCuaca() {
+  const jawaban = await fetch(urlCuaca);
+  const data = await jawaban.json();
+  return data;
+}</code></pre>
+<p>Yang dijeda hanya fungsi itu, bukan seluruh halaman. Orang lain di kantin tetap dilayani, dan tombol di halaman tetap bisa ditekan.</p>
+
+<h2>fetch dan Response</h2>
+<figure>
+<img src="/11-fetch-async/img/kuka-nampan-kotak.png" alt="Kuka menerima satu nampan dari petugas kantin, di atas nampan ada satu kotak kemasan standar yang terbuka, memperlihatkan isinya tertata rapi di dalam kotak.">
+<figcaption>Response, nampan berisi kotak standar yang isinya siap dibuka.</figcaption>
+</figure>
+<p>fetch menerima satu alamat URL dan mengembalikan Promise berisi Response, bungkus jawaban dari server. Isinya tiga hal yang paling sering dipakai. Status, kode angka hasil permintaan, contohnya 200 berarti oke, 404 berarti data tidak ditemukan, 500 berarti server bermasalah. Ok, versi mudahnya, bernilai true untuk status 200 sampai 299 dan false selain itu. Terakhir isi pesannya sendiri.</p>
+<p>Isi pesan tidak langsung berupa data. Isinya tiba bertahap, seperti nampan yang diantar piring demi piring. Metode json() mengumpulkan semuanya menjadi satu objek JavaScript, dan metode ini juga mengembalikan Promise karena pengumpulannya butuh waktu. JSON sudah ditemu di bab 10, format teks yang meniru bentuk data JavaScript.</p>
+<pre><code>const jawaban = await fetch(urlCuaca); // Promise berisi Response
+const data = await jawaban.json();     // Promise berisi objek</code></pre>
+
+<h2>Dua jenis gagal</h2>
+<p>Gagalnya ada dua jenis, dan perlakuannya berbeda. Jenis pertama gagal jaringan. Sinyal hilang, kabel lepas, server mati, permintaan tidak pernah selesai. Janjinya gagal, await melempar error, dan tempat menangkapnya adalah try/catch, blok coba yang kalau terjadi error lompat ke blok tangkap.</p>
+<pre><code>try {
+  const jawaban = await fetch(urlCuaca);
+  const data = await jawaban.json();
+} catch (galat) {
+  elemen.textContent = "Gagal menghubungi server";
+}</code></pre>
+<p>Jenis kedua sering mengejutkan pemula. Server menjawab, tetapi jawabannya buruk, misalnya 404 karena alamat data salah. fetch tetap terpenuhi, karena dari sudut pandang jaringan permintaan berhasil. Isi jawabannyalah yang bermasalah, jadi setelah fetch perlu satu pemeriksaan kecil, <code>if (!jawaban.ok)</code>.</p>
+<p>Ada satu batas lagi milik browser. Halaman hanya boleh membaca isi jawaban dari origin lain kalau servernya mengizinkan, aturannya bernama CORS. Origin sudah ditemu di bab 10. API publik seperti yang dipakai bab ini memang mengizinkan, jadi cukup tahu batasnya ada.</p>
+
+<h2>Batas fetch</h2>
+<p>Batasnya perlu dikenali sejak awal. fetch butuh jaringan, halaman tanpa internet hanya bisa menampilkan pesan gagal. Hasilnya tidak bisa diambil sekarang juga, <code>const x = fetch(url)</code> berisi Promise, bukan data, dan ini jebakan pemula yang paling sering.</p>
+
+<h2>Analogi: kantin</h2>
+<p>Satu gambar untuk semuanya. Konter adalah API, tempat permintaan diterima dengan aturan yang jelas. Memesan adalah fetch, bon berisi nomor pesanan adalah Promise. Sambil menunggu kamu tidak membekukan kantin, itulah async dan await, jeda hanya pada pesananmu sendiri. Petugas datang membawa nampan, itulah Response dengan keterangan status di bonnya. Isi nampan dikemas dalam kotak standar yang bisa dibuka tangan kosong, itulah JSON dan metode json(). Pesanan habis adalah 404, dapur bermasalah adalah 500, listrik padam adalah gagal jaringan yang ditangkap catch.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya mengambil suhu Jakarta saat halaman dibuka dari API cuaca publik Open-Meteo, satu nilai sederhana tanpa daftar. Versi vanilla menulis satu async function, memeriksa ok, lalu menaruh hasilnya dengan textContent. Versi React menyimpan suhu di state dengan useState, memanggil fetch di dalam useEffect dengan daftar dependensi kosong supaya jalan sekali saat komponen lahir, dan tampilan mengikuti state.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const urlCuaca = "https://api.open-meteo.com/v1/forecast?latitude=-6.2&amp;longitude=106.8&amp;current=temperature_2m";
+
+async function tampilkanCuaca() {
+  try {
+    const jawaban = await fetch(urlCuaca);
+    if (!jawaban.ok) return;
+    const data = await jawaban.json();
+    elemen.textContent = "Jakarta: " + data.current.temperature_2m + " °C";
+  } catch (galat) {
+    elemen.textContent = "Gagal mengambil data";
+  }
+}
+
+tampilkanCuaca();</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Cuaca() {
+  const [suhu, setSuhu] = React.useState(null);
+
+  React.useEffect(() =&gt; {
+    async function ambil() {
+      try {
+        const jawaban = await fetch(urlCuaca);
+        const data = await jawaban.json();
+        setSuhu(data.current.temperature_2m);
+      } catch (galat) {
+        setSuhu("gagal");
+      }
+    }
+    ambil();
+  }, []);
+
+  return &lt;p&gt;{suhu === null ? "Mengambil..." : "Jakarta: " + suhu + " °C"}&lt;/p&gt;;
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Di vanilla, urutan ambil data lalu pasang ke halaman dititipkan ke kedisiplinan penulis kode. React membakukan tempatnya. Pemanggilan fetch adalah efek samping, dan wilayah efek samping di React adalah useEffect. Hasilnya masuk state, dan tampilan mengikuti state, pola yang sudah dibakukan bab 10. Kode fetch-nya sama persis di kedua versi, yang berubah hanya tempat hasilnya dititipkan. Seperti bab-bab sebelumnya, React tidak menghapus pekerjaan vanilla, hanya menaruhnya di slot yang sudah disediakan.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah mengambil suhu Jakarta dari server sungguhan. Tulisan Mengambil muncul sesaat selama data di jalan, lalu diganti angka suhu. Tekan lagi untuk data segar, angkanya bisa berubah karena server mengukur ulang. Kalau jaringan diputus, pesan gagal dari catch yang muncul.</p>
+
+<div class="demo">
+<p>Demo ini meminta suhu terkini Jakarta ke server Open-Meteo, API cuaca publik. Tekan tombol, perhatikan tulisan Mengambil yang muncul sesaat, lalu angka datang dari server.</p>
+<button id="demo-ambil">Ambil suhu Jakarta</button>
+<p id="demo-suhu">Belum ada data.</p>
+</div>
+
+<p>Begini cara baca demonya. Pendengar kliknya adalah async function, jadi boleh memakai await. Baris pertamanya mengganti tulisan jadi Mengambil, bukti bahwa kode jalan sebelum data datang. Pemeriksaan ok menangkap jawaban buruk, dan json() mengumpulkan isi menjadi objek. <code>data.current.temperature_2m</code> adalah suhu di dalam objek itu, diambil seperti isi objek biasa dari bab 7. Kalau jaringan putus, lompatan ke catch menampilkan pesan galat.</p>
+
+<p>Ringkasan bab ini. fetch meminta data ke server saat halaman sudah jalan, tanpa memuat ulang. Jaringan lambat dan JavaScript satu jalur, karena itu hasilnya dijanjikan lewat Promise dan ditunggu dengan await di dalam async function. Response membawa status, ok, dan isi yang dikumpulkan json() menjadi objek. Gagal jaringan ditangkap try/catch, jawaban buruk diperiksa lewat ok. Bab berikutnya merender data sebagai daftar, dengan kondisi dan template.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">MDN: Fetch API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">MDN: Promise</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">MDN: async function</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await">MDN: await</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Response">MDN: Response</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">MDN: CORS</a></li>
+<li><a href="https://open-meteo.com/en/docs">Open-Meteo: API Documentation</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/10-state-localstorage/">Bab 10 - State di Sisi Klien &amp; localStorage</a> | Lanjut ke <a href="/12-merender-data/">Bab 12 - Merender Data</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const URL_CUACA = "https://api.open-meteo.com/v1/forecast?latitude=-6.2&longitude=106.8&current=temperature_2m";
+const tombol = document.querySelector("#demo-ambil");
+const hasil = document.querySelector("#demo-suhu");
+
+tombol.addEventListener("click", async function () {
+  hasil.textContent = "Mengambil dari server...";
+  try {
+    const jawaban = await fetch(URL_CUACA);
+    if (!jawaban.ok) {
+      hasil.textContent = "Server menjawab dengan status " + jawaban.status;
+      return;
+    }
+    const data = await jawaban.json();
+    hasil.textContent = "Suhu di Jakarta sekarang: " + data.current.temperature_2m + " °C";
+  } catch (galat) {
+    hasil.textContent = "Gagal menghubungi server: " + galat.message;
+  }
+});
+</script>
+</body>
+</html>
