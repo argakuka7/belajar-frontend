@@ -8,6 +8,7 @@ a { color: var(--accent); }
 .toc { padding-left: 1.2rem; } .toc li { margin: .35rem 0; }
 .bab-header .badge { display: inline-block; font-size: .78rem; color: var(--muted);
   border: 1px solid var(--muted); border-radius: 999px; padding: .1rem .6rem; margin-bottom: .4rem; }
+figure img { max-width: 100%; height: auto; }
 code, pre { font: .92em/1.5 ui-monospace, monospace; background: #f0f1f4; border-radius: .3rem; }
 pre { padding: .8rem 1rem; overflow-x: auto; }
 .pair { display: grid; gap: 1rem; grid-template-columns: 1fr; }
