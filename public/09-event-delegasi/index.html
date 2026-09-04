@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 9 - Event &amp; Delegasi | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo input[type="text"] { width: 16rem; max-width: 100%; padding: .4rem .6rem; font: .92em ui-monospace, monospace; border: 1px solid #e5e7eb; border-radius: .3rem; }
+.demo button { margin-top: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo .hapus { margin-left: .5rem; margin-top: 0; padding: .1rem .5rem; font-size: .8rem; background: transparent; color: var(--accent); border: 1px solid var(--accent); cursor: pointer; }
+#demo-daftar { margin: .6rem 0 0; padding-left: 1.4rem; }
+#demo-daftar li { margin: .3rem 0; }
+#demo-catatan { color: var(--muted); font-size: .88rem; margin: .6rem 0 0; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 9</span>
+<h1>Event &amp; Delegasi</h1>
+<p>Bab 8 mengajarkan memilih dan mengubah elemen halaman. Bab ini menambahkan pemicunya: event, kejadian yang dilaporkan browser, sampai delegasi, cara satu pendengar mengurus kejadian banyak elemen sekaligus.</p>
+</header>
+
+<main>
+<figure>
+<img src="/09-event-delegasi/img/kuka-resepsionis.png" alt="Kuka duduk di meja resepsionis lobi gedung kantor, menyerahkan kartu tamu kepada satu pengunjung, dengan pintu-pintu ruangan bernomor di latar belakang.">
+<figcaption>Event dan pendengarnya, resepsionis gedung.</figcaption>
+</figure>
+
+<h2>Mengapa event ada</h2>
+<p>Semua program di bab 6 sampai 8 berjalan lurus. Browser membaca kode dari atas ke bawah, menjalankan tiap baris, lalu selesai. Klik yang terjadi setelahnya tidak ada yang menangkap. Padahal program halaman tidak bisa memprediksi kapan pengguna berbuat sesuatu. Bisa dua detik lagi, bisa dua menit. Model jalan sekali dari atas ke bawah tidak muat untuk itu.</p>
+<p>Yang dibutuhkan adalah model baru. Program mendaftarkan reaksinya lebih dulu, lalu menunggu. Saat sesuatu terjadi, browser memanggil reaksi yang cocok. Model ini disebut event-driven, program yang hidup dari kejadian dan menunggu di sela dua kejadian.</p>
+
+<h2>Apa itu event</h2>
+<p>Event adalah kejadian yang dilaporkan browser. Klik pada tombol, ketikan di kotak teks, tombol keyboard yang diturunkan, formulir yang dikirim. Semuanya kejadian, dan masing-masing punya nama: <code>click</code>, <code>input</code>, <code>keydown</code>, <code>submit</code>. Kode bisa mendaftarkan reaksi untuk nama itu, dan reaksinya boleh berbeda untuk tiap elemen.</p>
+
+<h2>Memasang pendengar dengan addEventListener</h2>
+<p><code>addEventListener</code> memasang reaksi pada elemen. Ia menerima dua argumen, nama kejadian dan fungsi yang dipanggil saat kejadian datang. Fungsi yang dikirim untuk dipanggil nanti disebut callback.</p>
+<pre><code>const tombol = document.querySelector("#tombol");
+tombol.addEventListener("click", function () {
+  console.log("ditekan");
+});</code></pre>
+<p>Baris kedua tidak menjalankan isi fungsi seketika. Ia hanya mendaftar. Isinya jalan belakangan, setiap kali klik datang, dan boleh berkali-kali. Satu elemen boleh memakai banyak pendengar, dan ada <code>removeEventListener</code> untuk melepasnya, tapi halaman kecil biasanya memasang sekali di awal dan tidak melepas lagi.</p>
+
+<h2>Objek event</h2>
+<p>Browser tidak memanggil callback kosong. Ia mengirim satu objek berisi detail kejadian: jenisnya, elemen tempat kejadian bermula, posisi kursor untuk kejadian mouse. Objek itu diterima sebagai parameter pertama callback. Dua properti yang paling sering dipakai adalah <code>type</code>, nama kejadiannya, dan <code>target</code>, elemen tempat kejadian bermula.</p>
+<pre><code>tombol.addEventListener("click", function (event) {
+  console.log(event.type);   // "click"
+  console.log(event.target); // tombolnya sendiri
+});</code></pre>
+
+<h2>Menghentikan perilaku bawaan dengan preventDefault</h2>
+<p>Sebagian kejadian membawa perilaku bawaan browser. Klik tautan membuka halaman lain. Mengirim formulir memuat ulang halaman. Kadang kita ingin mencegahnya dan menggantinya dengan reaksi sendiri. <code>event.preventDefault()</code> menghentikan perilaku bawaan itu. Pemakaian paling umum ada di formulir: halaman tidak dimuat ulang, dan JavaScript yang mengurusi datanya.</p>
+<pre><code>form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  console.log("formulir terkirim tanpa memuat ulang");
+});</code></pre>
+
+<h2>Bubbling: kejadian merambat naik</h2>
+<p>Satu klik tidak berhenti di elemen yang diklik. Klik tombol di dalam <code>li</code> di dalam <code>ul</code> berarti kejadian <code>click</code> terjadi di tombol, lalu di <code>li</code>, lalu di <code>ul</code>, lalu naik terus sampai <code>document</code>. Perambatan ini disebut bubbling, kejadian naik dari elemen terdalam ke leluhurnya, seperti gelembung air naik ke permukaan. Konsekuensinya penting: pendengar di induk ikut terpanggil oleh kejadian anaknya.</p>
+
+<h2>Delegasi: satu pendengar untuk banyak anak</h2>
+<figure>
+<img src="/09-event-delegasi/img/kuka-delegasi.png" alt="Kuka berdiri di tengah lobi membaca kartu tamu sambil menunjuk ke beberapa pintu ruangan sekaligus, tanpa ada petugas di depan pintu mana pun.">
+<figcaption>Satu resepsionis di lobi melayani semua pintu.</figcaption>
+</figure>
+<p>Bubbling terdengar seperti detail teknis, padahal ini alat. Masalahnya begini. Daftar seratus tugas, tiap tugas punya tombol hapus. Memasang satu pendengar per tombol berarti seratus pendaftaran, dan tiap tugas baru butuh pendaftaran lagi. Delegasi membalik arahnya: satu pendengar dipasang di induk, lalu pendengar itu membaca <code>event.target</code> untuk tahu siapa yang diklik.</p>
+<pre><code>daftar.addEventListener("click", function (event) {
+  const tombol = event.target.closest("button.hapus");
+  if (tombol) { tombol.closest("li").remove(); }
+});</code></pre>
+<p><code>closest</code> mencari leluhur terdekat yang cocok selektor. Ia diperlukan karena yang diklik bisa bagian dalam tombol, bukan tombolnya. Dengan delegasi, item baru lahir dengan reaksi yang sudah lengkap, tanpa satu baris pendaftaran tambahan.</p>
+
+<h2>Analogi: resepsionis gedung</h2>
+<p>Satu gambar untuk semuanya. Bayangkan gedung kantor. Tamu yang datang adalah event, waktunya tidak bisa dijadwalkan. Petugas yang menunggu di pintu ruangan adalah pendengar yang dipasang <code>addEventListener</code>. Kartu tamu yang diterima petugas adalah objek event, berisi siapa tamunya dan ke mana ia menuju. Tamu berjalan dari pintu depan melewati setiap meja sampai ruangan tujuan, itulah bubbling. Delegasi adalah keputusan menaruh satu resepsionis di lobi daripada satu petugas di tiap pintu. Resepsionis membaca kartu tamu lalu mengarahkan. Ruangan baru dibuka pun tetap terlayani, karena resepsionisnya satu dan sudah berdiri di lobi.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Kode di bawah menandai tugas selesai saat itemnya diklik. Versi vanilla memasang satu pendengar di <code>ul</code> dan membaca <code>event.target</code> lewat delegasi. Versi React memberi tiap <code>li</code> reaksi <code>onClick</code> sendiri dan menyimpan data tugas di state.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const daftar = document.querySelector("#tugas");
+
+daftar.addEventListener("click", function (event) {
+  const item = event.target.closest("li");
+  if (item) { item.classList.toggle("selesai"); }
+});</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function DaftarTugas() {
+  const [tugas, setTugas] = React.useState([
+    { nama: "kopi", selesai: true },
+    { nama: "teh", selesai: false }
+  ]);
+
+  function ubah(nama) {
+    setTugas(tugas.map((t) =&gt; {
+      if (t.nama === nama) {
+        return { nama: t.nama, selesai: !t.selesai };
+      }
+      return t;
+    }));
+  }
+
+  return (
+    &lt;ul&gt;
+      {tugas.map((t) =&gt; (
+        &lt;li key={t.nama}
+            className={t.selesai ? "selesai" : ""}
+            onClick={() =&gt; ubah(t.nama)}&gt;
+          {t.nama}
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Delegasi vanilla meletakkan pembacaan <code>event.target</code> di tanganmu. React menyembunyikannya: tiap elemen cukup membawa <code>onClick</code>, dan React memasang pendengarnya sendiri di akar aplikasi, lalu mendistribusikan kejadian ke elemen yang tepat. Dua cara ini bertemu di titik yang sama, satu pintu kejadian untuk banyak elemen. Bedanya hanya siapa yang menulis pintunya. Untuk daftar panjang yang isinya sering bertambah, pendengar per item melelahkan dan rawan lupa. Delegasi dan React menyelesaikan lelah itu dengan cara yang sama, memusatkan.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah memakai kejadian pada halaman sungguhan. Satu tombol menambah tugas lewat kejadian <code>click</code>. Tombol hapus di tiap item dilayani satu pendengar delegasi di daftar. Satu baris catatan diisi satu pendengar di wadah demo, dan ia ikut menerima kejadian tombol-tombol di dalamnya karena bubbling. Semuanya jalan tanpa build tool.</p>
+
+<div class="demo">
+<p>Tambah tugas, hapus tugas mana pun, dan perhatikan baris catatan di bawah. Semua tombol hapus dilayani satu pendengar di daftar, termasuk tombol milik tugas yang baru ditambahkan.</p>
+<label for="demo-input">Tugas baru:</label>
+<input id="demo-input" type="text" value="beli kopi">
+<button id="demo-tambah">Tambah</button>
+<ul id="demo-daftar">
+  <li>kopi <button class="hapus">hapus</button></li>
+  <li>teh <button class="hapus">hapus</button></li>
+</ul>
+<p id="demo-catatan">Belum ada kejadian.</p>
+</div>
+
+<p>Begini cara baca demonya. Tombol Tambah dipasang pendengar <code>click</code>. Ia membaca isi kotak, memotong spasi di ujungnya dengan <code>trim</code>, dan mengabaikan isian kosong. Tugas baru dibuat dengan <code>createElement</code>, diberi tombol hapus, lalu ditempel dengan <code>appendChild</code>. Pendengar delegasi di daftar terpasang satu kali sejak halaman dibuka, karena itu tombol hapus milik tugas baru langsung berfungsi tanpa pendaftaran apa pun. Baris catatan diisi satu pendengar di wadah demo. Klik tombol mana pun di dalamnya, kejadian itu naik lewat bubbling, dan catatan menuliskan <code>event.type</code> beserta <code>event.target</code>. Coba tambah dua tugas, hapus satu, lalu perhatikan catatannya.</p>
+
+<p>Ringkasan bab ini. Event adalah kejadian yang dilaporkan browser, <code>addEventListener</code> mendaftarkan reaksinya, callback dijalankan saat kejadian datang. Objek event membawa <code>type</code> dan <code>target</code>, <code>preventDefault</code> menghentikan perilaku bawaan, bubbling mengangkat kejadian ke leluhur, delegasi memakai itu untuk satu pendengar yang mengurus banyak anak. Bab berikutnya membahas state di sisi klien dan localStorage, tempat data halaman bertahan antar muat ulang.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events">MDN: Introduction to events</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener">MDN: EventTarget.addEventListener</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/target">MDN: Event.target</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault">MDN: Event.preventDefault</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/closest">MDN: Element.closest</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/08-dom/">Bab 8 - DOM: Memilih &amp; Mengubah Halaman</a> | Lanjut ke <a href="/10-state-localstorage/">Bab 10 - State di Sisi Klien</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const input = document.querySelector("#demo-input");
+const tombolTambah = document.querySelector("#demo-tambah");
+const daftar = document.querySelector("#demo-daftar");
+const catatan = document.querySelector("#demo-catatan");
+
+tombolTambah.addEventListener("click", () => {
+  const teks = input.value.trim();
+  if (teks === "") { return; }
+  const item = document.createElement("li");
+  item.textContent = teks + " ";
+  const hapus = document.createElement("button");
+  hapus.textContent = "hapus";
+  hapus.className = "hapus";
+  item.appendChild(hapus);
+  daftar.appendChild(item);
+  input.value = "";
+});
+
+daftar.addEventListener("click", (event) => {
+  const tombol = event.target.closest("button.hapus");
+  if (tombol) { tombol.closest("li").remove(); }
+});
+
+const wadah = document.querySelector(".demo");
+wadah.addEventListener("click", (event) => {
+  catatan.textContent = "Kejadian terakhir: " + event.type + " pada " + event.target.tagName;
+});
+</script>
+</body>
+</html>
