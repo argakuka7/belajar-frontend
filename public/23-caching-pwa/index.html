@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 23 - Caching, PWA &amp; Offline | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 23</span>
+<h1>Caching, PWA &amp; Offline</h1>
+<p>Sejak bab 11, data halaman datang lewat jaringan. Bab 21 menghemat beban muat awalnya. Bab ini menyambung keduanya dengan pertanyaan yang tinggal: mengapa berkas dan data yang sama harus diambil berulang-ulang, dan apa yang terjadi saat jaringan hilang. Perkakas jawabannya tiga lapis, cache bawaan browser, Cache API, dan service worker, lalu dirangkai menjadi PWA.</p>
+</header>
+
+<main>
+<figure>
+<img src="/23-caching-pwa/img/kuka-dapur-lemari.png" alt="Kuka berdiri di dapur mengambil kaleng dari lemari persediaan yang pintunya terbuka berisi bahan bertatakan tanggal, sementara lewat jendela dapur terlihat sebuah pasar dengan atap terasah.">
+<figcaption>Ambil dari lemari dulu, ke pasar hanya kalau stoknya kosong.</figcaption>
+</figure>
+
+<h2>Mengapa caching, PWA, dan offline ada</h2>
+<p>Cache adalah salinan hasil permintaan yang disimpan, supaya permintaan yang sama tidak perlu dikerjakan ulang. Di front end, kerja yang paling mahal adalah menyeberangi jaringan. Bab 21 sudah membuktikannya lewat ukuran bundle dan gambar, dan bab 11 menunjukkan satu permintaan fetch bisa memakan waktu lebih lama daripada seluruh kode halaman. Kalau data itu jarang berubah, mengambilnya ulang setiap kunjungan adalah kerja yang dibuang begitu saja.</p>
+<p>Alasan keduanya lebih kasar: jaringan bisa hilang. Naik kereta, masuk lift, atau listrik di suatu tempat padam, dan halaman yang mengandalkan server mendadak jadi kertas kosong. Halaman yang tetap menyala saat koneksi putus disebut jalan offline, kondisi tanpa jaringan. Kemampuan itu bukan fitur tambahan yang muncul sendiri, ia dibangun dari salinan yang sudah disimpan sebelumnya.</p>
+<p>Rangkaian perkakas untuk dua masalah itu akhirnya diberi satu nama. PWA atau Progressive Web App adalah halaman web yang memenuhi syarat tertentu agar bisa dipasang seperti aplikasi dan tetap jalan tanpa jaringan. Bab ini membedah syaratnya satu per satu, karena setiap syarat adalah konsep penting yang berguna bahkan tanpa PWA.</p>
+
+<h2>HTTP cache: lemari bawaan browser</h2>
+<p>Lapisan pertama sudah bekerja tanpa kamu tulis satu baris pun. Browser menyimpan salinan berkas yang pernah diambil, gaya, gambar, JavaScript, dan memakai ulang salinannya di kunjungan berikutnya. Simpanan otomatis ini disebut HTTP cache.</p>
+<p>Cara kerjanya ada di jawaban server. Setiap jawaban HTTP membawa header, baris-baris keterangan yang menyertai isi jawaban. Salah satunya bernama Cache-Control, perintah tertulis dari server tentang bagaimana salinannya boleh disimpan. Nilai <code>max-age=31536000</code> artinya salinan ini sah dipakai 31536000 detik, sekitar satu tahun. Selama masa itu, permintaan berikutnya untuk berkas yang sama dijawab dari simpanan browser, tidak ada paket yang menyeberang jaringan.</p>
+<p>Batas lapisan ini jelas. Aturannya ditulis server dan browser hanya patuh, halaman tidak bisa ikut memutuskan. Ia juga tidak menolong saat halaman sendiri dibuka pertama kali tanpa jaringan, karena lemari masih kosong. Untuk ikut memutuskan, halaman butuh lemari yang kuncinya ada di tangannya sendiri.</p>
+
+<h2>Cache API: lemari yang bisa kamu buka</h2>
+<p>Lapisan kedua bernama Cache API, antarmuka JavaScript untuk membuat dan membaca simpanan permintaan dan jawaban milik halaman sendiri. Perkakasnya kecil. <code>caches.open("nama")</code> membuka lemari dengan nama itu, atau membuatnya kalau belum ada. <code>cache.add(url)</code> mengambil sebuah alamat lewat fetch lalu langsung menyimpan jawabannya. <code>cache.match(url)</code> membaca kembali salinannya. Semua lewat Promise dan await, persis kebiasaan bab 11.</p>
+<p>Simpanannya rapi per origin. Origin adalah asal-usul halaman, gabungan skema, domain, dan port, misalnya <code>https://www.argakuka.com</code>. Halaman dari satu origin tidak bisa membaca lemari origin lain, jadi salinanmu tidak tertukar dengan situs tetangga.</p>
+
+<h2>Service worker: penjaga di pintu</h2>
+<figure>
+<img src="/23-caching-pwa/img/kuka-asisten-pintu.png" alt="Kuka membaca selembar daftar aturan stok sambil berdiri di dapur, di depannya seorang asisten berapron berdiri di pintu belakang yang pintunya terbuka menuju pasar, satu tangan memegang kertas aturan, tangan lain menghalau membawa tas belanja.">
+<figcaption>Asisten yang mengatur lalu lintas bahan, dari lemari atau dari pasar.</figcaption>
+</figure>
+<p>Lapisan ketiga mengambil keputusan. Service worker adalah skrip yang dipasang browser sebagai penjaga di pintu jaringan sebuah halaman. Setiap permintaan halaman itu, berkas, gambar, data API, lewat tangannya lebih dulu. Ia boleh meneruskan ke jaringan, boleh menjawab dari cache, boleh mencampur keduanya.</p>
+<p>Karena penjaga bisa menjawab dari cache, halaman tetap hidup saat jaringan mati, dan itulah offline yang sebenarnya. Service worker juga hidup terpisah dari tab. Tab ditutup, penjaga tetap terpasang dan bekerja untuk kunjungan berikutnya. Pemasangannya satu baris, <code>navigator.serviceWorker.register("/sw.js")</code>, tetapi perhatikan isinya, service worker wajib berupa berkas tersendiri, ia tidak bisa ditanam di dalam HTML halaman.</p>
+
+<h2>Strategi: cache dulu atau jaringan dulu</h2>
+<p>Memasang penjaga saja belum cukup, kamu harus menuliskan aturannya. Dua strategi paling umum punya nama. Cache-first berarti tanya lemari dulu, ada salinannya langsung disajikan, kosong baru belanja ke jaringan. Cepat, dan cocok untuk berkas yang jarang berubah seperti gaya dan gambar logo. Network-first berarti ke jaringan dulu, jawaban terbaru disajikan dan disalin ke lemari, dan salinan hanya jadi penyelamat saat jaringan gagal. Sedikit lebih lambat, tetapi datanya segar, dan cocok untuk data yang sering berubah.</p>
+<p>Memilihnya bukan soal benar dan salah, melainkan soal mana yang lebih penting untuk data itu, kecepatan atau kesegaran. Satu halaman boleh memakai keduanya sekaligus, cache-first untuk berkas, network-first untuk data.</p>
+
+<h2>PWA: dari halaman jadi aplikasi</h2>
+<p>Setelah caching dan offline beres, PWA tinggal melengkapinya dengan dua syarat kecil. Pertama, halaman disajikan lewat HTTPS, sambungan terenkripsi yang menjadi rumah semua service worker. Kedua, ada manifest, berkas kecil berformat JSON yang berisi nama aplikasi, ikon, dan warna temanya. Browser membaca manifest itu lalu menawarkan pengunjung untuk memasang halaman di layar utama, lengkap dengan ikonnya sendiri dan tanpa bilah alamat. Sekali terpasang, aplikasi membuka halaman lewat penjaga yang sudah menunggu, dan jalan walau pasarnya tutup.</p>
+
+<h2>Batas dan jebakan</h2>
+<p>Semua perkakas bab ini berjalan hanya di konteks aman, halaman lewat HTTPS atau localhost di komputer sendiri. Dibuka lewat file langsung dari folder, Cache API tidak tersedia. Cache juga tidak punya aturan membereskan diri sendiri, salinan versi lama tetap duduk di lemari sampai dihapus, dan itulah sebabnya nama lemari biasanya diberi versi, <code>catatan-v1</code> berubah jadi <code>catatan-v2</code> saat isi berubah, yang lama dihapus. Terakhir, service worker yang salah aturan bisa menyimpan halaman yang rusak untuk waktu lama, karena setiap kunjungan dijawab penjaga yang sama. Aturannya ditulis dengan sengaja, dan ujilah sebelum dipasang.</p>
+
+<h2>Analogi: dapur dan lemari persediaan</h2>
+<p>Satu gambar untuk semuanya. Kamu juru masak, jaringan adalah pasar, cache adalah lemari persediaan di dapur, dan HTTP cache adalah lemari yang isinya diatur perjanjian dengan penjual, berganti stok hanya sesuai tanggal yang disepakati di kertasnya. Cache API adalah lemari kedua yang kamu beli sendiri dan kamu isi sendiri dengan tas belanja dari pasar. Service worker adalah asisten dapur yang berdiri di pintu belakang, setiap bahan lewat tangannya, dan ia memegang aturan stok yang kamu tulis, ambil dari lemari dulu, atau belanja dulu dan simpan sisanya. Saat pasar tutup, asisten tetap bisa menyajikan dari lemari, itulah offline. Dan papan nama warung di depan rumah beserta menunya, itulah manifest yang membuat dapur resmi disebut warung, PWA.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya memuat daftar catatan dari <code>/api/catatan</code> dengan strategi cache-first. Vanilanya membuka lemari bernama <code>catatan-v1</code>, menanyakan salinan lewat cache.match, dan langsung menampilkannya kalau ada. Kalau kosong, fetch ke jaringan berjalan, jawabannya disalin lewat cache.put sebelum ditampilkan. Perhatikan <code>jawaban.clone()</code>, satu jawaban hanya boleh dibaca sekali, jadi satu salinan untuk lemari dan satu untuk layar.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>async function muatCatatan() {
+  const cache = await caches.open("catatan-v1");
+  const tersimpan = await cache.match("/api/catatan");
+
+  if (tersimpan) {
+    tampilkan(await tersimpan.json());
+    return;
+  }
+
+  const jawaban = await fetch("/api/catatan");
+  await cache.put("/api/catatan", jawaban.clone());
+  tampilkan(await jawaban.json());
+}</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function useCacheFirst(url) {
+  const [data, setData] = useState(null);
+
+  useEffect(() =&gt; {
+    async function muat() {
+      const cache = await caches.open("catatan-v1");
+      const tersimpan = await cache.match(url);
+      if (tersimpan) {
+        setData(await tersimpan.json());
+        return;
+      }
+      const jawaban = await fetch(url);
+      await cache.put(url, jawaban.clone());
+      setData(await jawaban.json());
+    }
+    muat();
+  }, [url]);
+
+  return data;
+}</code></pre>
+</div>
+</div>
+
+<p>Strategi cache-first-nya sama persis di kedua versi, tanya lemari dulu, belanja kalau kosong, simpan sisanya. Yang berbeda hanya bungkusnya. Vanilanya fungsi biasa yang halaman panggil sendiri. React membungkus logika yang sama dalam hook, fungsi pembungkus state dan efek dari bab 17, sehingga komponen mana pun bisa memuat data dengan satu baris <code>useCacheFirst("/api/catatan")</code> tanpa menulis ulang aturan lemarnya. Cache tidak mengganti fetch, ia berdiri di depannya.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah memakai Cache API sungguhan, lapisan inti bab ini, untuk menyimpan salinan berkas <code>/enhancements.css</code> dari halaman yang sedang kamu baca. Tekan tombol simpan, berkas diambil lewat fetch lalu masuk lemari. Tekan tombol baca, isinya kembali dari cache tanpa menyentuh jaringan. Setelah tersimpan, tombol baca tetap jalan walaupun koneksi putus, coba lepas koneksi lalu tekan lagi.</p>
+
+<div class="demo">
+<p>Demo ini menyimpan dan membaca berkas dari Cache Storage memakai Cache API. Perhatikan bahwa baca dari cache tidak mengirim permintaan apa pun ke server.</p>
+<button id="demo-simpan">Simpan /enhancements.css ke cache</button>
+<button id="demo-baca">Baca dari cache</button>
+<p id="demo-hasil">Cache masih kosong.</p>
+</div>
+
+<p>Begini cara baca demonya. <code>caches.open("demo-bab-23")</code> membuka satu lemari milik origin halaman ini. <code>cache.add()</code> mengerjakan fetch dan cache.put sekaligus, ambil lalu simpan. <code>cache.match()</code> mengambil salinan langsung dari Cache Storage, karena itu ia jalan tanpa jaringan. Ukuran berkas dihitung dari isi salinannya sendiri, bukan dari server. Kalau demo bilang Cache API tidak tersedia, halaman sedang dibuka di luar konteks aman, dan itu batas yang dibahas di atas.</p>
+
+<p>Ringkasan bab ini. Menyeberangi jaringan itu mahal dan tidak selalu bisa, karena itu hasilnya disimpan. HTTP cache menyimpan otomatis sesuai header Cache-Control dari server. Cache API memberi halaman lemari sendiri yang bisa dibuka lewat caches.open, cache.add, dan cache.match, per origin. Service worker adalah penjaga di pintu jaringan yang memutuskan dari mana permintaan dijawab, cache-first untuk kecepatan, network-first untuk kesegaran. Manifest dan HTTPS melengkapinya menjadi PWA yang bisa dipasang dan jalan offline. Bab berikutnya menutup seri dengan menyatukan semuanya dalam satu proyek.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching">MDN: HTTP caching</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage">MDN: CacheStorage</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Cache">MDN: Cache</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API">MDN: Service Worker API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest">MDN: Web app manifest</a></li>
+<li><a href="https://web.dev/learn/pwa/service-workers">web.dev: Service workers (Learn PWA)</a></li>
+<li><a href="https://web.dev/learn/pwa">web.dev: Learn PWA</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/22-testing/">Bab 22 - Testing Front End</a> | Lanjut ke <a href="/24-proyek-akhir/">Bab 24 - Proyek Penutup</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const NAMA_CACHE = "demo-bab-23";
+const tombolSimpan = document.querySelector("#demo-simpan");
+const tombolBaca = document.querySelector("#demo-baca");
+const keluar = document.querySelector("#demo-hasil");
+
+if (!("caches" in window)) {
+  keluar.textContent = "Cache API tidak tersedia di sini. Halaman harus dibuka lewat HTTPS atau localhost.";
+  tombolSimpan.disabled = true;
+  tombolBaca.disabled = true;
+}
+
+tombolSimpan.addEventListener("click", async function () {
+  keluar.textContent = "Mengambil /enhancements.css lalu menyimpannya...";
+  try {
+    const cache = await caches.open(NAMA_CACHE);
+    await cache.add("/enhancements.css");
+    const salinan = await cache.match("/enhancements.css");
+    const teks = await salinan.text();
+    keluar.textContent = "Tersimpan di cache " + NAMA_CACHE + ". Ukurannya " + teks.length + " karakter.";
+  } catch (galat) {
+    keluar.textContent = "Gagal menyimpan: " + galat.message;
+  }
+});
+
+tombolBaca.addEventListener("click", async function () {
+  try {
+    const cache = await caches.open(NAMA_CACHE);
+    const salinan = await cache.match("/enhancements.css");
+    if (!salinan) {
+      keluar.textContent = "Cache masih kosong, tekan tombol simpan dulu.";
+      return;
+    }
+    const teks = await salinan.text();
+    keluar.textContent = "Dibaca dari cache tanpa jaringan. Awal isinya: " + teks.slice(0, 80) + "...";
+  } catch (galat) {
+    keluar.textContent = "Gagal membaca: " + galat.message;
+  }
+});
+</script>
+</body>
+</html>
