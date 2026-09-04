@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 18 - Routing di Front End | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo a { margin-right: .8rem; font-weight: bold; }
+.demo button { margin-top: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+#demo-konten { border: 1px solid #e5e7eb; border-radius: .3rem; padding: .8rem; margin-top: .5rem; min-height: 3.2rem; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 18</span>
+<h1>Routing di Front End</h1>
+<p>Bab 0 sampai 17 selalu bekerja di satu halaman yang dimuat sekali. Situs sungguhan hampir selalu punya banyak halaman, beranda, daftar, detail. Bab ini membuka bagian kemahiran dengan pertanyaannya: bagaimana satu halaman JavaScript bisa punya banyak halaman sekaligus tanpa memuat ulang, sementara URL tetap jujur mengikuti.</p>
+</header>
+
+<main>
+<figure>
+<img src="/18-routing/img/kuka-resepsionis-nomor.png" alt="Kuka berdiri di lobi hotel memakai rompi resepsionis, satu tangan menunjuk papan nomor kamar, tangan lain memegang buku tamu terbuka, di belakangnya lorong dengan beberapa pintu bernomor.">
+<figcaption>Resepsionis membaca nomor kamar, lalu mengantar tamu ke kamar yang tepat. Gaya kerja router.</figcaption>
+</figure>
+
+<h2>Mengapa routing ada</h2>
+<p>Cara paling tua menangani banyak halaman juga cara paling sederhana. Setiap klik tautan, browser mengirim request, permintaan yang sudah ditemu di bab 11, ke server. Server membalas dengan dokumen HTML yang utuh, dan browser membuang halaman lama lalu membangunnya dari nol. Cara ini masih dipakai banyak situs dan tidak ada yang salah dengan itu.</p>
+<p>Masalahnya muncul di aplikasi yang hidup di satu halaman. Bayangkan email: membuka satu surat tidak perlu membangun ulang seluruh kotak masuk. Memuat ulang tiap klik membuang pekerjaan yang sudah selesai, menggulir pembaca kembali ke atas, dan menghapus state yang sudah terisi. Muncul pola berlawanan, SPA atau Single-Page Application, aplikasi yang memuat satu dokumen HTML sekali di awal, lalu JavaScript mengganti isi halaman setiap pengguna berpindah.</p>
+<p>Pola ini membuka lubang baru. Kalau JavaScript hanya mengganti isi halaman, URL di address bar, kolom alamat di bagian atas browser, tidak ikut berubah. Padahal URL dipakai pembaca untuk tiga hal: membookmark, membagikan tautan, dan menekan tombol back. Routing, aturan yang menerjemahkan URL menjadi tampilan yang harus dirender, menambal lubang itu. Ia punya dua pekerjaan: mengubah isi halaman dengan JavaScript sekaligus menulis perubahan itu ke URL, lalu membaca URL kembali saat halaman dibuka atau tombol back ditekan.</p>
+
+<h2>URL sebagai state</h2>
+<p>Bab 10 menyebut state sebagai ingatan data yang bisa berubah. Ada satu state yang berbeda dari yang lain: dia terlihat oleh semua orang, tersalin saat tautan dibagikan, dan dikirim ke server setiap kali halaman dibuka. State itu adalah URL. Kalau posisi navigasi disimpan di URL, refresh, bookmark, dan tombol share bekerja tanpa kode tambahan. URL juga tempat alami untuk data yang menentukan tampilan, misalnya /produk/42 yang menyimpan angka 42 sebagai id produk, sama seperti query menyimpan parameter fetch di bab 11.</p>
+
+<h2>Di baliknya: tumpukan history</h2>
+<figure>
+<img src="/18-routing/img/kuka-buku-tamu.png" alt="Kuka duduk di meja resepsionis menelusuri baris buku tamu yang tebal dengan jarinya dari bawah ke atas, di sampingnya tumpukan kartu nomor kamar dan panah besar menunjuk ke belakang.">
+<figcaption>Tumpukan history adalah buku tamu, dan tombol back membacanya mundur satu baris.</figcaption>
+</figure>
+<p>Browser menyimpan jejak kunjungan dalam tumpukan history, barisan alamat yang bisa ditelusuri lewat tombol back dan forward. Dua alat di dalamnya menjadi fondasi semua router. Yang pertama history.pushState(nilai, judul, url), perintah untuk menambah barisan tanpa memuat ulang halaman. Yang kedua event popstate, sinyal yang dipancarkan window setiap tombol back atau forward memindahkan posisi dalam barisan.</p>
+<p>Dengan dua alat itu, router kecil selesai dalam tiga langkah. Saat tautan diklik, batalkan pindah halaman bawaan browser dengan preventDefault dari bab 9, tulis rute baru dengan pushState, lalu render. Saat popstate terdengar, baca URL yang sekarang dan render. Itu seluruh mesinnya, dan React Router di bagian akhir bab menjalankan mesin yang sama persis.</p>
+
+<h2>Dua cara menulis rute di URL</h2>
+<p>Ada dua tempat menyimpan rute, dan keduanya dipakai di situs nyata.</p>
+<p>Yang pertama hash, bagian URL setelah tanda pagar. Perubahan hash tidak pernah dikirim ke server dan memicu event hashchange. URL-nya terlihat seperti /#/tentang. Kelebihannya kebal refresh: server hanya pernah menerima alamat sebelum tanda pagar, jadi menyegarkan halaman tidak pernah gagal. Kekurangannya tampak di URL-nya sendiri, tanda pagar itu.</p>
+<p>Yang kedua History API, kumpulan perintah browser untuk mengelola tumpukan history, dengan pushState sebagai andalannya. Jalur yang ditulis menjadi jalur sungguhan, /tentang tanpa tanda pagar, dan bentuk inilah yang dipakai situs besar. Konsekuensinya ada di sisi server. Ketika pembaca menyegarkan halaman di /tentang, request yang datang memang membawa jalur itu. Server harus tahu bahwa semua jalur tetap disajikan halaman yang sama, kalau tidak ia membalas 404, balasan untuk alamat yang tidak dikenal. Hal yang sama berlaku untuk deep link, tautan yang menunjuk langsung ke halaman dalam, misalnya yang dibagikan lewat chat.</p>
+<p>Jadi pilihannya bukan benar dan salah, tetapi URL bersih dengan biaya konfigurasi server, atau URL bertanda pagar tanpa biaya apa pun.</p>
+
+<h2>Router: tabel rute dan fungsi render</h2>
+<p>Inti sebuah router hanya dua bagian. Tabel rute, daftar pasangan jalur dan isi yang biasa ditulis sebagai objek, dan fungsi render yang membaca location lalu mengambil isi sesuai jalurnya. Polanya identik dengan bab 12, yang memetakan data server ke elemen daftar. Bedanya hanya sumber datanya: router memetakan URL ke tampilan. Tabel kecil sudah cukup untuk aplikasi nyata, dan aplikasi besar hanya menambah barisnya.</p>
+
+<h2>React Router</h2>
+<p>Di dunia React, pekerjaan itu dibungkus React Router, library yang paling banyak dipakai untuk routing React. Link adalah elemen a yang di dalamnya sudah memanggil preventDefault dan pushState, jadi kliknya tidak pernah memuat ulang halaman. Routes dan Route adalah tabel rute yang ditulis sebagai JSX dari bab 15. Semua kenyamanan itu berdiri di atas mesin yang sudah dibaca di bagian sebelumnya, pushState dan popstate.</p>
+
+<h2>Analogi: hotel dan buku tamu</h2>
+<p>Satu gambar untuk semuanya. SPA adalah gedung hotel yang sudah berdiri, kamu masuk sekali dan tidak lagi keluar masuk gedung setiap pindah kamar. Router adalah resepsionis yang membaca nomor di pintu, dan nomor itu adalah URL. Pindah halaman berarti ganti nomor di pintu dan ganti isi kamarnya, bangunannya tidak dibongkar. Tumpukan history adalah buku tamu di meja resepsionis, dan tombol back hanyalah membaca buku itu mundur satu baris. Hash dan History API adalah dua gaya menulis nomor kamar, ditempel di balik pintu atau ditulis rapi di daftar resmi gedung. Dan mengantar tamu langsung ke kamar 204, deep link itu, hanya berhasil kalau petugas gedung tahu kamar 204 memang milik gedungnya.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya router dua halaman, Beranda dan Tentang, lengkap dengan rute 404 untuk jalur yang tidak dikenal. Versi vanilla menyimpan tabel rute sebagai objek, memasang pendengar klik di setiap tautan untuk mencegah muat ulang, menulis rute dengan pushState, dan mendengarkan popstate untuk tombol back. Versi React menyusun hal yang sama dalam BrowserRouter, Link, dan Routes.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>&lt;nav&gt;
+  &lt;a href="/beranda"&gt;Beranda&lt;/a&gt;
+  &lt;a href="/tentang"&gt;Tentang&lt;/a&gt;
+&lt;/nav&gt;
+&lt;main id="halaman"&gt;&lt;/main&gt;
+
+&lt;script&gt;
+const rute = {
+  "/beranda": "&lt;h2&gt;Beranda&lt;/h2&gt;&lt;p&gt;Halo.&lt;/p&gt;",
+  "/tentang": "&lt;h2&gt;Tentang&lt;/h2&gt;&lt;p&gt;Tentang kami.&lt;/p&gt;"
+};
+
+function render() {
+  document.querySelector("#halaman").innerHTML =
+    rute[location.pathname] || "&lt;h2&gt;404&lt;/h2&gt;";
+}
+
+document.querySelectorAll("nav a").forEach(function (a) {
+  a.addEventListener("click", function (e) {
+    e.preventDefault();
+    history.pushState(null, "", a.getAttribute("href"));
+    render();
+  });
+});
+
+window.addEventListener("popstate", render);
+render();
+&lt;/script&gt;</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>import { BrowserRouter, Routes, Route, Link }
+  from "react-router-dom";
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;nav&gt;
+        &lt;Link to="/beranda"&gt;Beranda&lt;/Link&gt;
+        &lt;Link to="/tentang"&gt;Tentang&lt;/Link&gt;
+      &lt;/nav&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/beranda"
+          element={&lt;Beranda /&gt;} /&gt;
+        &lt;Route path="/tentang"
+          element={&lt;Tentang /&gt;} /&gt;
+        &lt;Route path="*"
+          element={&lt;h2&gt;404&lt;/h2&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Di vanilla, setiap sambungan dipasang sendiri: preventDefault, pushState, popstate, dan tabel rutenya. React Router membakukan polanya. Link mengurus dua perintah pertama, Routes membaca location, dan Route adalah tabelnya yang ditulis deklaratif. Di baliknya, mesinnya persis sama. Seperti bab-bab React sebelumnya, React tidak menghapus kerja vanilla, ia memberi nama pada polanya supaya tidak ditulis ulang di setiap proyek.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo memakai router hash. Alasan praktisnya: rute hash aman disegarkan di mana saja tanpa bantuan server. Tekan Beranda dan Tentang, URL di address bar berubah tanpa halaman memuat ulang. Tekan tombol Mundur atau tombol back browser, konten mengikuti karena hashchange terdengar. Angka isi tumpukan history tumbuh satu setiap navigasi.</p>
+
+<div class="demo">
+<p>Router hash sungguhan di bawah ini. Klik Beranda dan Tentang, perhatikan address bar berubah tanpa halaman dimuat ulang. Tombol Mundur memanggil history.back(), sama persis dengan tombol back browser.</p>
+<nav>
+<a href="#/beranda">Beranda</a>
+<a href="#/tentang">Tentang</a>
+</nav>
+<div id="demo-konten"></div>
+<p>Jalur sekarang: <code id="demo-url"></code>, isi tumpukan history: <code id="demo-history"></code></p>
+<button id="demo-mundur">Mundur</button>
+</div>
+
+<p>Begini cara baca demonya. Objek halaman adalah tabel rutenya, jalur hash dipetakan ke tulisan siap render. Fungsi renderDemo membaca location.hash, memotong tanda pagarnya dengan slice, lalu mengambil isi dari tabel. Pendengar hashchange memasang satu jawaban untuk dua kejadian berbeda, klik tautan hash dan tombol back, karena keduanya hanya mengubah URL, dan render tinggal membaca ulang. Tidak ada satu baris pun yang menghubungi server saat navigasi.</p>
+
+<p>Ringkasan bab ini. Situs multi halaman memuat ulang dokumen tiap klik, SPA mengganti isi halaman dengan JavaScript dan menitipkan posisi navigasi ke URL. Mesinnya dua perintah browser: pushState menulis rute tanpa memuat ulang, popstate memberi tahu saat back dan forward dipakai. Rute bisa disimpan di hash yang kebal refresh atau di jalur sungguhan yang butuh server paham. Router, punya versi vanilla maupun React Router, hanyalah tabel rute plus fungsi render yang berjalan saat URL berubah. Bab berikutnya berpindah dari cara bernavigasi ke orang yang menavigasi: aksesibilitas.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/History/pushState">MDN: History API, pushState</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event">MDN: Window, popstate event</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event">MDN: Window, hashchange event</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Location">MDN: Location</a></li>
+<li><a href="https://web.dev/learn/pwa/architecture">web.dev: Architecture, SPA dan MPA</a></li>
+<li><a href="https://reactrouter.com/">React Router</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/17-custom-hooks/">Bab 17 - React: Custom Hooks &amp; Pola Komposisi</a> | Lanjut ke <a href="/19-aksesibilitas/">Bab 19 - Aksesibilitas (a11y)</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const halamanDemo = {
+  "/beranda": "Kamu di beranda. Isi ini dirender oleh JavaScript, bukan dokumen baru dari server.",
+  "/tentang": "Kamu di tentang. Perhatikan tanda pagar di URL, itulah hash yang dibaca router."
+};
+
+function renderDemo() {
+  const jalur = location.hash.slice(1) || "/beranda";
+  document.querySelector("#demo-konten").textContent = halamanDemo[jalur] || "404, jalur tidak dikenal.";
+  document.querySelector("#demo-url").textContent = location.hash || "#/beranda";
+  document.querySelector("#demo-history").textContent = history.length + " alamat";
+}
+
+window.addEventListener("hashchange", renderDemo);
+document.querySelector("#demo-mundur").addEventListener("click", function () {
+  history.back();
+});
+renderDemo();
+</script>
+</body>
+</html>
