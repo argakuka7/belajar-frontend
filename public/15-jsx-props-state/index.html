@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 15 - React: JSX, Props &amp; State | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+#demo-isi ul { margin: .6rem 0 0; }
+#demo-isi p { margin: .6rem 0 0; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "htm": "https://esm.sh/htm@3.1.1"
+  }
+}
+</script>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 15</span>
+<h1>React: JSX, Props &amp; State</h1>
+<p>Bab 14 menjelaskan mengapa framework ada: React mengizinkan kita mendeklarasikan bentuk halaman dari data, dan React yang mengurus DOM. Bab ini membuka tiga peralatan yang dipakai semua bab React sesudahnya. JSX, cara menulis bentuk tampilan yang mirip HTML di dalam JavaScript. Props, data yang dikirim komponen induk ke anakannya dan hanya dibaca. State, ingatan milik satu komponen yang diganti lewat <code>useState</code>, dan pergantian itulah yang memicu render ulang.</p>
+</header>
+
+<main>
+<figure>
+<img src="/15-jsx-props-state/img/kuka-koki-resep.png" alt="Kuka berjuluk koki berdiri di dapur restoran, menempelkan kartu pesanan pelanggan ke rel dapur, di samping kartu resep penyajian yang bergambar bentuk piring dengan beberapa kolom isian kosong.">
+<figcaption>JSX dan props, kartu resep dengan lubang isian yang diisi kartu pesanan dari luar dapur.</figcaption>
+</figure>
+
+<h2>Mengapa JSX ada</h2>
+<p>Bab 12 memperlihatkan merender dengan tangan itu panjang. Satu baris data butuh <code>createElement</code>, <code>textContent</code>, <code>appendChild</code>. Tiga panggilan untuk satu elemen, dan pembacanya harus menyusuri urutan perintah dulu sebelum paham bentuk akhirnya. React menawarkan jalan lain. Di dalam komponen, fungsi yang mengembalikan bentuk tampilan, kita menulis bentuk halaman itu seperti HTML. Cara menulis ini disebut JSX, JavaScript XML, sintaksis yang mirip HTML tapi hidup di dalam kode JavaScript. JSX bukan HTML sungguhan. Ia gula mata, bentuknya familiar, isinya JavaScript.</p>
+
+<h2>Bagaimana JSX bekerja</h2>
+<p>Browser tidak pernah mengerti JSX. JSX bukan JavaScript yang sah. Sebelum sampai ke browser, JSX dikompilasi, diubah oleh program lain menjadi panggilan fungsi biasa. Compiler seperti Babel, esbuild, atau SWC mengerjakan ini di proyek sungguhan. Padanannya sederhana.</p>
+<pre><code>&lt;li&gt;{tugas.judul}&lt;/li&gt;</code></pre>
+<pre><code>React.createElement("li", null, tugas.judul);</code></pre>
+<p>Jadi setiap kali menulis JSX, yang sebenarnya dieksekusi adalah fungsi <code>createElement</code>. Melihat padanan ini membuat aturan JSX masuk akal, bukan hafalan. Satu <code>return</code> wajib membungkus satu induk, karena <code>createElement</code> mengembalikan satu nilai. <code>class</code> menjadi <code>className</code>, karena <code>class</code> adalah kata tercadang JavaScript. Nilai JavaScript masuk lewat kurung kurawal <code>{}</code>, sehingga kondisi bab 12 ikut muat, <code>{tugas.length === 0 &amp;&amp; &lt;p&gt;Belum ada tugas.&lt;/p&gt;}</code>. Tag tunggal ditutup sendiri, <code>&lt;img /&gt;</code> dan <code>&lt;input /&gt;</code>, seperti XML.</p>
+
+<h2>Props: data yang mengalir turun</h2>
+<p>Komponen adalah fungsi biasa, dan fungsi menerima argumen. Argumen komponen bernama props, properti yang dikirim induknya lewat atribut pada tag komponen. <code>&lt;Baris nama="es teh" jumlah={2} /&gt;</code> sama artinya dengan memanggil fungsi <code>Baris</code> dengan objek <code>{ nama: "es teh", jumlah: 2 }</code>. Anak memakai props untuk menampilkan sesuatu. Aturannya satu, dibaca saja. Anak tidak mengubah props miliknya, karena data itu milik induk. Semuanya mengalir satu arah, dari atas ke bawah. Kalau anak ingin data berubah, ia tidak mencoret kartunya sendiri, ia minta induk lewat fungsi yang induk kirim sebagai props.</p>
+
+<h2>State: ingatan yang memicu render ulang</h2>
+<figure>
+<img src="/15-jsx-props-state/img/kuka-papan-catatan.png" alt="Kuka berdiri di depan papan catatan di dinding dapur, sedang menghapus tulisan es teh tinggal 2 dengan kain, sementara tulisan baru es teh tinggal 1 sudah tersedia di tangan lainnya, dan piring di meja dapur terlihat di latar belakang.">
+<figcaption>State, papan catatan dapur yang tiap kali diganti memicu penyajian ulang meja.</figcaption>
+</figure>
+<p>Di sinilah masalah muncul. Komponen React adalah fungsi yang dijalankan berulang-ulang, dan variabel lokal fungsi mati setiap fungsi selesai, seperti diajarkan bab 7. Padahal tampilan butuh ingatan, isi keranjang, jumlah pesanan, teks kotak pencarian. React menyimpan ingatan itu sendiri, di luar fungsi komponen, lalu menyambungkannya lewat hook bernama <code>useState</code>. Hook, fungsi khusus React yang hanya boleh dipanggil di dalam komponen.</p>
+<pre><code>const [hitung, setHitung] = React.useState(0);</code></pre>
+<p><code>useState(0)</code> memberi dua barang sekaligus. <code>hitung</code>, isi ingatan sekarang. <code>setHitung</code>, satu-satunya pintu untuk menggantinya. Memanggil <code>setHitung(1)</code> melakukan dua hal. Mengganti isi ingatan, lalu menjadwalkan render ulang, React menjalankan fungsi komponen lagi dari atas, dan kali ini fungsi membaca nilai baru. Di sinilah perbedaan inti dengan vanilla. Di vanilla, mengganti variabel tidak mengubah apa pun di layar sampai kita memanggil <code>render()</code> dengan tangan. Di React, panggilan itu otomatis, dipicu oleh <code>setHitung</code>. Bab 12 sudah menyebut React membandingkan hasil render baru dengan halaman lama dan menyentuh DOM hanya di bagian yang berubah. Bab ini menunjukkan pemicunya, panggilan <code>setHitung</code>.</p>
+
+<h2>Analogi: dapur restoran</h2>
+<p>Satu gambar untuk semuanya. Di dapur restoran ada kartu resep penyajian, ditulis sekali, bentuknya tetap, dengan lubang isian untuk nama menu dan catatan. Itu JSX, cetakan bentuk tampilan. Di rel dapur terselip kartu pesanan dari pelanggan, isinya dari luar dapur, koki hanya membaca dan tidak boleh mencoretnya. Itu props, data yang mengalir turun dan dibaca saja. Di dinding dapur ada papan catatan milik koki, "es teh tinggal 2 porsi". Saat koki mengganti catatan itu menjadi tinggal 1, ia menyajikan ulang meja sesuai catatan terbaru. Itu state, ingatan internal yang setiap kali diganti memicu pekerjaan ulang. Koki tidak menghafal tiga istilah ini, ia memakai tiga benda yang masing-masing punya aturan main.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya kedai sederhana. Tiga tombol menu, nasi goreng, es teh, bakso. Tiap klik menambah satu pesanan, daftar di bawah menunjukkan jumlah per menu. Versi vanilla menyimpan hitungan di objek, memasang <code>addEventListener</code> bab 9, lalu memanggil <code>render()</code> dengan tangan setiap klik. Versi React menyimpan hitungan di <code>useState</code>, dan induk <code>Kedai</code> mengirim <code>nama</code> dan <code>jumlah</code> sebagai props ke komponen anak <code>Baris</code> lewat <code>map</code> dengan <code>key</code> bab 12.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>const MENU = ["nasi goreng", "es teh", "bakso"];
+const hitung = { "nasi goreng": 0, "es teh": 0, bakso: 0 };
+const daftar = document.querySelector("#pesanan");
+
+document.querySelectorAll("[data-menu]").forEach(function (tombol) {
+  tombol.addEventListener("click", function () {
+    const nama = tombol.dataset.menu;
+    hitung[nama] = hitung[nama] + 1;
+    render();
+  });
+});
+
+function render() {
+  daftar.replaceChildren();
+  MENU.forEach(function (nama) {
+    if (hitung[nama] === 0) return;
+    const li = document.createElement("li");
+    li.textContent = nama + " x " + hitung[nama];
+    daftar.appendChild(li);
+  });
+}</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Baris(props) {
+  return &lt;li&gt;{props.nama} x {props.jumlah}&lt;/li&gt;;
+}
+
+function Kedai() {
+  const [hitung, setHitung] = React.useState({});
+  const menu = ["nasi goreng", "es teh", "bakso"];
+
+  function tambah(nama) {
+    setHitung({ ...hitung, [nama]: (hitung[nama] || 0) + 1 });
+  }
+
+  return (
+    &lt;div&gt;
+      {menu.map(function (nama) {
+        return (
+          &lt;button key={nama} onClick={function () { tambah(nama); }}&gt;
+            + {nama}
+          &lt;/button&gt;
+        );
+      })}
+      &lt;ul&gt;
+        {menu.filter(function (n) { return hitung[n]; }).map(function (nama) {
+          return &lt;Baris key={nama} nama={nama} jumlah={hitung[nama]} /&gt;;
+        })}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di satu pertanyaan, siapa yang memanggil render ulang. Versi vanilla mengganti objek <code>hitung</code> lalu harus ingat memanggil <code>render()</code> sendiri. Lupa panggilan itu, layar tertinggal. Versi React mengganti hitungan lewat <code>setHitung</code>, dan render ulang dijadwalkan otomatis, fungsi <code>Kedai</code> dijalankan lagi dari atas dengan nilai baru. Props ikut kerja di sini. Data tidak tersebar di variabel lepas, tetapi mengalir turun dari induk ke tiap <code>Baris</code>, sehingga sumber kebenaran cuma satu, state milik <code>Kedai</code>. Di vanilla, pembagian tugas itu dibuat sendiri dengan disiplin. Di React, kerangka yang memaksa.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah menyalin kedai yang sama dan benar-benar jalan di halaman ini. Satu rintangan teknis, browser tidak bisa mengeksekusi JSX mentah, dan halaman ini tanpa build tool. Jadi demo memuat React lewat import map dari CDN ESM, lalu memakai jembatan bernama <code>htm</code>, yang bentuknya mirip JSX tapi ditulis di dalam template literal bab 12. Yang dibaca <code>htm</code> dan yang dibaca compiler JSX berakhir di panggilan <code>createElement</code> yang sama. Karena dimuat dari CDN, demo ini butuh koneksi internet, beda dengan demo bab sebelumnya yang jalan tanpa jaringan.</p>
+
+<div class="demo">
+<p>Tiga tombol di bawah adalah menu kedai. Tekan beberapa kali, perhatikan daftar dan total yang berganti sendiri tanpa satu pun panggilan <code>render()</code> yang ditulis dengan tangan.</p>
+<div id="demo-isi"><p>Memuat React dari CDN...</p></div>
+</div>
+
+<p>Begini cara baca demonya. Fungsi <code>Kedai</code> memegang satu state, objek <code>hitung</code>, lewat <code>useState({})</code>. Tiap tombol menu memanggil <code>tambah(nama)</code>, dan <code>tambah</code> memanggil <code>setHitung</code> dengan objek baru. Panggilan itulah yang memicu render ulang, fungsi <code>Kedai</code> dijalankan lagi dari atas dan membaca hitungan terbaru. Daftar pesanan dirender lewat <code>filter</code> dan <code>map</code>, tiap baris dipanggil sebagai komponen <code>Baris</code> dengan props <code>nama</code> dan <code>jumlah</code>. Baris tidak menyimpan apa pun, ia membaca kartu pesanannya. Bedanya dengan kode di <code>&lt;script&gt;</code> halaman ini cuma satu, <code>html\`...\`</code> dari <code>htm</code> menggantikan JSX, karena JSX mentah butuh compiler dan halaman ini tanpa build tool.</p>
+
+<p>Ringkasan bab ini. JSX adalah cara menulis bentuk tampilan yang mirip HTML di dalam JavaScript, dan ia dikompilasi menjadi panggilan <code>createElement</code> sebelum browser melihatnya. Props adalah data yang dikirim induk ke anak lewat atribut, dibaca saja, mengalir satu arah. State adalah ingatan milik komponen yang dipegang React, diganti lewat fungsi <code>setHitung</code> dari <code>useState</code>, dan tiap pergantian menjadwalkan render ulang. Bab berikutnya memakai ketiganya untuk menjalankan efek dan mengambil data dari server.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://react.dev/learn/describing-the-ui">react.dev: Describing the UI</a></li>
+<li><a href="https://react.dev/learn/passing-props-to-a-component">react.dev: Passing Props to a Component</a></li>
+<li><a href="https://react.dev/learn/state-as-a-snapshot">react.dev: State as a Snapshot</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">MDN: Template literals</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/14-react-mengapa/">Bab 14 - React: Mengapa Framework Ada</a> | Lanjut ke <a href="/16-efek-fetch/">Bab 16 - React: Efek &amp; Pengambilan Data</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script type="module">
+const kotak = document.querySelector("#demo-isi");
+
+try {
+  const React = await import("react");
+  const { createRoot } = await import("react-dom/client");
+  const html = (await import("htm")).default.bind(React.createElement);
+
+  function Baris(props) {
+    return html`<li>${props.nama} x ${props.jumlah}</li>`;
+  }
+
+  function Kedai() {
+    const [hitung, setHitung] = React.useState({});
+    const menu = ["nasi goreng", "es teh", "bakso"];
+
+    function tambah(nama) {
+      setHitung({ ...hitung, [nama]: (hitung[nama] || 0) + 1 });
+    }
+
+    let total = 0;
+    menu.forEach(function (n) { total = total + (hitung[n] || 0); });
+
+    return html`
+      <div>
+        ${menu.map(function (nama) {
+          return html`<button key=${nama} onClick=${function () { tambah(nama); }}>+ ${nama}</button>`;
+        })}
+        <ul>
+          ${menu.filter(function (n) { return hitung[n]; }).map(function (nama) {
+            return html`<${Baris} key=${nama} nama=${nama} jumlah=${hitung[nama]} />`;
+          })}
+        </ul>
+        <p>Total pesanan: ${total}</p>
+      </div>
+    `;
+  }
+
+  createRoot(kotak).render(html`<${Kedai} />`);
+} catch (gagal) {
+  kotak.textContent = "Demo butuh koneksi internet untuk memuat React dari CDN.";
+}
+</script>
+</body>
+</html>
