@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 14 - React: Mengapa Framework Ada | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 14</span>
+<h1>React: Mengapa Framework Ada</h1>
+<p>Bab 6 sampai 13 membangun halaman dengan tangan: memilih elemen, mengubah isi, memasang pendengar. Bab ini menjawab pertanyaan yang muncul saat halaman membesar: mengapa framework ada, dan apa yang React ganti dari kerja tangan itu.</p>
+</header>
+
+<main>
+<figure>
+<img src="/14-react-mengapa/img/kuka-arsitek-denah.png" alt="Kuka duduk di meja gambar menggambar satu denah rumah dengan penggaris, di belakangnya sebuah tim tukang kecil berdiri siaga membawa perkakas, menunggu denah selesai.">
+<figcaption>Menggambar denah, bukan memasang bata sendiri. Gaya deklaratif ala framework.</figcaption>
+</figure>
+
+<h2>Mengapa framework ada</h2>
+<p>Framework adalah kumpulan kode dan aturan baku yang mengurus pekerjaan berulang, sehingga penulisnya fokus ke bagian yang khas dari aplikasinya. React sendiri lebih tepat disebut library, kumpulan fungsi siap pakai, tetapi ia membakukan satu hal penting: alur data dari state ke tampilan. Sebutan framework dipakai di seri ini karena React mengubah cara kerja, bukan sekadar menambah fungsi.</p>
+<p>Recap pola yang dipakai terus sejak bab 8. Data berubah, lalu kode menyuruh DOM berubah. querySelector memilih elemen, textContent atau innerHTML mengubah isinya, addEventListener memasang pendengar. Bab 10 menambah state di localStorage, bab 11 mengambil data dari server, bab 12 merender daftar, bab 13 memvalidasi form. Semua memakai gaya imperatif, memberi perintah langkah demi langkah ke DOM.</p>
+
+<h2>Titik lelah halaman yang tumbuh</h2>
+<p>Gaya imperatif tidak salah. Ia hanya mulai berat saat halaman tumbuh. Bebannya tiga.</p>
+<p>Pertama, sinkronisasi manual. Satu data sering muncul di beberapa tempat, misalnya jumlah barang di keranjang tampil di ikon, di daftar, dan di total. Setiap perubahan harus diubah ke semua tempat itu dengan tangan. Satu tempat terlewat, tampilan menunjukkan angka yang bohong.</p>
+<p>Kedua, kode menyebar. Pendengar event ada di satu tempat, fungsi pembaruan di tempat lain, elemen yang diubah di tempat ketiga. Halaman masih kecil, urutannya mudah diikuti. Saat fitur bertambah, melacak siapa mengubah apa jadi pekerjaan tersendiri.</p>
+<p>Ketiga, pengulangan. Bab 12 dan 13 berulang kali menulis pola yang mirip: pilih wadah, susun teks atau elemen, pasang kembali. Pola yang ditulis berulang-ulang adalah tanda pekerjaan yang seharusnya bisa diotomasi.</p>
+
+<h2>Deklaratif dan imperatif</h2>
+<p>Dua gaya itu punya nama. Imperatif berarti memberi perintah langkah demi langkah: cari elemen ini, ubah teksnya, lalu pasang pendengar. Deklaratif berarti menyatakan seperti apa hasilnya, dan membiarkan langkahnya dikerjakan pihak lain.</p>
+<p>React memilih gaya deklaratif. Tampilan dinyatakan sebagai fungsi dari state. Kalau state berisi jumlah 3, tampilan yang benar adalah teks berangka 3. Kalau state berubah jadi 4, fungsi itu dijalankan ulang dan tampilan mengikutinya. Penulis kode tidak pernah menyuruh DOM langsung, ia hanya mengubah state.</p>
+
+<h2>Komponen: tampilan sebagai fungsi</h2>
+<p>Wadah deklaratif di React disebut komponen. Komponen adalah fungsi yang mengembalikan tampilan, dan namanya selalu diawali huruf besar. Halaman besar dipecah menjadi komponen kecil, tombol, daftar, form, yang bisa dipakai ulang. Detail penulisannya menyusul di bab 15, yang penting di bab ini adalah bentuknya: tampilan lahir dari fungsi, bukan dari perintah yang tersebar.</p>
+
+<h2>State dan re-render</h2>
+<p>State, ingatan data yang bisa berubah dan sudah ditemu di bab 10, di React jadi milik komponen. Komponen menyimpan nilai lewat useState dan mengubahnya lewat fungsi pengubah, bukan lewat penugasan biasa. Setiap kali nilai diubah, React menjalankan ulang fungsi komponen. Menjalankan ulang inilah yang disebut re-render, tampilan dirender kembali dari state yang baru.</p>
+<p>Inilah ganti yang paling besar. Di bab-bab sebelumnya, mengubah data dan mengubah tampilan adalah dua pekerjaan yang ditulis terpisah. Di React, mengubah data otomatis membawa tampilannya, karena tampilan memang fungsi dari data.</p>
+
+<h2>Di balik re-render</h2>
+<figure>
+<img src="/14-react-mengapa/img/kuka-tukang-ruangan.png" alt="Kuka berdiri di rumah dua ruangan sambil memegang denah, satu tukang hanya merombak ruangan kanan yang denahnya berubah, ruangan kiri utuh dan tidak ada yang menyentuhnya.">
+<figcaption>Re-render, tukang yang merombak hanya ruangan yang denahnya berubah.</figcaption>
+</figure>
+<p>Terdengar mahal, fungsi dijalankan ulang setiap ada perubahan. React menahan biayanya. Hasil render baru dibandingkan dengan hasil sebelumnya, dan hanya bagian yang berubah yang disentuh di DOM. Salinan ringan tampilan yang dipakai untuk membandingkan itu disebut virtual DOM. Angka 3 jadi 4 pada satu baris teks, hanya teks baris itu yang diperbarui, sisanya dibiarkan.</p>
+
+<h2>Batas framework</h2>
+<p>Framework bukan sihir, dan React tidak menghapus apa pun yang sudah dipelajari. Di baliknya tetap DOM yang sama, createElement membangun objek elemen, dan React yang memasangnya ke halaman. Bab 6 sampai 13 justru jadi bekal: tanpa tahu kerja manualnya, re-render terlihat seperti sulap. Batasnya juga perlu jujur. Halaman kecil tidak butuh framework, memasang satu bingkai foto lebih cepat dilakukan sendiri. React menambah berkas dan aturan, dan itu dibayar dengan penghematan saat aplikasi membesar.</p>
+
+<h2>Analogi: tukang dan denah</h2>
+<p>Satu gambar untuk semuanya. Kamu adalah arsitek, state adalah denah rumah, React adalah tim tukang, dan DOM adalah bangunannya. Gaya imperatif adalah memasang bata dengan tangan sendiri, setiap perubahan kamu yang merangkak ke atap. Gaya deklaratif adalah menggambar denah lalu membiarkan tukang mewujudkannya, denah berubah, tukang bekerja lagi. Re-render adalah tukang yang cerdas, ia merombak hanya ruangan yang denahnya berubah, ruangan lain tidak disentuh. Dan untuk gantung satu bingkai, memanggil tim tukang justru memperlambat, itulah halaman kecil yang lebih cocok dengan vanilla.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya penghitung (counter), satu angka dan dua tombol, tambah satu dan reset. Vanilanya menyimpan jumlah di variabel, dua pendengar klik masing-masing mengubah variabel lalu menulis ulang teks dengan textContent. React-nya menyimpan jumlah di state dengan useState, tombol hanya memanggil setJumlah, dan teks ikut berubah sendiri. Kalau angka harus muncul di tiga tempat, versi vanilla butuh tiga textContent, versi React tetap cukup satu setJumlah.</p>
+<p>Kode React di kolom kanan ditulis dengan JSX, cara React menulis tampilan yang mirip HTML di dalam JavaScript. JSX baru diajarkan di bab 15, jadi demo di bawah memakai bentuk mentahnya, React.createElement, yang jalan tanpa build tool.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>let jumlah = 0;
+const tampil = document.querySelector("#angka");
+
+function tulis() {
+  tampil.textContent = "Kamu menekan tombol " + jumlah + " kali.";
+}
+
+document.querySelector("#tambah").addEventListener("click", function () {
+  jumlah = jumlah + 1;
+  tulis();
+});
+
+document.querySelector("#reset").addEventListener("click", function () {
+  jumlah = 0;
+  tulis();
+});</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Penghitung() {
+  const [jumlah, setJumlah] = React.useState(0);
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Kamu menekan tombol {jumlah} kali.&lt;/p&gt;
+      &lt;button onClick={() =&gt; setJumlah(jumlah + 1)}&gt;
+        Tambah satu
+      &lt;/button&gt;
+      &lt;button onClick={() =&gt; setJumlah(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Di vanilla, setiap tombol mengurus dua pekerjaan sekaligus, mengubah data dan mengubah tampilan. React memisahkannya. Tombol hanya mengubah data lewat fungsi pengubah state, dan tampilan mengikuti karena ia fungsi dari state. Konsekuensinya terasa saat tampilan tumbuh: penambahan tempat tampil tidak menambah pekerjaan pada sumber perubahannya. Seperti bab-bab sebelumnya, React tidak menghapus pekerjaan vanilla, ia membakukan urutannya, data dulu, tampilan menyusul.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo memuat React sungguhan lewat CDN ESM dan menjalankan komponen penghitung yang sama dengan pasangan contoh. CDN, singkatan dari Content Delivery Network, adalah jaringan server yang menyajikan berkas library dari alamat lain, dan ESM atau modul ES adalah cara JavaScript memuat berkas lewat perintah import. Tekan Tambah satu, angka naik. Tekan Reset, angka kembali ke nol. Yang bekerja di balik setiap klik hanya setJumlah, React yang mengurus DOM-nya.</p>
+
+<div class="demo">
+<p>Demo ini menjalankan komponen React sungguhan, dimuat dari CDN tanpa build tool. Perhatikan bahwa tidak ada satu baris pun yang menyentuh DOM secara langsung, teks mengikuti state.</p>
+<div id="demo-akar"><p><em>Memuat React dari CDN...</em></p></div>
+</div>
+
+<p>Begini cara baca demonya. createElement adalah perintah React untuk membangun elemen, bentuk mentah yang nanti disingkat oleh JSX di bab 15. Fungsi Penghitung mengembalikan satu paragraf dan dua tombol, dengan state jumlah yang dimulai dari 0. Tombol Tambah satu memanggil setJumlah dengan nilai baru, dan React menjalankan ulang Penghitung, membandingkan hasilnya dengan sebelumnya, lalu memperbarui hanya paragrafnya. Tombol Reset memanggil setJumlah dengan 0, dan yang berubah tetap cuma paragraf itu.</p>
+
+<p>Ringkasan bab ini. Kerja manual DOM jadi berat saat halaman tumbuh, bebannya sinkronisasi, kode menyebar, dan pengulangan. React menjawab dengan gaya deklaratif, tampilan adalah fungsi dari state, ditulis dalam komponen. Mengubah state memicu re-render, dan React hanya menyentuh bagian DOM yang berubah. Bab berikutnya mengajarkan bahasa penulisannya: JSX, props, dan state.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks">MDN: Introduction to client-side frameworks</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started">MDN: Getting started with React</a></li>
+<li><a href="https://react.dev/learn">react.dev: Learn React</a></li>
+<li><a href="https://react.dev/learn/writing-markup-with-jsx">react.dev: Writing markup with JSX</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model">MDN: Document Object Model (DOM)</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/13-form-validasi/">Bab 13 - Form &amp; Validasi di Sisi Klien</a> | Lanjut ke <a href="/15-jsx-props-state/">Bab 15 - React: JSX, Props &amp; State</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script type="module">
+import React from "https://esm.sh/react@18.3.1";
+import { createRoot } from "https://esm.sh/react-dom@18.3.1/client";
+
+function Penghitung() {
+  const [jumlah, setJumlah] = React.useState(0);
+  return React.createElement(
+    "div",
+    null,
+    React.createElement(
+      "p",
+      { style: { fontSize: "1.3rem", fontWeight: "bold", margin: ".4rem 0" } },
+      "Kamu menekan tombol " + jumlah + " kali."
+    ),
+    React.createElement(
+      "button",
+      { onClick: function () { setJumlah(jumlah + 1); } },
+      "Tambah satu"
+    ),
+    React.createElement(
+      "button",
+      { onClick: function () { setJumlah(0); } },
+      "Reset"
+    )
+  );
+}
+
+createRoot(document.querySelector("#demo-akar")).render(React.createElement(Penghitung));
+</script>
+</body>
+</html>
