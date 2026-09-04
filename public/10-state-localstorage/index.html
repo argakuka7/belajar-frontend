@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 10 - State di Sisi Klien &amp; localStorage | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+#demo-angka { font-size: 2.2rem; font-weight: bold; margin: .4rem 0; }
+#demo-mentah { color: var(--muted); font-size: .85rem; margin: .6rem 0 0; font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 10</span>
+<h1>State di Sisi Klien &amp; localStorage</h1>
+<p>Bab 9 membuat halaman bereaksi pada klik dan ketikan. Bab ini menutup lubang yang tersisa: setiap muat ulang menghapus semua yang pengguna buat. Dua konsepnya state, data yang berubah dan tampilan mengikutinya, lalu localStorage, penyimpanan browser yang bertahan melewati muat ulang.</p>
+</header>
+
+<main>
+<figure>
+<img src="/10-state-localstorage/img/kuka-meja-kerja.png" alt="Kuka duduk di meja kerja kantor yang penuh kertas catatan tersebar, sedang menukar satu kertas di tangannya, dengan lampu meja menyala.">
+<figcaption>State, kertas di meja kerja yang hilang saat kantor tutup.</figcaption>
+</figure>
+
+<h2>Mengapa state ada</h2>
+<p>Setiap bab sejak bab 6 memakai variabel untuk menyimpan nilai, dan nilai itu biasanya diam. Padahal nilai yang penting pada halaman nyata justru yang berubah. Jumlah barang di keranjang naik dan turun. Tab yang terbuka pindah. Centang tugas berpindah dari belum ke selesai. Data yang berubah sepanjang halaman dipakai punya nama sendiri, state. State adalah data milik halaman yang nilainya boleh berubah, dan tampilan halaman menggambarkan state itu.</p>
+<p>Urutan kerjanya konsisten, ubah state dulu, lalu tampilan disesuaikan dengan state terbaru. Memisahkan data dari tampilan membuat perubahan jadi satu pekerjaan, karena ada satu sumber kebenaran yang diikuti seluruh halaman.</p>
+
+<h2>Muat ulang menghapus ingatan</h2>
+<p>Variabel disimpan di ingatan halaman yang hidup selama halaman terbuka. Bayangkan meja kerja di kantor. Kertas di atas meja cepat dibaca dan cepat diubah, dan itu pas untuk pekerjaan hari itu. Muat ulang halaman berarti kantor tutup dan meja dibersihkan. Buka lagi, meja kosong, kertas hari itu tidak ada yang tersisa.</p>
+<p>Untuk hitungan sementara ini tidak masalah. Untuk daftar tugas, draf komentar, atau pilihan tema gelap, ini mematahkan harapan pengguna. Yang dibutuhkan adalah tempat penyimpanan di luar meja, yang tidak ikut dibersihkan.</p>
+
+<h2>localStorage: lemari arsip browser</h2>
+<figure>
+<img src="/10-state-localstorage/img/kuka-lemari.png" alt="Kuka berdiri di depan lemari arsip, memasukkan satu map berlabel ke salah satu laci, dengan meja kerja kosong terlihat di kejauhan.">
+<figcaption>localStorage, lemari arsip yang bertahan saat kantor tutup.</figcaption>
+</figure>
+<p>localStorage adalah penyimpanan yang disediakan browser untuk satu asal halaman. Asal halaman disebut origin, yaitu kombinasi skema, domain, dan port, contohnya <code>https://www.argakuka.com</code>. localStorage milik satu origin, halaman origin lain tidak bisa membacanya. Isinya bertahan melewati muat ulang dan melewati browser yang ditutup. Bentuk datanya key-value, satu label menunjuk satu nilai, seperti map arsip dengan labelnya. Nilainya selalu string, alias teks.</p>
+<p>Empat metode yang dipakai:</p>
+<pre><code>localStorage.setItem("kuka-tema", "gelap"); // simpan
+localStorage.getItem("kuka-tema");          // "gelap"
+localStorage.removeItem("kuka-tema");       // hapus satu label
+localStorage.clear();                       // hapus semua milik origin ini</code></pre>
+<p><code>getItem</code> mengembalikan <code>null</code> saat labelnya belum ada. <code>null</code> tadi jadi petunjuk untuk memakai nilai default.</p>
+
+<h2>Menyimpan objek dengan JSON</h2>
+<p>Karena nilai hanya boleh string, array dan objek tidak bisa disimpan begitu saja. Jalan keluarnya JSON, JavaScript Object Notation, format teks yang meniru bentuk data JavaScript. <code>JSON.stringify</code> mengubah objek menjadi string, <code>JSON.parse</code> mengembalikannya menjadi objek.</p>
+<pre><code>const tugas = [{ nama: "kopi", selesai: false }];
+localStorage.setItem("kuka-tugas", JSON.stringify(tugas));
+const kembali = JSON.parse(localStorage.getItem("kuka-tugas"));
+kembali[0].selesai; // false</code></pre>
+<p>Lipatannya di lemari arsip. Map hanya menerima lembar datar, jadi dokumen berlapis dilipat dulu, itulah <code>stringify</code>, lalu dibuka lagi saat dikeluarkan, itulah <code>parse</code>. Satu catatan batas. Kalau isinya rusak dan bukan JSON yang sah, <code>JSON.parse</code> melempar error. Halaman pemula jarang mengurusi kasus itu, cukup tahu batasnya ada.</p>
+
+<h2>Pola dua momen: baca saat buka, tulis saat berubah</h2>
+<p>localStorage tidak mengurus tampilan, ia hanya menyimpan. Yang menyambungkan keduanya adalah pola dua momen. Saat halaman dibuka, baca localStorage untuk mengisi nilai awal. Saat nilainya berubah, tulis kembali. Contohnya draf komentar yang tersimpan otomatis saat diketik.</p>
+<pre><code>input.value = localStorage.getItem("kuka-draf") || "";
+
+input.addEventListener("input", function () {
+  localStorage.setItem("kuka-draf", input.value);
+});</code></pre>
+<p>Baris pertama adalah momen baca, halaman mulai dengan draf terakhir. Pendengar <code>input</code> adalah momen tulis, setiap ketikan ikut disalin ke lemari. Lupa momen baca, halaman selalu mulai dari kosong. Lupa momen tulis, perubahan tidak pernah sampai lemari.</p>
+
+<h2>Batas localStorage</h2>
+<p>Batasnya perlu dikenali sejak awal. Isinya hanya string. Ukurannya terbatas, kira-kira lima MB per origin, cukup untuk teks, tidak untuk berkas besar. Membaca dan menulisnya sinkron, kode menunggu sampai selesai, dan untuk halaman kecil ini tidak terasa. Ia tidak punya tanggal kedaluwarsa, data bertahan sampai kode atau pengguna menghapusnya lewat pengaturan browser. Ada satu varian yang sering disebut bareng, sessionStorage. Cara pakainya sama, bedanya isinya hilang saat tab ditutup. Untuk bab ini, satu localStorage sudah cukup.</p>
+
+<h2>Analogi: meja kerja dan lemari arsip</h2>
+<p>Satu gambar untuk semuanya. Sebuah kantor punya satu meja kerja dan satu lemari arsip. Kertas di meja adalah variabel dan state, cepat dibaca dan diubah selama kantor buka, dan hilang saat kantor tutup. Kantor tutup itulah muat ulang. Lemari arsip adalah localStorage. Ia milik kantor itu, sama seperti localStorage milik satu origin. Map berlabelnya adalah key, dan isinya lembar datar, sama seperti nilai yang harus string. Dokumen berlapis dilipat dulu sebelum masuk map, dan itulah JSON. Besok pagi kantor buka lagi, kertas di meja mulai dari kosong, tetapi lemari tetap berisi arsip kemarin. Karena itu keputusannya sederhana, yang penting disalin ke lemari, yang sementara dibiarkan di meja.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya tombol ganti tema terang dan gelap, pilihan yang wajar untuk disimpan. Versi vanilla menuliskan pola dua momen dengan tangan, baca sekali di awal, tulis di dalam pendengar klik. Versi React menyimpan tema di state dengan <code>useState</code>, membaca localStorage sebagai nilai awal lewat fungsi initializer, dan menulis kembali lewat <code>useEffect</code> setiap kali tema berubah.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>let tema = localStorage.getItem("kuka-tema") || "terang";
+document.body.className = tema;
+
+tombol.addEventListener("click", function () {
+  tema = tema === "terang" ? "gelap" : "terang";
+  document.body.className = tema;
+  localStorage.setItem("kuka-tema", tema);
+});</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function Tema() {
+  const [tema, setTema] = React.useState(() =&gt; {
+    return localStorage.getItem("kuka-tema") || "terang";
+  });
+
+  React.useEffect(() =&gt; {
+    localStorage.setItem("kuka-tema", tema);
+  }, [tema]);
+
+  return (
+    &lt;button onClick={() =&gt; setTema(tema === "terang" ? "gelap" : "terang")}&gt;
+      Tema sekarang: {tema}
+    &lt;/button&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Pola dua momen di vanilla dititipkan ke kedisiplinan penulis kode, ia menaruh sendiri baris bacanya dan baris tulisnya. React membakukan tempatnya. Momen baca masuk ke fungsi initializer <code>useState</code>, yang jalan satu kali saat komponen lahir. Momen tulis masuk ke <code>useEffect</code>, yang jalan setelah render ketika tema berubah. Menulis ke localStorage memang bukan mengubah tampilan, melainkan efek samping, dan wilayah efek samping di React memang <code>useEffect</code>. Seperti bab-bab sebelumnya, React tidak menghapus pekerjaan vanilla, hanya menaruhnya di slot yang sudah disediakan.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo di bawah adalah penghitung yang tersimpan. Satu tombol menambah angka, satu tombol mengembalikan ke nol, dan setiap perubahan ditulis ke localStorage. Satu baris menampilkan isi mentah yang tersimpan, supaya sifatnya terlihat dengan mata, termasuk <code>null</code> sebelum ada yang disimpan. Muat ulang halaman setelah menambah, angkanya tidak kembali ke nol.</p>
+
+<div class="demo">
+<p>Angka di bawah disimpan di localStorage. Tekan Tambah beberapa kali, lalu muat ulang halaman ini. Angkanya tidak kembali ke nol.</p>
+<p id="demo-angka">0</p>
+<button id="demo-tambah">Tambah satu</button>
+<button id="demo-reset">Mulai dari nol</button>
+<p id="demo-mentah">Isi mentah localStorage: </p>
+</div>
+
+<p>Begini cara baca demonya. Saat halaman dibuka, <code>Number(localStorage.getItem("kuka-hitung")) || 0</code> mengisi hitungan awal, dan <code>Number</code> mengubah string kembali menjadi angka. Tombol Tambah menaikkan hitungan lalu <code>setItem</code> menuliskannya dengan <code>String(hitung)</code>, karena localStorage hanya menerima string. Tombol Mulai dari nol memakai <code>removeItem</code>, dan baris isi mentah menunjukkan <code>getItem</code> yang kembali <code>null</code>. Itu momen baca dan momen tulis pola dua momen, terlihat langsung di satu halaman.</p>
+
+<p>Ringkasan bab ini. State adalah data yang berubah dan tampilan mengikutinya. Variabel hanya hidup selama halaman terbuka. localStorage menyimpan key-value per origin dan bertahan melewati muat ulang. Nilainya string saja, <code>JSON.stringify</code> dan <code>JSON.parse</code> mengurus objek dan array. Polanya dua momen, baca saat halaman dibuka, tulis saat nilai berubah. Bab berikutnya keluar dari data milik halaman sendiri, ke fetch dan async, cara halaman mengambil data dari server lain.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Client-side_storage">MDN: Client-side storage</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">MDN: Window.localStorage</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage">MDN: Window.sessionStorage</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">MDN: JSON.stringify</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">MDN: JSON.parse</a></li>
+<li><a href="https://web.dev/learn/javascript">web.dev: Learn JavaScript</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/09-event-delegasi/">Bab 9 - Event &amp; Delegasi</a> | Lanjut ke <a href="/11-fetch-async/">Bab 11 - Fetch &amp; Async</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script>
+const KUNCI = "kuka-hitung";
+const angkaEl = document.querySelector("#demo-angka");
+const mentahEl = document.querySelector("#demo-mentah");
+let hitung = Number(localStorage.getItem(KUNCI)) || 0;
+
+function tampilkan() {
+  angkaEl.textContent = hitung;
+  mentahEl.textContent = 'Isi mentah localStorage: localStorage.getItem("kuka-hitung") = ' + localStorage.getItem(KUNCI);
+}
+
+document.querySelector("#demo-tambah").addEventListener("click", function () {
+  hitung = hitung + 1;
+  localStorage.setItem(KUNCI, String(hitung));
+  tampilkan();
+});
+
+document.querySelector("#demo-reset").addEventListener("click", function () {
+  hitung = 0;
+  localStorage.removeItem(KUNCI);
+  tampilkan();
+});
+
+tampilkan();
+</script>
+</body>
+</html>
