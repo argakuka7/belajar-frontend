@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bab 17 - React: Custom Hooks &amp; Pola Komposisi | Belajar Prinsip-Prinsip Front End</title>
+<link rel="stylesheet" href="/enhancements.css">
+<style>
+.demo button { margin-top: .5rem; margin-right: .5rem; padding: .4rem .9rem; background: var(--accent); color: #fff; border: 0; border-radius: .3rem; cursor: pointer; }
+.demo input { width: 100%; margin-top: .25rem; padding: .4rem; border: 1px solid #e5e7eb; border-radius: .3rem; font: inherit; }
+.demo label { display: block; margin: .6rem 0; }
+</style>
+</head>
+<body>
+<header class="bab-header">
+<span class="badge">Bab 17</span>
+<h1>React: Custom Hooks &amp; Pola Komposisi</h1>
+<p>Dua bab terakhir melengkapi komponen dengan efek dan pengambilan data. Justru karena alatnya lengkap, sebuah masalah baru muncul: komponen yang berbeda menulis logika yang sama persis. Bab ini menjawab dengan dua gagasan, custom hook untuk logika yang dipakai ulang, dan pola komposisi untuk halaman yang tersusun dari bagian kecil.</p>
+</header>
+
+<main>
+<figure>
+<img src="/17-custom-hooks/img/kuka-resep-dua-dapur.png" alt="Kuka menempelkan satu kartu resep yang sama di dua dapur berdampingan, panci di dapur kiri berisi sup yang baru mulai mendidih, panci di dapur kanan berisi masakan yang hampir matang.">
+<figcaption>Satu resep, dua dapur, bahan masing-masing. Begitu pula custom hook.</figcaption>
+</figure>
+
+<h2>Kebocoran dari dua bab lalu</h2>
+<p>Recap singkat dari dua bab terakhir. State, ingatan data yang bisa berubah dan milik komponen, diubah lewat fungsi pengubah seperti useState. Efek, kode yang dijalankan React di samping render, ditulis lewat useEffect dan berguna untuk pekerjaan di luar tampilan, termasuk menyimpan data ke localStorage atau mengambil data dari server.</p>
+<p>Masalahnya begini. Ambil dua komponen yang sama-sama menyimpan teks ke localStorage. Keduanya menulis panggilan useState yang sama, lalu useEffect yang sama, lalu daftar ketergantungan yang sama. Logikanya identik, hanya kuncinya berbeda. Halaman masih kecil, duplikat ini terlihat jinak. Tambah komponen ketiga dan keempat, salin-tempel ikut bertambah. Saat ada yang perlu diperbaiki, misalnya localStorage penuh, perbaikan harus dilakukan di semua tempat. Satu terlewat, satu komponen berperilaku berbeda diam-diam.</p>
+<p>Ini kebalikan dari pesan bab 14. React menghapus pengulangan dalam mengubah tampilan, tetapi pengulangan dalam logika masih mengintai. Custom hook adalah jawabannya.</p>
+
+<h2>Hook dan aturan mainnya</h2>
+<p>Sebelum lanjut, rapikan istilah. Hook adalah fungsi khusus React yang menyimpan state atau menjalankan efek, contohnya useState dan useEffect. React punya aturan baku untuknya, sering disebut aturan hook. Panggil hook hanya di tingkat atas komponen, tidak di dalam if atau loop. Panggil hook hanya dari komponen React atau dari hook lain. Alasannya bukan formalitas, React membaca urutan panggilan hook untuk mencocokkan tiap state dengan pemiliknya, dan urutan itu harus sama setiap render.</p>
+
+<h2>Custom hook: logika yang bisa dipinjam</h2>
+<p>Custom hook, atau hook kustom, adalah fungsi biasa yang namanya diawali use dan di dalamnya memanggil hook lain. Ia bukan fitur baru di React, melainkan konvensi: bungkus logika berstate dalam fungsi, awali namanya dengan use, dan fungsi itu boleh dipanggil dari komponen mana pun.</p>
+<p>Dua komponen yang tadi menulis logika localStorage dua kali kini cukup memanggil satu hook, useSimpanLokal, masing-masing dengan kuncinya sendiri. Bagian pentingnya: hook tidak membagikan satu state bersama. Setiap pemanggil mendapat panggilan useState sendiri, jadi state mereka terpisah total. Yang dibagi adalah logikanya, bukan nilainya. Dua dapur memakai resep yang sama, bahan di masing-masing dapur tetap milik dapurnya.</p>
+
+<h2>Di balik nama use</h2>
+<p>Nama yang diawali use bukan gaya bebas. React memakainya sebagai penanda bahwa fungsi itu memanggil hook di dalamnya. Alat pemeriksa React, linter, membaca penanda ini untuk memberi peringatan saat aturan hook dilanggar, misalnya ada useState di dalam if. Bagi pembaca kode juga sama, nama use langsung mengabari bahwa memanggil fungsi ini akan menyimpan state atau efek, sesuatu yang tidak bisa ditebak dari fungsi biasa.</p>
+
+<h2>Pola komposisi</h2>
+<figure>
+<img src="/17-custom-hooks/img/kuka-rak-kotak.png" alt="Kuka menyusun sebuah rak dari beberapa kotak kayu berukuran sama, satu kotak dibiarkan terbuka kosong dan siap diisi, sekrup dan obeng kecil tergeletak di lantai.">
+<figcaption>Komposisi, rak dari kotak standar yang sama tanpa papan khusus.</figcaption>
+</figure>
+<p>Custom hook menyelesaikan pengulangan logika. Pertanyaan keduanya, bagaimana halaman besar tidak berubah jadi satu fungsi raksasa, dijawab komposisi. Komposisi berarti menyusun halaman dari komponen kecil yang masing-masing punya satu pekerjaan, lalu memasangnya seperti balok. Satu komponen DaftarBarang berisi banyak komponen BarisBarang, satu halaman berisi header, daftar, dan form yang masing-masing komponen tersendiri.</p>
+<p>Lubang masuknya dua. Props adalah data yang dilewatkan dari luar, bab 15 sudah membahasnya. Children adalah props istimewa yang membawa isi di antara tag pembuka dan penutup komponen, sehingga komponen wadah seperti Kartu bisa membungkus apa saja tanpa tahu isinya. Dengan dua lubang ini, komponen kecil bisa dipasang ulang di halaman lain tanpa diubah. Ditambah custom hook untuk logikanya, tersusunlah pola yang dipakai hampir semua aplikasi React: tampilan dari komponen kecil, logika dari hook.</p>
+
+<h2>Batas: jangan mengekstrak terlalu dini</h2>
+<p>Custom hook bukan tujuan, melainkan alat. Logika yang dipakai sekali tidak perlu dibungkus, bungkusan ekstra justru menambah lompatan saat membaca. Tanda waktunya adalah pengulangan yang nyata, pola yang sama muncul di dua tempat atau lebih dan keduanya bergerak bersama saat berubah. Ekstrak saat pola itu terlihat, bukan sebelum. Aturan yang sama berlaku untuk komposisi, pecah komponen saat ia kebesaran, bukan supaya terlihat rapi di atas kertas.</p>
+
+<h2>Analogi: resep dapur</h2>
+<p>Satu gambar untuk semuanya. Custom hook adalah resep masakan yang ditulis sekali dan ditempel di banyak dapur. Komponen adalah dapurnya, state adalah bahan di tiap dapur, dan memanggil hook adalah mengikuti resep dengan bahan sendiri. Resep yang sama di dapur berbeda menghasilkan masakan berbeda, karena bahannya berbeda. Kalau resepnya perlu diperbaiki, cukup satu kertas yang diganti, semua dapur yang menempelnya ikut benar. Dan untuk masakan yang hanya dimasak sekali, menulis resepnya justru buang waktu, itulah logika yang tidak perlu dijadikan hook.</p>
+
+<h2>Pasangan contoh</h2>
+<p>Contohnya masih localStorage, kasus pembuka tadi. Vanilanya logika dipakai ulang lewat fungsi pabrik, fungsi yang mengembalikan objek siap pakai. buatSimpanLokal menerima kunci, lalu mengembalikan dua fungsi, baca dan simpan, yang membungkus localStorage.getItem dan localStorage.setItem. Tiap pemanggilan buatSimpanLokal menghasilkan alat sendiri dengan kuncinya sendiri.</p>
+<p>React-nya logika yang sama dibungkus custom hook useSimpanLokal. Di dalamnya ada useState yang membaca localStorage dan useEffect yang menulis kembali tiap teks berubah, dengan daftar ketergantungan yang direcap dari bab 16. Hook mengembalikan pasangan nilai dan pengubah, dan komponen KotakCatatan memakainya sambil menerima label dan kunci lewat props.</p>
+
+<div class="pair">
+<div class="pane">
+<h3>Vanilla JavaScript</h3>
+<pre><code>function buatSimpanLokal(kunci) {
+  return {
+    baca: function () {
+      return localStorage.getItem(kunci) || "";
+    },
+    simpan: function (nilai) {
+      localStorage.setItem(kunci, nilai);
+    }
+  };
+}
+
+const nama = buatSimpanLokal("nama");
+const catatan = buatSimpanLokal("catatan");
+
+nama.simpan("Kuka");
+console.log(nama.baca());</code></pre>
+</div>
+<div class="pane">
+<h3>React</h3>
+<pre><code>function useSimpanLokal(kunci) {
+  const [nilai, setNilai] = React.useState(
+    localStorage.getItem(kunci) || ""
+  );
+
+  React.useEffect(function () {
+    localStorage.setItem(kunci, nilai);
+  }, [kunci, nilai]);
+
+  return [nilai, setNilai];
+}
+
+function KotakCatatan({ label, kunci }) {
+  const [teks, setTeks] = useSimpanLokal(kunci);
+  return (
+    &lt;label&gt;
+      {label}
+      &lt;input value={teks}
+        onChange={(e) =&gt; setTeks(e.target.value)} /&gt;
+    &lt;/label&gt;
+  );
+}</code></pre>
+</div>
+</div>
+
+<p>Perbedaan inti bab ini ada di sini. Kedua kolom menyelesaikan masalah yang sama, logika localStorage yang tidak mau ditulis dua kali. Vanilla membaginya sebagai alat, fungsi yang mengembalikan pasangan baca dan simpan, dan pemanggil yang mengurus kapan tampilan diubah. React membaginya sebagai hook, dan pemisahan data dan tampilan dari bab 14 tetap bekerja, ubah state lewat pengubah, tampilan menyusul sendiri. Konsekuensinya terlihat di komponen pemakai: KotakCatatan tidak tahu detail localStorage sama sekali, ia hanya memanggil hook dan merender.</p>
+
+<h2>Demo Hidup</h2>
+<p>Demo memuat React sungguhan lewat CDN ESM dan menjalankan dua KotakCatatan, satu hook useSimpanLokal yang dipanggil dua kali. Ketik di kotak Nama, ketik di kotak Catatan, lalu muat ulang halaman. Keduanya kembali dengan tulisan masing-masing. Dua panggilan hook, dua state terpisah, satu logika yang ditulis sekali.</p>
+
+<div class="demo">
+<p>Demo ini menjalankan komponen React sungguhan, dimuat dari CDN tanpa build tool. Kedua kotak memanggil hook yang sama, tapi state mereka terpisah.</p>
+<div id="demo-akar"><p><em>Memuat React dari CDN...</em></p></div>
+</div>
+
+<p>Begini cara baca demonya. Halaman ini jalan tanpa build tool, jadi demo memakai bentuk mentah createElement, sementara JSX di kolom contoh hanya cara menulis yang lebih pendek untuk hasil yang sama. Fungsi useSimpanLokal dipanggil dua kali, sekali di tiap KotakCatatan, dengan kunci berbeda. Tiap panggilan membuat useState sendiri, itulah sebabnya ketikan di kotak Nama tidak pernah bocor ke kotak Catatan. useEffect di dalam hook menulis ke localStorage setiap teks berubah, dan saat halaman dibuka lagi, useState membaca kembali dari localStorage.</p>
+
+<p>Ringkasan bab ini. Komponen yang berbeda sering menulis logika yang sama, state plus efek yang menempel berulang-ulang. Custom hook membungkusnya jadi fungsi berawalan use, logika dibagi, state tetap milik tiap pemanggil. Komposisi melengkapi, halaman besar disusun dari komponen kecil dengan lubang masuk props dan children. Ekstrak saat pengulangan nyata, bukan sebelum. Bab berikutnya keluar dari React dan menyusun halaman dari banyak halaman, routing.</p>
+
+<h2>Rujukan</h2>
+<ul>
+<li><a href="https://react.dev/learn/reusing-logic-with-custom-hooks">react.dev: Reusing Logic with Custom Hooks</a></li>
+<li><a href="https://react.dev/reference/rules/rules-of-hooks">react.dev: Rules of Hooks</a></li>
+<li><a href="https://react.dev/learn/passing-props-to-a-component">react.dev: Passing Props to a Component</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API">MDN: Web Storage API</a></li>
+</ul>
+</main>
+
+<nav class="bab-nav">
+<p>Kembali ke <a href="/16-efek-fetch/">Bab 16 - React: Efek &amp; Pengambilan Data</a> | Lanjut ke <a href="/18-routing/">Bab 18 - Routing di Front End</a></p>
+</nav>
+
+<footer class="site">
+<p>Belajar Prinsip-Prinsip Front End. Kunjungi <a href="https://www.argakuka.com">www.argakuka.com</a>.</p>
+</footer>
+
+<script type="module">
+import React from "https://esm.sh/react@18.3.1";
+import { createRoot } from "https://esm.sh/react-dom@18.3.1/client";
+
+function useSimpanLokal(kunci) {
+  const [nilai, setNilai] = React.useState(
+    localStorage.getItem(kunci) || ""
+  );
+
+  React.useEffect(
+    function () {
+      localStorage.setItem(kunci, nilai);
+    },
+    [kunci, nilai]
+  );
+
+  return [nilai, setNilai];
+}
+
+function KotakCatatan(props) {
+  const [teks, setTeks] = useSimpanLokal(props.kunci);
+  return React.createElement(
+    "label",
+    null,
+    props.label + ": ",
+    React.createElement("input", {
+      value: teks,
+      onChange: function (e) { setTeks(e.target.value); }
+    })
+  );
+}
+
+function Aplikasi() {
+  return React.createElement(
+    "div",
+    null,
+    React.createElement(KotakCatatan, { label: "Nama", kunci: "demo17-nama" }),
+    React.createElement(KotakCatatan, { label: "Catatan", kunci: "demo17-catatan" }),
+    React.createElement(
+      "p",
+      { style: { margin: ".6rem 0 0", color: "#6b7280" } },
+      "Muat ulang halaman, tulisanmu tetap ada."
+    )
+  );
+}
+
+createRoot(document.querySelector("#demo-akar")).render(React.createElement(Aplikasi));
+</script>
+</body>
+</html>
