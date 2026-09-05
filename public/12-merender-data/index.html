@@ -21,7 +21,7 @@
 
 <main>
 <figure>
-<img src="/12-merender-data/img/kuka-mesin-cetak.png" alt="Kuka berdiri di mesin cetak percetakan, memasukkan satu lembar berkas ke mesin, sementara deretan kartu hasil cetakan yang bentuknya sama persis keluar di sisi lain.">
+<img loading="lazy" decoding="async" src="/12-merender-data/img/kuka-mesin-cetak.png" alt="Kuka berdiri di mesin cetak percetakan, memasukkan satu lembar berkas ke mesin, sementara deretan kartu hasil cetakan yang bentuknya sama persis keluar di sisi lain.">
 <figcaption>List dan template, berkas dari klien dicetak satu kartu per baris dengan satu desain yang sama.</figcaption>
 </figure>
 
@@ -41,7 +41,7 @@ data.forEach(function (tugas) {
 
 <h2>Kondisi: tampilan yang berganti</h2>
 <figure>
-<img src="/12-merender-data/img/kuka-papan-status.png" alt="Kuka berdiri di depan papan status di jendela percetakan, sedang membalik tulisan dari Menunggu berkas menjadi Sedang mencetak, dengan mesin cetak terlihat di dalam toko.">
+<img loading="lazy" decoding="async" src="/12-merender-data/img/kuka-papan-status.png" alt="Kuka berdiri di depan papan status di jendela percetakan, sedang membalik tulisan dari Menunggu berkas menjadi Sedang mencetak, dengan mesin cetak terlihat di dalam toko.">
 <figcaption>Kondisi, papan status yang hanya menampilkan satu keadaan pada satu waktu.</figcaption>
 </figure>
 <p>Data yang diambil dari server tidak selalu siap. Ada jeda, ada jawaban kosong, ada data yang terisi. Halaman yang baik menunjukkan keadaannya, bukan diam tanpa kabar. Inilah kondisi, keputusan apa yang dirender tergantung data saat itu. Alatnya if dan else dari bab 6, dan pilihannya biasanya tiga. Sedang memuat, data belum tiba, tampilkan tulisan "Memuat...". Kosong, data tiba tapi arraynya kosong array, tampilkan tulisan seperti "Belum ada tugas". Terisi, barulah loop list jalan. Ketiganya masuk satu fungsi render yang sama.</p>

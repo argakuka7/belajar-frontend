@@ -23,7 +23,7 @@ figure img { max-width: 100%; height: auto; }
 
 <main>
 <figure>
-<img src="/21-performa/img/kuka-tas-piknik.png" alt="Kuka mengepak satu tas piknik besar di atas meja, semua sendok termos dan bekal dari meja yang penuh barang sedang masuk ke satu tas itu, jalan ke arah mobil sudah terbuka lebar.">
+<img loading="lazy" decoding="async" src="/21-performa/img/kuka-tas-piknik.png" alt="Kuka mengepak satu tas piknik besar di atas meja, semua sendok termos dan bekal dari meja yang penuh barang sedang masuk ke satu tas itu, jalan ke arah mobil sudah terbuka lebar.">
 <figcaption>Satu tas, satu perjalanan. Ide di balik bundle.</figcaption>
 </figure>
 
@@ -41,7 +41,7 @@ figure img { max-width: 100%; height: auto; }
 
 <h2>Lazy load: memuat saat dibutuhkan</h2>
 <figure>
-<img src="/21-performa/img/kuka-payung-bagasi.png" alt="Kuka membuka bagasi mobil dan baru mengambil satu payung saat hujan mulai turun, jaket tebal dan speaker piknik tetap tertata di dalam bagasi dan tidak ada yang disentuh.">
+<img loading="lazy" decoding="async" src="/21-performa/img/kuka-payung-bagasi.png" alt="Kuka membuka bagasi mobil dan baru mengambil satu payung saat hujan mulai turun, jaket tebal dan speaker piknik tetap tertata di dalam bagasi dan tidak ada yang disentuh.">
 <figcaption>Lazy load, payung diambil dari bagasi hanya saat hujan turun.</figcaption>
 </figure>
 <p>Lazy load berarti menunda pemuatan sesuatu sampai benar-benar dibutuhkan. Lawannya disebut eager, memuat semuanya sejak awal. Untuk kode, tekniknya bernama code splitting, memecah bundle menjadi beberapa bagian yang diunduh terpisah. Bagian yang jarang dipakai, misalnya kode galeri foto, baru diunduh saat pembaca benar-benar membuka galerinya. Pemicu unduhannya dynamic import, perintah <code>import()</code> yang boleh dijalankan kapan saja saat halaman sudah hidup, bukan cuma di awal. Di React, kebiasaan ini dibungkus React.lazy dan komponen Suspense. React.lazy menunda pengunduhan kode komponen, Suspense menampilkan sesuatu, biasanya tulisan Memuat, selama kode itu di jalan.</p>

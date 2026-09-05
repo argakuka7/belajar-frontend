@@ -20,7 +20,7 @@
 
 <main>
 <figure>
-<img src="/10-state-localstorage/img/kuka-meja-kerja.png" alt="Kuka duduk di meja kerja kantor yang penuh kertas catatan tersebar, sedang menukar satu kertas di tangannya, dengan lampu meja menyala.">
+<img loading="lazy" decoding="async" src="/10-state-localstorage/img/kuka-meja-kerja.png" alt="Kuka duduk di meja kerja kantor yang penuh kertas catatan tersebar, sedang menukar satu kertas di tangannya, dengan lampu meja menyala.">
 <figcaption>State, kertas di meja kerja yang hilang saat kantor tutup.</figcaption>
 </figure>
 
@@ -34,7 +34,7 @@
 
 <h2>localStorage: lemari arsip browser</h2>
 <figure>
-<img src="/10-state-localstorage/img/kuka-lemari.png" alt="Kuka berdiri di depan lemari arsip, memasukkan satu map berlabel ke salah satu laci, dengan meja kerja kosong terlihat di kejauhan.">
+<img loading="lazy" decoding="async" src="/10-state-localstorage/img/kuka-lemari.png" alt="Kuka berdiri di depan lemari arsip, memasukkan satu map berlabel ke salah satu laci, dengan meja kerja kosong terlihat di kejauhan.">
 <figcaption>localStorage, lemari arsip yang bertahan saat kantor tutup.</figcaption>
 </figure>
 <p>localStorage adalah penyimpanan yang disediakan browser untuk satu asal halaman. Asal halaman disebut origin, yaitu kombinasi skema, domain, dan port, contohnya <code>https://www.argakuka.com</code>. localStorage milik satu origin, halaman origin lain tidak bisa membacanya. Isinya bertahan melewati muat ulang dan melewati browser yang ditutup. Bentuk datanya key-value, satu label menunjuk satu nilai, seperti map arsip dengan labelnya. Nilainya selalu string, alias teks.</p>

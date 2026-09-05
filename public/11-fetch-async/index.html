@@ -19,7 +19,7 @@
 
 <main>
 <figure>
-<img src="/11-fetch-async/img/kuka-kantin-bon.png" alt="Kuka berdiri di konter kantin memegang satu bon berisi nomor pesanan, petugas konter mengangguk, dapur dan beberapa pengunjung yang mengobrol santai terlihat di belakangnya.">
+<img loading="lazy" decoding="async" src="/11-fetch-async/img/kuka-kantin-bon.png" alt="Kuka berdiri di konter kantin memegang satu bon berisi nomor pesanan, petugas konter mengangguk, dapur dan beberapa pengunjung yang mengobrol santai terlihat di belakangnya.">
 <figcaption>fetch, memesan di konter dan menerima bon berisi nomor pesanan.</figcaption>
 </figure>
 
@@ -48,7 +48,7 @@
 
 <h2>fetch dan Response</h2>
 <figure>
-<img src="/11-fetch-async/img/kuka-nampan-kotak.png" alt="Kuka menerima satu nampan dari petugas kantin, di atas nampan ada satu kotak kemasan standar yang terbuka, memperlihatkan isinya tertata rapi di dalam kotak.">
+<img loading="lazy" decoding="async" src="/11-fetch-async/img/kuka-nampan-kotak.png" alt="Kuka menerima satu nampan dari petugas kantin, di atas nampan ada satu kotak kemasan standar yang terbuka, memperlihatkan isinya tertata rapi di dalam kotak.">
 <figcaption>Response, nampan berisi kotak standar yang isinya siap dibuka.</figcaption>
 </figure>
 <p>fetch menerima satu alamat URL dan mengembalikan Promise berisi Response, bungkus jawaban dari server. Isinya tiga hal yang paling sering dipakai. Status, kode angka hasil permintaan, contohnya 200 berarti oke, 404 berarti data tidak ditemukan, 500 berarti server bermasalah. Ok, versi mudahnya, bernilai true untuk status 200 sampai 299 dan false selain itu. Terakhir isi pesannya sendiri.</p>

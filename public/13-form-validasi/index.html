@@ -22,7 +22,7 @@
 
 <main>
 <figure>
-<img src="/13-form-validasi/img/kuka-loket.png" alt="Kuka duduk di kursi loket pendaftaran sambil mengisi formulir kertas dengan pulpen, ada kotak-kotak isian di kertas, dan satu kotak bertanda bintang wajib diisi.">
+<img loading="lazy" decoding="async" src="/13-form-validasi/img/kuka-loket.png" alt="Kuka duduk di kursi loket pendaftaran sambil mengisi formulir kertas dengan pulpen, ada kotak-kotak isian di kertas, dan satu kotak bertanda bintang wajib diisi.">
 <figcaption>Form, formulir di loket yang kotaknya siap diisi.</figcaption>
 </figure>
 
@@ -52,7 +52,7 @@ form.addEventListener("submit", function (event) {
 
 <h2>Validasi dengan JavaScript, Constraint Validation API</h2>
 <figure>
-<img src="/13-form-validasi/img/kuka-periksa.png" alt="Petugas loket mengembalikan formulir kertas ke Kuka melalui jendela loket sambil menunjuk satu kotak isian yang ditandai lingkaran merah, Kuka menunduk melihat kotak itu.">
+<img loading="lazy" decoding="async" src="/13-form-validasi/img/kuka-periksa.png" alt="Petugas loket mengembalikan formulir kertas ke Kuka melalui jendela loket sambil menunjuk satu kotak isian yang ditandai lingkaran merah, Kuka menunduk melihat kotak itu.">
 <figcaption>Validasi, petugas menunjuk kotak yang salah sebelum berkas masuk.</figcaption>
 </figure>
 <p>Di balik atribut-atribut tadi ada mesin yang bernama Constraint Validation API, kumpulan properti dan metode untuk memeriksa input dari kode. Setiap input punya metode <code>checkValidity()</code>, yang mengembalikan <code>true</code> bila isinya sah dan <code>false</code> bila tidak. Setiap input juga punya objek <code>validity</code>, yang menjelaskan sebab kegagalan lewat tanda boolean. <code>validity.valueMissing</code> berarti kolom wajib kosong. <code>validity.typeMismatch</code> berarti bentuk isinya tidak cocok dengan <code>type</code>, misalnya email tanpa @. Dengan dua itu halaman bisa menulis pesan kesalahannya sendiri, sespesifik apa pun sebabnya.</p>
