@@ -46,4 +46,4 @@ Seri ini membedah frontend dari fondasinya: bukan sekadar menyebut fungsi tiap b
 - Rujukan verifikasi materi: MDN dan web.dev (link di naskah tiap bab).
 - Deploy: Netlify, footer menuju `www.argakuka.com`.
 
-Seri pasangan: Belajar Prinsip-Prinsip Backend (github.com/argakuka7/Belajar-backend).
+Seri pasangan: Belajar Prinsip-Prinsip Backend (https://belajar-backend.netlify.app/).
