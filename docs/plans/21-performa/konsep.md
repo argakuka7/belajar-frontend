@@ -34,6 +34,10 @@ Di kebanyakan halaman, gambar adalah porsi unduhan terbesar, lebih besar daripad
 
 Dua kebiasaan kecil melengkapi. Pasang width dan height pada img supaya browser menyiapkan ruangnya sebelum gambar tiba, layout shift-nya hilang. Dan pasang `loading="lazy"` untuk semua gambar di bawah lipatan, bagian halaman yang belum terlihat sebelum digulir.
 
+### Core Web Vitals: ukuran standar industri
+
+Semua teknik bab ini mengejar satu tujuan yang punya nama resmi. Core Web Vitals adalah tiga angka dari Google yang dipakai industri menakar kecepatan halaman. LCP, Largest Contentful Paint, seberapa cepat elemen terbesar pada layar, biasanya gambar utama, selesai tampil. INP, Interaction to Next Paint, seberapa cepat halaman menanggapi klik atau sentuhan pembaca. CLS, Cumulative Layout Shift, seberapa besar tata letak melompat-lompat selama halaman dimuat. Tiap metrik punya ambang yang disepakati: LCP baik bila 2,5 detik atau kurang, INP baik bila 200 milidetik atau kurang, CLS baik bila 0,1 atau kurang. Satu catatan sejarah: INP resmi menggantikan pendahulunya, FID, First Input Delay, sejak Maret 2024, karena mengukur semua interaksi, bukan hanya yang pertama. Ketiganya mengikat kembali ke materi bab ini. LCP diurus teknik gambar, CLS diurus width dan height pada img serta `loading="lazy"`, dan INP diurus bundle dan code splitting.
+
 ### Analogi: tas piknik
 
 Satu gambar untuk semuanya. Kamu berangkat piknik. Bundle adalah mengepak semua barang ke satu tas besar, satu perjalanan dari dapur ke mobil, bukan bolak-balik untuk tiap sendok. Lazy load adalah menyisakan payung dan jaket tebal di bagasi mobil, diambil hanya kalau hujan benar-benar turun, membawanya jalan kaki hanya menambah beban. Dan gambar adalah galon air, beban terberat di dalam tas. Membawa galon 19 liter untuk empat orang minum segelas adalah halaman yang memuat gambar 4000 piksel untuk avatar kecil. Perkecil galonnya, tas langsung ringan.
