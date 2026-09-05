@@ -3,7 +3,7 @@
 Kembali ke [overview](overview.md).
 
 ## Goal
-Repo hidup dengan struktur final: beranda berisi daftar isi 24 bab, netlify.toml, STYLE_GUIDE, empat ADR, CONTEXT.md, kerangka plans.
+Repo hidup dengan struktur final: beranda editorial (landing Kuka; lihat AGENTS.md), netlify.toml, STYLE_GUIDE, empat ADR, CONTEXT.md, kerangka plans.
 
 ## Changes
 - README.md: judul, daftar isi, konvensi seri.

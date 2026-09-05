@@ -10,7 +10,7 @@ Setiap bab merujuk dua PNG di `public/<bab>/img/kuka-*.png`; spesifikasi file, a
 
 ## Landing page (`public/index.html`)
 
-Landing editorial satu file: hero Kuka (`01-apa-itu-front-end/img/kuka-tiga-bahasa.png`, `fetchpriority="high"` + width/height eksplisit, bukan lazy), kartu 25 bab bernomor, search modal client-side (`Ctrl K`/`/`, keyboard penuh), progress baca per bab di localStorage (`bfp_completed`). Gaya di `public/landing.css`, logika di `public/landing.js`; keduanya vanilla, tanpa dependency. Font: Fraunces + Spline Sans + JetBrains Mono via Google Fonts `display=swap`. Palet aksen oranye `#e68a3c` di atas krem `#fbf7f0`. Href bab persis sama dengan daftar isi lama (`/NN-slug/`).
+Landing editorial satu file: hero Kuka (`01-apa-itu-front-end/img/kuka-tiga-bahasa-800.png`, turunan resize+quantize 800px dari `kuka-tiga-bahasa.png`, dilayani via srcset/sizes; `fetchpriority="high"` + width/height eksplisit, bukan lazy), kartu 25 bab bernomor, search modal client-side (`Ctrl K`/`/`, keyboard penuh), progress baca per bab di localStorage (`bfp_completed`). Gaya di `public/landing.css`, logika di `public/landing.js`; keduanya vanilla, tanpa dependency. Font: Fraunces + Spline Sans + JetBrains Mono via Google Fonts `display=swap`. Palet aksen oranye `#e68a3c` di atas krem `#fbf7f0`. Href bab persis sama dengan daftar isi lama (`/NN-slug/`).
 
 ## Maintaining this file
 

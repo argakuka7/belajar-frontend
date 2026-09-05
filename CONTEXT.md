@@ -1,6 +1,6 @@
 # Belajar Prinsip-Prinsip Front End
 
-Buku teks frontend bahasa Indonesia untuk pembaca belum pernah koding, seri 24 bab.
+Buku teks frontend bahasa Indonesia untuk pembaca belum pernah koding, seri 25 bab.
 
 ## Language
 
