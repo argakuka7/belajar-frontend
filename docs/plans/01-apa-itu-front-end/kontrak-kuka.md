@@ -17,3 +17,4 @@ Kuka adalah persona ilustrasi seri ini. Kontrak ini memesan ilustrasi untuk dipr
 - **Alt text**: Kuka memegang tiga kartu bertuliskan HTML, CSS, dan JavaScript.
 - **Penempatan**: di bagian "Kenapa tiga bahasa terpisah".
 - **Deskripsi**: Kuka memegang tiga kartu besar. Kartu pertama bertuliskan HTML, kedua CSS, ketiga JavaScript. Tiap kartu punya ikon kecil: kerangka untuk HTML, kuas untuk CSS, roda gigi untuk JavaScript. Gaya sama dengan ilustrasi 1.
+- **Turunan landing**: `public/01-apa-itu-front-end/img/kuka-tiga-bahasa-800.png` (resize+quantize 800px dari file ini) dipakai hero landing page; nama file terkunci halaman publik.

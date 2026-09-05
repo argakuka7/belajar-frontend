@@ -3,42 +3,124 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Belajar Prinsip-Prinsip Front End</title>
-<link rel="stylesheet" href="/enhancements.css">
+<title>Belajar Prinsip-Prinsip Front End: Seri 25 Bab</title>
+<meta name="description" content="Buku teks frontend bahasa Indonesia untuk pembaca yang belum pernah koding. 25 bab dari HTML, CSS, dan JavaScript sampai React, dengan demo hidup di setiap bab.">
+<meta name="theme-color" content="#fbf7f0">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Belajar Prinsip-Prinsip Front End">
+<meta property="og:description" content="Buku teks frontend bahasa Indonesia, 25 bab, untuk pembaca yang belum pernah koding. Vanilla JavaScript dan React berdampingan, dengan demo hidup di setiap bab.">
+<meta property="og:locale" content="id_ID">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Belajar Prinsip-Prinsip Front End">
+<meta name="twitter:description" content="Buku teks frontend bahasa Indonesia, 25 bab, untuk pembaca yang belum pernah koding.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Spline+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/landing.css">
 </head>
 <body>
-<header><h1>Belajar Prinsip-Prinsip Front End</h1>
-<p>Buku teks frontend bahasa Indonesia, 24 bab, untuk pembaca yang belum pernah koding. Vanilla JavaScript dan React berdampingan, dengan demo hidup di setiap bab.</p>
+<a class="skip-link" href="#chapters">Langsung ke daftar isi</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/">Belajar <em>Front End</em></a>
+    <a class="series-link" href="https://github.com/argakuka7/Belajar-backend">Seri Backend</a>
+  </div>
 </header>
+
 <main>
-<ol class="toc">
-<li><a href="/00-siapkan-alat/">Bab 0 - Siapkan Alat</a></li>
-<li><a href="/01-apa-itu-front-end/">Bab 1 - Apa Itu Front End</a></li>
-<li><a href="/02-html-semantik/">Bab 2 - HTML: Struktur &amp; Semantik</a></li>
-<li><a href="/03-css-selektor-box-model/">Bab 3 - CSS: Selektor &amp; Box Model</a></li>
-<li><a href="/04-css-layout-flex-grid/">Bab 4 - CSS Layout: Flex &amp; Grid</a></li>
-<li><a href="/05-responsif-media-query-unit/">Bab 5 - Responsif</a></li>
-<li><a href="/06-js-dasar/">Bab 6 - JavaScript: Variabel, Tipe &amp; Kontrol Aliran</a></li>
-<li><a href="/07-fungsi-array-objek/">Bab 7 - Fungsi, Array &amp; Objek</a></li>
-<li><a href="/08-dom/">Bab 8 - DOM</a></li>
-<li><a href="/09-event-delegasi/">Bab 9 - Event &amp; Delegasi</a></li>
-<li><a href="/10-state-localstorage/">Bab 10 - State di Sisi Klien</a></li>
-<li><a href="/11-fetch-async/">Bab 11 - Fetch &amp; Async</a></li>
-<li><a href="/12-merender-data/">Bab 12 - Merender Data</a></li>
-<li><a href="/13-form-validasi/">Bab 13 - Form &amp; Validasi</a></li>
-<li><a href="/14-react-mengapa/">Bab 14 - React: Mengapa Framework Ada</a></li>
-<li><a href="/15-jsx-props-state/">Bab 15 - React: JSX, Props &amp; State</a></li>
-<li><a href="/16-efek-fetch/">Bab 16 - React: Efek &amp; Pengambilan Data</a></li>
-<li><a href="/17-custom-hooks/">Bab 17 - React: Custom Hooks</a></li>
-<li><a href="/18-routing/">Bab 18 - Routing di Front End</a></li>
-<li><a href="/19-aksesibilitas/">Bab 19 - Aksesibilitas</a></li>
-<li><a href="/20-design-token/">Bab 20 - Styling Modern</a></li>
-<li><a href="/21-performa/">Bab 21 - Performa</a></li>
-<li><a href="/22-testing/">Bab 22 - Testing Front End</a></li>
-<li><a href="/23-caching-pwa/">Bab 23 - Caching, PWA &amp; Offline</a></li>
-<li><a href="/24-proyek-akhir/">Bab 24 - Proyek Penutup</a></li>
-</ol>
-<p class="series">Seri pasangan: <a href="https://github.com/argakuka7/Belajar-backend">Belajar Prinsip-Prinsip Backend</a></p>
+  <section class="hero" aria-labelledby="judul">
+    <div class="eyebrow">Buku teks 25 bab untuk pemula</div>
+    <h1 class="title" id="judul">Belajar<br><em>Prinsip-Prinsip Front End.</em></h1>
+    <p class="lede">Dari HTML, CSS, dan JavaScript sampai React, dibedah untuk pembaca yang belum pernah koding. Setiap bab punya demo hidup yang bisa dicoba langsung di halaman, tanpa setup apa pun.</p>
+
+    <div class="hero-grid">
+      <div>
+        <div class="stats">
+          <span class="stat"><b>25</b> bab</span>
+          <span class="stat">Vanilla + React</span>
+          <span class="stat">demo hidup</span>
+          <span class="progress-pill" id="progressCounter"><b>0</b> dari <b>25</b> selesai</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/00-siapkan-alat/">Mulai dari Bab 0</a>
+          <button class="btn btn-ghost" data-search-trigger type="button">Cari bab <span class="kbd">Ctrl K</span></button>
+        </div>
+      </div>
+      <figure class="hero-figure">
+        <img src="/01-apa-itu-front-end/img/kuka-tiga-bahasa-800.png" srcset="/01-apa-itu-front-end/img/kuka-tiga-bahasa-800.png 800w, /01-apa-itu-front-end/img/kuka-tiga-bahasa.png 1672w" sizes="(max-width: 760px) calc(100vw - 40px), 430px" alt="Kuka memegang tiga kartu bertuliskan HTML, CSS, dan JavaScript." width="1672" height="941" fetchpriority="high">
+        <figcaption>Kuka, maskot seri ini, memegang tiga bahasa inti front end.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="chapters-wrap">
+    <div class="section-head">
+      <h2>Daftar Isi</h2>
+      <span class="sub">25 bab, urut dari dasar</span>
+    </div>
+    <div class="chapters" id="chapters">
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="0" title="Tandai selesai" aria-label="Tandai bab 0 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/00-siapkan-alat/"><span class="card-num">00</span><span class="card-info"><span class="card-title">Siapkan Alat</span><span class="card-desc">Editor, browser, dan DevTools. Semua yang kamu butuh sebelum menulis baris pertama.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="1" title="Tandai selesai" aria-label="Tandai bab 1 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/01-apa-itu-front-end/"><span class="card-num">01</span><span class="card-info"><span class="card-title">Apa Itu Front End</span><span class="card-desc">Bagian halaman yang kamu lihat, dan bagaimana browser menyusunnya dari HTML, CSS, dan JavaScript.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="2" title="Tandai selesai" aria-label="Tandai bab 2 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/02-html-semantik/"><span class="card-num">02</span><span class="card-info"><span class="card-title">HTML: Struktur &amp; Semantik</span><span class="card-desc">Kerangka halaman dengan tag yang bermakna, bukan sekadar tumpukan div.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="3" title="Tandai selesai" aria-label="Tandai bab 3 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/03-css-selektor-box-model/"><span class="card-num">03</span><span class="card-info"><span class="card-title">CSS: Selektor &amp; Box Model</span><span class="card-desc">Cara memilih elemen dan memahami kotak yang menyusun setiap bagian halaman.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="4" title="Tandai selesai" aria-label="Tandai bab 4 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/04-css-layout-flex-grid/"><span class="card-num">04</span><span class="card-info"><span class="card-title">CSS Layout: Flex &amp; Grid</span><span class="card-desc">Menyusun elemen dalam baris dan kolom dengan Flexbox dan Grid.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="5" title="Tandai selesai" aria-label="Tandai bab 5 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/05-responsif-media-query-unit/"><span class="card-num">05</span><span class="card-info"><span class="card-title">Responsif</span><span class="card-desc">Membuat halaman tetap enak dibaca di layar kecil lewat media query dan unit relatif.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="6" title="Tandai selesai" aria-label="Tandai bab 6 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/06-js-dasar/"><span class="card-num">06</span><span class="card-info"><span class="card-title">JavaScript: Variabel, Tipe &amp; Kontrol Aliran</span><span class="card-desc">Bahasa yang membuat halaman hidup, mulai dari variabel sampai percabangan dan perulangan.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="7" title="Tandai selesai" aria-label="Tandai bab 7 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/07-fungsi-array-objek/"><span class="card-num">07</span><span class="card-info"><span class="card-title">Fungsi, Array &amp; Objek</span><span class="card-desc">Blok bangunan JavaScript untuk mengorganisasi data dan logika.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="8" title="Tandai selesai" aria-label="Tandai bab 8 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/08-dom/"><span class="card-num">08</span><span class="card-info"><span class="card-title">DOM</span><span class="card-desc">Peta halaman yang bisa diubah JavaScript, dan cara mengubahnya.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="9" title="Tandai selesai" aria-label="Tandai bab 9 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/09-event-delegasi/"><span class="card-num">09</span><span class="card-info"><span class="card-title">Event &amp; Delegasi</span><span class="card-desc">Menangkap klik dan ketikan, lalu menanganinya dengan rapi lewat delegasi.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="10" title="Tandai selesai" aria-label="Tandai bab 10 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/10-state-localstorage/"><span class="card-num">10</span><span class="card-info"><span class="card-title">State di Sisi Klien</span><span class="card-desc">Menyimpan data di browser dengan localStorage agar tetap ada setelah halaman ditutup.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="11" title="Tandai selesai" aria-label="Tandai bab 11 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/11-fetch-async/"><span class="card-num">11</span><span class="card-info"><span class="card-title">Fetch &amp; Async</span><span class="card-desc">Meminta data dari server dengan fetch dan menunggunya tanpa membekukan halaman.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="12" title="Tandai selesai" aria-label="Tandai bab 12 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/12-merender-data/"><span class="card-num">12</span><span class="card-info"><span class="card-title">Merender Data</span><span class="card-desc">Mengubah data mentah menjadi daftar dan tampilan yang bisa dibaca pengguna.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="13" title="Tandai selesai" aria-label="Tandai bab 13 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/13-form-validasi/"><span class="card-num">13</span><span class="card-info"><span class="card-title">Form &amp; Validasi</span><span class="card-desc">Mengumpulkan input pengguna dan memastikan datanya benar sebelum dikirim.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="14" title="Tandai selesai" aria-label="Tandai bab 14 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/14-react-mengapa/"><span class="card-num">14</span><span class="card-info"><span class="card-title">React: Mengapa Framework Ada</span><span class="card-desc">Kenapa kita butuh framework, dan masalah apa yang React pecahkan.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="15" title="Tandai selesai" aria-label="Tandai bab 15 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/15-jsx-props-state/"><span class="card-num">15</span><span class="card-info"><span class="card-title">React: JSX, Props &amp; State</span><span class="card-desc">Menulis antarmuka sebagai komponen dengan JSX, props, dan state.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="16" title="Tandai selesai" aria-label="Tandai bab 16 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/16-efek-fetch/"><span class="card-num">16</span><span class="card-info"><span class="card-title">React: Efek &amp; Pengambilan Data</span><span class="card-desc">Menjalankan efek samping dan mengambil data di dalam komponen React.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="17" title="Tandai selesai" aria-label="Tandai bab 17 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/17-custom-hooks/"><span class="card-num">17</span><span class="card-info"><span class="card-title">React: Custom Hooks</span><span class="card-desc">Membungkus logika yang dipakai berulang menjadi hook sendiri.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="18" title="Tandai selesai" aria-label="Tandai bab 18 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/18-routing/"><span class="card-num">18</span><span class="card-info"><span class="card-title">Routing di Front End</span><span class="card-desc">Memetakan URL ke halaman dan membuat navigasi antar-tampilan.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="19" title="Tandai selesai" aria-label="Tandai bab 19 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/19-aksesibilitas/"><span class="card-num">19</span><span class="card-info"><span class="card-title">Aksesibilitas</span><span class="card-desc">Membuat halaman bisa dipakai semua orang, termasuk lewat keyboard dan pembaca layar.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="20" title="Tandai selesai" aria-label="Tandai bab 20 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/20-design-token/"><span class="card-num">20</span><span class="card-info"><span class="card-title">Styling Modern</span><span class="card-desc">Design token dan variabel CSS untuk tema yang konsisten dan mudah diganti.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="21" title="Tandai selesai" aria-label="Tandai bab 21 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/21-performa/"><span class="card-num">21</span><span class="card-info"><span class="card-title">Performa</span><span class="card-desc">Membuat halaman cepat dimuat dan terasa ringan, dari gambar sampai kode.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="22" title="Tandai selesai" aria-label="Tandai bab 22 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/22-testing/"><span class="card-num">22</span><span class="card-info"><span class="card-title">Testing Front End</span><span class="card-desc">Memastikan kode tetap benar saat berubah, dengan unit dan integration test.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="23" title="Tandai selesai" aria-label="Tandai bab 23 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/23-caching-pwa/"><span class="card-num">23</span><span class="card-info"><span class="card-title">Caching, PWA &amp; Offline</span><span class="card-desc">Menyimpan aset di browser dan membuat halaman tetap jalan tanpa koneksi.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+      <div class="chapter-row"><button class="ch-done-btn" data-ch="24" title="Tandai selesai" aria-label="Tandai bab 24 selesai"><svg class="check-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 7.5 5.5 10.5 11.5 4"/></svg></button><a class="chapter-card" href="/24-proyek-akhir/"><span class="card-num">24</span><span class="card-info"><span class="card-title">Proyek Penutup</span><span class="card-desc">Menyatukan semua teknik yang sudah dipelajari menjadi satu dashboard konsumsi API.</span></span><span class="card-arrow"><svg class="ico-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2.5" y1="8" x2="12.5" y2="8"/><polyline points="8.5,4 12.5,8 8.5,12"/></svg></span></a></div>
+    </div>
+  </div>
+
+  <section class="howto" aria-labelledby="cara">
+    <div class="section-head">
+      <h2 id="cara">Cara Membaca Buku Ini</h2>
+      <span class="sub">tiga kebiasaan</span>
+    </div>
+    <div class="howto-grid">
+      <div class="howto-card"><span class="n">01</span><h3>Urut dari Bab 0</h3><p>Setiap bab membangun di atas bab sebelumnya. Mulai dari dasar, jangan lompat-lompat.</p></div>
+      <div class="howto-card"><span class="n">02</span><h3>Jalankan demo hidup</h3><p>Setiap bab punya blok interaktif yang memakai kode bab itu. Coba ubah, lihat hasilnya.</p></div>
+      <div class="howto-card"><span class="n">03</span><h3>Vanilla dulu, React sesudahnya</h3><p>Kode vanilla menunjukkan apa yang terjadi sebenarnya. React menunjukkan bagaimana ekosistem membungkusnya.</p></div>
+    </div>
+  </section>
 </main>
+
+<footer class="doc">
+  <div class="inner">
+    <div class="big">"Kuasai dasarnya, maka framework-nya jadi terlihat jelas."</div>
+    <p>Belajar Prinsip-Prinsip Front End, seri buku teks. Pasangannya: <a href="https://github.com/argakuka7/Belajar-backend">Belajar Prinsip-Prinsip Backend</a>.</p>
+  </div>
+</footer>
+
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Cari bab">
+  <div class="search-modal">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7.5"/><line x1="16" y1="16" x2="22" y2="22"/></svg>
+      <input class="search-input" id="searchInput" type="text" placeholder="Cari bab, topik..." autocomplete="off" spellcheck="false" aria-label="Cari bab">
+      <span class="search-kbd">ESC</span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/landing.js"></script>
 </body>
 </html>

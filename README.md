@@ -1,6 +1,6 @@
 # Belajar Prinsip-Prinsip Front End
 
-Dokumentasi frontend engineering dalam bahasa Indonesia, seri 24 bab, untuk pembaca yang belum pernah koding.
+Dokumentasi frontend engineering dalam bahasa Indonesia, seri 25 bab, untuk pembaca yang belum pernah koding.
 
 Seri ini membedah frontend dari fondasinya: bukan sekadar menyebut fungsi tiap bagian, tetapi mengapa ia ada dan cara kerjanya di baliknya. Setiap bab memuat penjelasan, contoh kode **Vanilla JavaScript** dan **React** berdampingan, serta satu blok **demo hidup** yang bisa dicoba langsung di halaman.
 
