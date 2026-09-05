@@ -13,8 +13,8 @@
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@18.3.1",
-    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "react": "https://esm.sh/react@19.2.8",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.8/client",
     "htm": "https://esm.sh/htm@3.1.1"
   }
 }
@@ -120,6 +120,28 @@ function Kedai() {
 </div>
 
 <p>Perbedaan inti bab ini ada di satu pertanyaan, siapa yang memanggil render ulang. Versi vanilla mengganti objek <code>hitung</code> lalu harus ingat memanggil <code>render()</code> sendiri. Lupa panggilan itu, layar tertinggal. Versi React mengganti hitungan lewat <code>setHitung</code>, dan render ulang dijadwalkan otomatis, fungsi <code>Kedai</code> dijalankan lagi dari atas dengan nilai baru. Props ikut kerja di sini. Data tidak tersebar di variabel lepas, tetapi mengalir turun dari induk ke tiap <code>Baris</code>, sehingga sumber kebenaran cuma satu, state milik <code>Kedai</code>. Di vanilla, pembagian tugas itu dibuat sendiri dengan disiplin. Di React, kerangka yang memaksa.</p>
+
+<h2>Cara React 19 mempermudah form</h2>
+<p>React 19 menambahkan Actions, cara menangani form dan aksi dari dalam satu kejadian. Sebelumnya, form React mengurus nilai setiap input lewat <code>useState</code> satu per satu, lalu menolak kirimnya dengan tangan. Actions membungkus itu ke satu hook bernama <code>useActionState</code>, yang menerima fungsi aksi dan status awal form, lalu mengembalikan status itu bersama pengirim baru yang dipakai di atribut <code>action</code> form.</p>
+<pre><code>function FormNama() {
+  const [hasil, kirimForm] = React.useActionState(
+    async function (state, formData) {
+      const nama = formData.get("nama");
+      await fetch("/api-sapa", { method: "POST", body: formData });
+      return "Halo, " + nama + "!";
+    },
+    ""
+  );
+
+  return (
+    &lt;form action={kirimForm}&gt;
+      &lt;input name="nama" placeholder="Nama kamu" /&gt;
+      &lt;button type="submit"&gt;Kirim&lt;/button&gt;
+      &lt;p&gt;{hasil}&lt;/p&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+<p>Dua hal pantas disorot. Pertama, aksinya bisa <code>async</code>, menunggu data terkirim dulu sebelum menampilkan hasil, tanpa <code>useEffect</code>. Kedua, isi form dibaca lewat <code>FormData</code>, bukan per-input <code>useState</code>. Actions bukan materi wajib; buku ini cukup dengan <code>useState</code> untuk state biasa. Tapi membaca dokumentasi React hari ini, istilah ini muncul terus, jadi mengenal bentuknya membantu saat nanti berjumpa.</p>
 
 <h2>Demo Hidup</h2>
 <p>Demo di bawah menyalin kedai yang sama dan benar-benar jalan di halaman ini. Satu rintangan teknis, browser tidak bisa mengeksekusi JSX mentah, dan halaman ini tanpa build tool. Jadi demo memuat React lewat import map dari CDN ESM, lalu memakai jembatan bernama <code>htm</code>, yang bentuknya mirip JSX tapi ditulis di dalam template literal bab 12. Yang dibaca <code>htm</code> dan yang dibaca compiler JSX berakhir di panggilan <code>createElement</code> yang sama. Karena dimuat dari CDN, demo ini butuh koneksi internet, beda dengan demo bab sebelumnya yang jalan tanpa jaringan.</p>
