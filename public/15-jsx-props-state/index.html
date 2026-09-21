@@ -143,6 +143,28 @@ function Kedai() {
 }</code></pre>
 <p>Dua hal pantas disorot. Pertama, aksinya bisa <code>async</code>, menunggu data terkirim dulu sebelum menampilkan hasil, tanpa <code>useEffect</code>. Kedua, isi form dibaca lewat <code>FormData</code>, bukan per-input <code>useState</code>. Actions bukan materi wajib; buku ini cukup dengan <code>useState</code> untuk state biasa. Tapi membaca dokumentasi React hari ini, istilah ini muncul terus, jadi mengenal bentuknya membantu saat nanti berjumpa.</p>
 
+<h2>Cara React 19 menganimasikan perubahan</h2>
+<p>React 19.3 menambahkan komponen bernama <code>&lt;<a href="https://react.dev/reference/react/ViewTransition">ViewTransition</a>&gt;</code> yang membuat perubahan tampilan bergerak halus, memakai View Transition API milik browser. Bungkus bagian yang bisa muncul, hilang, atau berpindah dengan komponen itu, dan saat bagian tersebut berubah dalam sebuah update yang ditandai sebagai transition, browser menganimasikannya secara lintas-fade alih-alih langsung melompat ke tampilan baru. Contoh paling sederhana satu kotak yang muncul dan hilang.</p>
+<pre><code>function Kotak() {
+  const [tampil, setTampil] = React.useState(false);
+  return (
+    &lt;div&gt;
+      &lt;button
+        onClick={() =&gt; React.startTransition(
+          () =&gt; setTampil(t =&gt; !t)
+        )}&gt;
+        {tampil ? "Sembunyikan" : "Tampilkan"}
+      &lt;/button&gt;
+      {tampil &amp;&amp; (
+        &lt;React.ViewTransition&gt;
+          &lt;div className="kotak"&gt;Halo, Kuka!&lt;/div&gt;
+        &lt;/React.ViewTransition&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre>
+<p>Perlu diperhatikan bahwa ViewTransition memerlukan React 19.3, sementara halaman-halaman buku ini mengunci React 19.2.8 supaya demo CDN-nya stabil. Karena itu catatan ini cukup jadi konsep dan kode contoh, bukan demo hidup, dan tidak mengganti pendekatan render ulang yang sudah dipelajari bab ini. Gagasannya selaras dengan bab 14: React hanya menyentuh bagian yang berubah, dan kini kemunculan bagian itu bisa dianimasikan sesuai browser.</p>
+
 <h2>Demo Hidup</h2>
 <p>Demo di bawah menyalin kedai yang sama dan benar-benar jalan di halaman ini. Satu rintangan teknis, browser tidak bisa mengeksekusi JSX mentah, dan halaman ini tanpa build tool. Jadi demo memuat React lewat import map dari CDN ESM, lalu memakai jembatan bernama <code>htm</code>, yang bentuknya mirip JSX tapi ditulis di dalam template literal bab 12. Yang dibaca <code>htm</code> dan yang dibaca compiler JSX berakhir di panggilan <code>createElement</code> yang sama. Karena dimuat dari CDN, demo ini butuh koneksi internet, beda dengan demo bab sebelumnya yang jalan tanpa jaringan.</p>
 
